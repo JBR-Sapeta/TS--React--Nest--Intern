@@ -12,7 +12,7 @@ module.exports = {
           const isValid = pattern.test(subject);
           return [
             isValid,
-            `Your subject match following pattern: '/^(B-|F-|P-)2024\s.*/' `,
+            `Your subject should match the following pattern: "/^(B|F|P)-\d+\s.*/" `,
           ];
         },
       },
