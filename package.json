@@ -5,6 +5,7 @@
     "husky": "^9.0.10"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   }
 }
