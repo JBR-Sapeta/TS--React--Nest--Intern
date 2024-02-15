@@ -7,6 +7,7 @@ import { ENV_KEYS } from './utils/constants';
 import { DatabaseConfigType } from './utils/types';
 
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -34,6 +35,7 @@ import { AppService } from './app.service';
       },
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
