@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { SuccesMessage } from './common/classes';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHello(): SuccesMessage {
+    return new SuccesMessage({ message: 'Service is running.' });
   }
 }

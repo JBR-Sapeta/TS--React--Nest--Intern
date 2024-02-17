@@ -5,7 +5,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Roles } from '../utils/enums';
+
+import { Roles } from '../common/enums';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -22,7 +23,7 @@ export class UserEntity {
   email: string;
 
   @Column({ nullable: true, default: null })
-  phoneNumber: string;
+  phoneNumber: string | null;
 
   @Column()
   password: string;
@@ -36,16 +37,16 @@ export class UserEntity {
   roles: Roles[];
 
   @Column({ nullable: true })
-  activationToken: string;
+  activationToken: string | null;
 
   @Column({ nullable: true })
-  refreshToken: string;
+  refreshToken: string | null;
 
   @Column({ nullable: true, default: null })
-  resetToken: string;
+  resetToken: string | null;
 
   @Column({ nullable: true, default: null })
-  resetTokenExpirationDate: Date;
+  resetTokenExpirationDate: Date | null;
 
   @Column({ default: false })
   isActive: boolean;
