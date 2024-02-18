@@ -1,4 +1,4 @@
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 
 import type { UserEntity } from '../../entities';
 import { SuccesMessage } from '../../common/classes';
@@ -33,7 +33,6 @@ export class ProfileDto
   implements ResponseWithPayload<UserProfileDto>
 {
   @Expose()
-  @Type(() => UserProfileDto)
   data: UserProfileDto;
 
   constructor(args: SuccesMessageArgs, data: any) {

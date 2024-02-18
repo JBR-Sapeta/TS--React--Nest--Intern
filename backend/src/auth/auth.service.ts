@@ -15,9 +15,8 @@ import { SuccesMessage } from '../common/classes';
 import { UserEntity } from '../entities';
 import { UserRepository } from '../repositories';
 
-import { ProfileDto, type CreateUserDto } from './dto';
-import { TokensDto } from './dto/tokens.dto';
-import { AccessTokenDto } from './dto/access-token.dto';
+import { AccessTokenDto, RefreshToken, TokensDto, ProfileDto } from './dto';
+import type { CreateUserDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -51,7 +50,7 @@ export class AuthService {
     await this.userRepository.updateRefreshToken(user.id, hashedRefreshToken);
     const accessToken = await this.createAccessToken(user.id);
 
-    return new TokensDto({}, { refreshToken, accessToken });
+    return new TokensDto({}, accessToken, refreshToken);
   }
 
   public async logout(userId: string): Promise<SuccesMessage> {
@@ -78,7 +77,7 @@ export class AuthService {
 
     const accessToken = await this.createAccessToken(user.id);
 
-    return new AccessTokenDto({}, { accessToken });
+    return new AccessTokenDto({}, accessToken);
   }
 
   public async getUserProfile(userId: string): Promise<ProfileDto> {
@@ -117,7 +116,7 @@ export class AuthService {
 
   // --------------------------- Helpers --------------------------- //
 
-  private async createAccessToken(userId: string) {
+  private async createAccessToken(userId: string): Promise<string> {
     return this.jwtService.signAsync(
       { userId },
       {
@@ -131,11 +130,11 @@ export class AuthService {
     );
   }
 
-  private async createRefreshToken(userId: string) {
+  private async createRefreshToken(userId: string): Promise<RefreshToken> {
     const now = new Date().getTime();
     const expirationTime = 24 * 60 * 60 * 1000;
     const expirationDate = new Date(now + expirationTime).toISOString();
-    const token = await this.jwtService.signAsync(
+    const refreshToken = await this.jwtService.signAsync(
       { userId },
       {
         secret: this.configService.get<string>(
@@ -146,6 +145,6 @@ export class AuthService {
         ),
       },
     );
-    return { expirationDate, token };
+    return new RefreshToken(refreshToken, expirationDate);
   }
 }

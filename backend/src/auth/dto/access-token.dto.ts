@@ -3,7 +3,15 @@ import { Expose } from 'class-transformer';
 import { SuccesMessage } from '../../common/classes';
 import type { SuccesMessageArgs } from '../../common/classes';
 import { ResponseWithPayload } from '../../common/interfaces';
-import type { AccessToken } from '../../common/types';
+
+class AccessToken {
+  @Expose()
+  accessToken: string;
+
+  constructor(token: string) {
+    this.accessToken = token;
+  }
+}
 
 export class AccessTokenDto
   extends SuccesMessage
@@ -12,8 +20,8 @@ export class AccessTokenDto
   @Expose()
   data: AccessToken;
 
-  constructor(args: SuccesMessageArgs, data: AccessToken) {
+  constructor(args: SuccesMessageArgs, token: string) {
     super(args);
-    this.data = data;
+    this.data = new AccessToken(token);
   }
 }

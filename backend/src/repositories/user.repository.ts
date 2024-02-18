@@ -1,12 +1,15 @@
+import {
+  ConflictException,
+  ForbiddenException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserEntity } from '../entities';
-import { Nullable } from 'src/common/types';
-import {
-  ForbiddenException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { PostgresqlErrorCodes } from '../common/enums';
+import type { Nullable } from '../common/types';
+
 import { isNil } from 'ramda';
 
 export class UserRepository extends Repository<UserEntity> {
@@ -36,6 +39,9 @@ export class UserRepository extends Repository<UserEntity> {
       const createdUser = await this.repository.save(user);
       return createdUser;
     } catch (error) {
+      if (error?.code === PostgresqlErrorCodes.UNIQUE_VIOLATION) {
+        throw new ConflictException('Email already in use.');
+      }
       throw new InternalServerErrorException('Internal Server Error');
     }
   }
