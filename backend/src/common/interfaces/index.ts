@@ -1,1 +1,1 @@
-export { ClassConstructor } from './class-constructor.interface';
+export { ResponseWithPayload } from './response-with-payload.interface';

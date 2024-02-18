@@ -1,3 +1,2 @@
-export { Payload } from './payload.class.ts';
 export { SuccesMessage } from './succes-message';
-export { SerializedPayload } from './serialized-payload.class';
+export type { SuccesMessageArgs } from './succes-message';

@@ -10,13 +10,14 @@ import * as bcrypt from 'bcrypt';
 import { isNil, not } from 'ramda';
 
 import { ENV_KEYS } from '../common/constants';
-import { SuccesMessage, SerializedPayload, Payload } from '../common/classes';
-import type { AccessToken, Tokens } from '../common/types';
+import { SuccesMessage } from '../common/classes';
 
 import { UserEntity } from '../entities';
 import { UserRepository } from '../repositories';
 
-import { UserProfileDto, type CreateUserDto } from './dto';
+import { ProfileDto, type CreateUserDto } from './dto';
+import { TokensDto } from './dto/tokens.dto';
+import { AccessTokenDto } from './dto/access-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,13 +45,13 @@ export class AuthService {
     return new SuccesMessage({ statusCode: 201 });
   }
 
-  public async login(user: UserEntity): Promise<Payload<Tokens>> {
+  public async login(user: UserEntity): Promise<TokensDto> {
     const refreshToken = await this.createRefreshToken(user.id);
     const hashedRefreshToken = await bcrypt.hash(refreshToken.token, 10);
     await this.userRepository.updateRefreshToken(user.id, hashedRefreshToken);
     const accessToken = await this.createAccessToken(user.id);
 
-    return new Payload({}, { refreshToken, accessToken });
+    return new TokensDto({}, { refreshToken, accessToken });
   }
 
   public async logout(userId: string): Promise<SuccesMessage> {
@@ -62,7 +63,7 @@ export class AuthService {
   public async refreshToken(
     userId: string,
     refreshToken: string,
-  ): Promise<Payload<AccessToken>> {
+  ): Promise<AccessTokenDto> {
     const user = await this.userRepository.getUserById(userId);
 
     if (isNil(user) || isNil(user.refreshToken)) {
@@ -77,15 +78,13 @@ export class AuthService {
 
     const accessToken = await this.createAccessToken(user.id);
 
-    return new Payload({}, { accessToken });
+    return new AccessTokenDto({}, { accessToken });
   }
 
-  public async getUserProfile(
-    userId: string,
-  ): Promise<SerializedPayload<typeof UserProfileDto>> {
+  public async getUserProfile(userId: string): Promise<ProfileDto> {
     const user = await this.userRepository.getUserById(userId);
 
-    return new SerializedPayload({}, UserProfileDto, user);
+    return new ProfileDto({}, user);
   }
 
   public async activateUserAccount(token: string): Promise<SuccesMessage> {

@@ -1,6 +1,10 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Module,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -47,6 +51,12 @@ import { AppService } from './app.service';
       useValue: new ValidationPipe({
         whitelist: true,
         exceptionFactory,
+      }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useValue: new ClassSerializerInterceptor(new Reflector(), {
+        strategy: 'excludeAll',
       }),
     },
   ],

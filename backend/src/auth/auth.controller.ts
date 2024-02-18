@@ -11,21 +11,19 @@ import {
 } from '@nestjs/common';
 
 import { UserEntity } from '../entities';
-import type {
-  SuccesMessage,
-  SerializedPayload,
-  Payload,
-} from '../common/classes';
-import type { AccessToken, RefreshTokenPayload, Tokens } from '../common/types';
+import type { SuccesMessage } from '../common/classes';
+import type { RefreshTokenPayload } from '../common/types';
 
 import {
   GetAccessTokenPayload,
   GetCurrentUser,
   GetRefreshTokenPayload,
 } from './decorators';
-import { CreateUserDto, UserProfileDto } from './dto';
+import { CreateUserDto, ProfileDto } from './dto';
 import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from './guards';
 import { AuthService } from './auth.service';
+import { TokensDto } from './dto/tokens.dto';
+import { AccessTokenDto } from './dto/access-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -40,7 +38,7 @@ export class AuthController {
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
-  signin(@GetCurrentUser() user: UserEntity): Promise<Payload<Tokens>> {
+  signin(@GetCurrentUser() user: UserEntity): Promise<TokensDto> {
     return this.authService.login(user);
   }
 
@@ -56,16 +54,14 @@ export class AuthController {
   @UseGuards(RefreshTokenGuard)
   refreshToken(
     @GetRefreshTokenPayload() { userId, refreshToken }: RefreshTokenPayload,
-  ): Promise<Payload<AccessToken>> {
+  ): Promise<AccessTokenDto> {
     return this.authService.refreshToken(userId, refreshToken);
   }
 
   @Get('/profile')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
-  getUserProfile(
-    @GetAccessTokenPayload() userId: string,
-  ): Promise<SerializedPayload<typeof UserProfileDto>> {
+  getUserProfile(@GetAccessTokenPayload() userId: string): Promise<ProfileDto> {
     return this.authService.getUserProfile(userId);
   }
 
