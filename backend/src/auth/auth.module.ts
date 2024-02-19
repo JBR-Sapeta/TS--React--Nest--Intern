@@ -4,10 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity } from '../entities';
 import { UserRepository } from '../repositories';
+import { MailService } from '../mail/mail.service';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-
 import {
   LocalStrategy,
   AccessTokenStrategy,
@@ -23,6 +23,7 @@ import {
     RefreshTokenStrategy,
     AuthService,
     UserRepository,
+    MailService,
   ],
 })
 export class AuthModule {}

@@ -17,12 +17,14 @@ import { UserRepository } from '../repositories';
 
 import { AccessTokenDto, RefreshToken, TokensDto, ProfileDto } from './dto';
 import type { CreateUserDto } from './dto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
     private readonly userRepository: UserRepository,
   ) {}
 
@@ -40,6 +42,8 @@ export class AuthService {
       hashedPassword,
       activationToken,
     );
+
+    await this.mailService.sendWelcomeEmail(email, firstName, activationToken);
 
     return new SuccesMessage({ statusCode: 201 });
   }
