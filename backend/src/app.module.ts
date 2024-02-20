@@ -9,15 +9,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { ENV_KEYS } from './common/constants';
-import { DatabaseConfigType } from './common/types';
-import { exceptionFactory } from './common/functions';
 
+import { exceptionFactory } from './common/functions';
+import type { DatabaseConfigType } from './common/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -28,6 +28,17 @@ import { MailModule } from './mail/mail.module';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        if (process.env.NODE_ENV === 'test') {
+          return {
+            type: config.get<DatabaseConfigType>(ENV_KEYS.DB_TYPE),
+            database: config.get<string>(ENV_KEYS.DB_NAME),
+            autoLoadEntities: true,
+            synchronize: true,
+            dropSchema: true,
+            logging: false,
+          };
+        }
+
         return {
           type: config.get<DatabaseConfigType>(ENV_KEYS.DB_TYPE),
           host: config.get<string>(ENV_KEYS.DB_HOST),

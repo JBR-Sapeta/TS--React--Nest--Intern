@@ -5,17 +5,16 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isNil } from 'ramda';
 
-import { UserEntity } from '../entities';
+import { UserEntity, UserRoleEntity } from '../entities';
 import { PostgresqlErrorCodes } from '../common/enums';
 import type { Nullable } from '../common/types';
-
-import { isNil } from 'ramda';
 
 export class UserRepository extends Repository<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
-    private repository: Repository<UserEntity>,
+    private readonly repository: Repository<UserEntity>,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
@@ -26,17 +25,19 @@ export class UserRepository extends Repository<UserEntity> {
     email: string,
     password: string,
     activationToken: string,
+    roles: UserRoleEntity[],
   ): Promise<UserEntity> {
-    const user = this.repository.create({
+    const user = this.create({
       firstName,
       lastName,
       email,
       password,
       activationToken,
+      roles,
     });
 
     try {
-      const createdUser = await this.repository.save(user);
+      const createdUser = await this.save(user);
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresqlErrorCodes.UNIQUE_VIOLATION) {
@@ -48,7 +49,7 @@ export class UserRepository extends Repository<UserEntity> {
 
   public async getUserById(userId: string): Promise<Nullable<UserEntity>> {
     try {
-      const user = await this.repository.findOneBy({ id: userId });
+      const user = await this.findOneBy({ id: userId });
       return user;
     } catch {
       throw new InternalServerErrorException('Internal Server Error');
@@ -57,7 +58,7 @@ export class UserRepository extends Repository<UserEntity> {
 
   public async getUserByEmail(email: string): Promise<Nullable<UserEntity>> {
     try {
-      const user = await this.repository.findOneBy({ email });
+      const user = await this.findOneBy({ email });
       return user;
     } catch {
       throw new InternalServerErrorException('Internal Server Error');
@@ -71,7 +72,7 @@ export class UserRepository extends Repository<UserEntity> {
     let user: Nullable<UserEntity> = null;
 
     try {
-      user = await this.repository.findOneBy({ id: userId });
+      user = await this.findOneBy({ id: userId });
     } catch (error) {
       throw new InternalServerErrorException('Internal Server Error');
     }
@@ -82,7 +83,7 @@ export class UserRepository extends Repository<UserEntity> {
 
     try {
       user.refreshToken = refreshToken;
-      await this.repository.save(user);
+      await this.save(user);
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -92,7 +93,7 @@ export class UserRepository extends Repository<UserEntity> {
     let user: Nullable<UserEntity> = null;
 
     try {
-      user = await this.repository.findOneBy({ activationToken });
+      user = await this.findOneBy({ activationToken });
     } catch (error) {
       throw new InternalServerErrorException();
     }
@@ -106,7 +107,7 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user.activationToken = null;
       user.isActive = true;
-      await this.repository.save(user);
+      await this.save(user);
     } catch (error) {
       throw new InternalServerErrorException();
     }

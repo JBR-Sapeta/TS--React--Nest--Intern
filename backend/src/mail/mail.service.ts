@@ -20,7 +20,7 @@ export class MailService {
       await this.mailerService.sendMail({
         to: email,
         from: this.configService.get<string>(ENV_KEYS.MAIL_FROM),
-        subject: `Welcome ${firstName}`,
+        subject: `Welcome message`,
         template: 'welcome.ejs',
         context: {
           domainUrl: this.configService.get<string>(ENV_KEYS.DOMAIN_URL),
@@ -29,6 +29,7 @@ export class MailService {
         },
       });
     } catch (error) {
+      console.log(error);
       throw new BadGatewayException('Sending email failed.');
     }
   }

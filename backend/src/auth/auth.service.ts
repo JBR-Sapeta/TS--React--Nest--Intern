@@ -11,13 +11,14 @@ import { isNil, not } from 'ramda';
 
 import { ENV_KEYS } from '../common/constants';
 import { SuccesMessage } from '../common/classes';
+import { Roles } from '../common/enums';
 
 import { UserEntity } from '../entities';
-import { UserRepository } from '../repositories';
+import { UserRepository, UserRoleRepository } from '../repositories';
+import { MailService } from '../mail/mail.service';
 
 import { AccessTokenDto, RefreshToken, TokensDto, ProfileDto } from './dto';
 import type { CreateUserDto } from './dto';
-import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
     private readonly userRepository: UserRepository,
+    private readonly userRoleRepository: UserRoleRepository,
   ) {}
 
   public async createUserAccount(
@@ -34,6 +36,7 @@ export class AuthService {
     const { firstName, lastName, email, password } = createUserDto;
     const activationToken = uuid();
     const hashedPassword = await bcrypt.hash(password, 12);
+    const roles = await this.userRoleRepository.getRolesByIds([Roles.USER]);
 
     await this.userRepository.createUser(
       firstName,
@@ -41,6 +44,7 @@ export class AuthService {
       email,
       hashedPassword,
       activationToken,
+      roles,
     );
 
     await this.mailService.sendWelcomeEmail(email, firstName, activationToken);

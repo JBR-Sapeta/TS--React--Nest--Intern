@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { UserRoleRepository } from './repositories';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,7 +13,8 @@ async function bootstrap() {
     allowedHeaders: '*',
     credentials: true,
   });
-
   await app.listen(8080);
+  const userRoleRepository = app.get(UserRoleRepository);
+  await userRoleRepository.seedRoles();
 }
 bootstrap();

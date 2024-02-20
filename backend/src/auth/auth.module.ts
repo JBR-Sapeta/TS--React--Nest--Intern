@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserEntity } from '../entities';
-import { UserRepository } from '../repositories';
+import { UserEntity, UserRoleEntity } from '../entities';
+import { UserRepository, UserRoleRepository } from '../repositories';
 import { MailService } from '../mail/mail.service';
 
 import { AuthController } from './auth.controller';
@@ -15,15 +15,19 @@ import {
 } from './strategies';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity, UserRoleEntity]),
+    JwtModule.register({}),
+  ],
   controllers: [AuthController],
   providers: [
     LocalStrategy,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,
-    UserRepository,
     MailService,
+    UserRepository,
+    UserRoleRepository,
   ],
 })
 export class AuthModule {}
