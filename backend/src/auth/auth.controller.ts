@@ -19,7 +19,12 @@ import {
   GetCurrentUser,
   GetRefreshTokenPayload,
 } from './decorators';
-import { CreateUserDto, ProfileDto } from './dto';
+import {
+  UserEmailDto,
+  CreateUserDto,
+  ProfileDto,
+  ResetPasswordDto,
+} from './dto';
 import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from './guards';
 import { AuthService } from './auth.service';
 import { TokensDto } from './dto/tokens.dto';
@@ -49,13 +54,35 @@ export class AuthController {
     return this.authService.logout(userId);
   }
 
-  @Post('/refresh')
+  @Post('/refresh-token')
   @HttpCode(HttpStatus.OK)
   @UseGuards(RefreshTokenGuard)
   refreshToken(
     @GetRefreshTokenPayload() { userId, refreshToken }: RefreshTokenPayload,
   ): Promise<AccessTokenDto> {
     return this.authService.refreshToken(userId, refreshToken);
+  }
+
+  @Post('/account-recovery')
+  @HttpCode(HttpStatus.OK)
+  accountRecovery(@Body() userEmailDto: UserEmailDto): Promise<SuccesMessage> {
+    return this.authService.accountRecovery(userEmailDto);
+  }
+
+  @Post('/reset-password')
+  @HttpCode(HttpStatus.OK)
+  resetPassword(
+    @Body() resetPasswordDto: ResetPasswordDto,
+  ): Promise<SuccesMessage> {
+    return this.authService.resetPassword(resetPasswordDto);
+  }
+
+  @Post('/resend-welcome-email')
+  @HttpCode(HttpStatus.OK)
+  resendWelcomeEmail(
+    @Body() userEmailDto: UserEmailDto,
+  ): Promise<SuccesMessage> {
+    return this.authService.resendWelcomeEmail(userEmailDto);
   }
 
   @Get('/profile')

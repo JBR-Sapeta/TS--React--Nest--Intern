@@ -68,7 +68,7 @@ export class UserRepository extends Repository<UserEntity> {
   public async updateRefreshToken(
     userId: string,
     refreshToken: Nullable<string>,
-  ) {
+  ): Promise<void> {
     let user: Nullable<UserEntity> = null;
 
     try {
@@ -89,7 +89,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  public async activateAccount(activationToken: string) {
+  public async activateAccount(activationToken: string): Promise<void> {
     let user: Nullable<UserEntity> = null;
 
     try {
@@ -107,6 +107,65 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user.activationToken = null;
       user.isActive = true;
+      await this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  public async setResetToken(
+    email: string,
+    resetToken: string,
+    resetTokenExpirationDate: Date,
+  ): Promise<UserEntity> {
+    let user: Nullable<UserEntity> = null;
+
+    try {
+      user = await this.findOneBy({ email });
+    } catch (error) {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+
+    if (isNil(user)) {
+      throw new ForbiddenException('This account does not exist.');
+    }
+
+    try {
+      user.resetToken = resetToken;
+      user.resetTokenExpirationDate = resetTokenExpirationDate;
+      return await this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  public async resetPassword(
+    resetToken: string,
+    password: string,
+  ): Promise<void> {
+    let user: Nullable<UserEntity> = null;
+
+    try {
+      user = await this.findOneBy({ resetToken });
+    } catch (error) {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+
+    if (isNil(user)) {
+      throw new ForbiddenException();
+    }
+
+    const now = new Date().getTime();
+    const expirationDate = new Date(user.resetTokenExpirationDate).getTime();
+
+    if (now > expirationDate) {
+      throw new ForbiddenException();
+    }
+
+    try {
+      user.resetToken = null;
+      user.resetTokenExpirationDate = null;
+      user.password = password;
       await this.save(user);
     } catch (error) {
       throw new InternalServerErrorException();

@@ -33,4 +33,27 @@ export class MailService {
       throw new BadGatewayException('Sending email failed.');
     }
   }
+
+  public async sendRecoveryEmail(
+    email: string,
+    firstName: string,
+    resetToken: string,
+  ): Promise<void> {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        from: this.configService.get<string>(ENV_KEYS.MAIL_FROM),
+        subject: `Welcome message`,
+        template: 'recovery.ejs',
+        context: {
+          domainUrl: this.configService.get<string>(ENV_KEYS.DOMAIN_URL),
+          resetToken,
+          firstName,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw new BadGatewayException('Sending email failed.');
+    }
+  }
 }

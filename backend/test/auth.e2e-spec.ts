@@ -15,7 +15,6 @@ import {
   VALID_SIGN_UP_DATA,
   INVALID_SIGN_UP_DATA,
   INVALID_ACCESS_TOKEN,
-  INVALID_REFRESH_TOKEN,
 } from './helpers/auth-data';
 import type { User, Credentials } from './helpers/auth-data';
 import { mailService } from './mocks/mail-service';
@@ -103,7 +102,7 @@ describe('AuthController (e2e)', () => {
 
   const sendRefreshTokenRequest = async (token: string) => {
     const response = await request(app.getHttpServer())
-      .post('/auth/refresh')
+      .post('/auth/refresh-token')
       .set('Authorization', `Bearer ${token}`)
       .send();
     return response;
@@ -463,7 +462,7 @@ describe('AuthController (e2e)', () => {
   describe('/refresh (POST) - Invalid Request', () => {
     it('returns 401 status code when refresh token is invalid', async () => {
       await createActiveUser(USER_ONE);
-      const response = await sendRefreshTokenRequest(INVALID_REFRESH_TOKEN);
+      const response = await sendRefreshTokenRequest('INVALID_REFRESH_TOKEN');
       expect(response.status).toBe(401);
     });
   });

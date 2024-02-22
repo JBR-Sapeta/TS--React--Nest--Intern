@@ -10,15 +10,16 @@ import * as bcrypt from 'bcrypt';
 import { equals, isNil, not } from 'ramda';
 
 import { ENV_KEYS } from '../common/constants';
-import { SuccesMessage } from '../common/classes';
 import { Roles } from '../common/enums';
+import { SuccesMessage } from '../common/classes';
+import { calculateExpirationDate } from '../common/functions';
 
 import { UserEntity } from '../entities';
 import { UserRepository, UserRoleRepository } from '../repositories';
 import { MailService } from '../mail/mail.service';
 
 import { AccessTokenDto, RefreshToken, TokensDto, ProfileDto } from './dto';
-import type { CreateUserDto } from './dto';
+import type { UserEmailDto, CreateUserDto, ResetPasswordDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -30,10 +31,12 @@ export class AuthService {
     private readonly userRoleRepository: UserRoleRepository,
   ) {}
 
-  public async createUserAccount(
-    createUserDto: CreateUserDto,
-  ): Promise<SuccesMessage> {
-    const { firstName, lastName, email, password } = createUserDto;
+  public async createUserAccount({
+    firstName,
+    lastName,
+    email,
+    password,
+  }: CreateUserDto): Promise<SuccesMessage> {
     const activationToken = uuid();
     const hashedPassword = await bcrypt.hash(password, 12);
     const roles = await this.userRoleRepository.getRolesByIds([Roles.USER]);
@@ -87,15 +90,68 @@ export class AuthService {
     return new AccessTokenDto({}, accessToken);
   }
 
+  public async activateUserAccount(token: string): Promise<SuccesMessage> {
+    await this.userRepository.activateAccount(token);
+
+    return new SuccesMessage({});
+  }
+
+  public async accountRecovery({
+    email,
+  }: UserEmailDto): Promise<SuccesMessage> {
+    const resetToken = uuid();
+    const expirationTime = +this.configService.get<string>(
+      ENV_KEYS.RESET_TOKEN_EXPIRATION_TIME,
+    );
+    const resetTokenExpirationDate = calculateExpirationDate(expirationTime);
+
+    const { firstName } = await this.userRepository.setResetToken(
+      email,
+      resetToken,
+      resetTokenExpirationDate,
+    );
+
+    await this.mailService.sendRecoveryEmail(email, firstName, resetToken);
+
+    return new SuccesMessage({});
+  }
+
+  public async resetPassword({
+    resetToken,
+    password,
+  }: ResetPasswordDto): Promise<SuccesMessage> {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await this.userRepository.resetPassword(resetToken, hashedPassword);
+
+    return new SuccesMessage({});
+  }
+
+  public async resendWelcomeEmail({
+    email,
+  }: UserEmailDto): Promise<SuccesMessage> {
+    const user = await this.userRepository.getUserByEmail(email);
+
+    if (isNil(user)) {
+      throw new ForbiddenException();
+    }
+
+    if (isNil(user.activationToken)) {
+      throw new ForbiddenException();
+    }
+
+    await this.mailService.sendWelcomeEmail(
+      email,
+      user.firstName,
+      user.activationToken,
+    );
+
+    return new SuccesMessage({});
+  }
+
   public async getUserProfile(userId: string): Promise<ProfileDto> {
     const user = await this.userRepository.getUserById(userId);
 
     return new ProfileDto({}, user);
-  }
-
-  public async activateUserAccount(token: string): Promise<SuccesMessage> {
-    await this.userRepository.activateAccount(token);
-    return new SuccesMessage({});
   }
 
   public async validateUserCredentials(
@@ -152,6 +208,7 @@ export class AuthService {
         ),
       },
     );
+
     return new RefreshToken(refreshToken, expirationDate);
   }
 }
