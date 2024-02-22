@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
-import { isNil, not } from 'ramda';
+import { equals, isNil, not } from 'ramda';
 
 import { ENV_KEYS } from '../common/constants';
 import { SuccesMessage } from '../common/classes';
@@ -54,8 +54,7 @@ export class AuthService {
 
   public async login(user: UserEntity): Promise<TokensDto> {
     const refreshToken = await this.createRefreshToken(user.id);
-    const hashedRefreshToken = await bcrypt.hash(refreshToken.token, 10);
-    await this.userRepository.updateRefreshToken(user.id, hashedRefreshToken);
+    await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
     const accessToken = await this.createAccessToken(user.id);
 
     return new TokensDto({}, accessToken, refreshToken);
@@ -77,7 +76,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const isValidToken = await bcrypt.compare(refreshToken, user.refreshToken);
+    const isValidToken = equals(refreshToken, user.refreshToken);
 
     if (not(isValidToken)) {
       throw new ForbiddenException('Access Denied');

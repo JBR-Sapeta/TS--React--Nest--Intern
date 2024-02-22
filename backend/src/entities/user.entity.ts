@@ -33,7 +33,7 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 63, nullable: true })
   activationToken: string | null;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'text', nullable: true })
   refreshToken: string | null;
 
   @Column({ type: 'varchar', length: 63, nullable: true, default: null })
