@@ -2,6 +2,7 @@ import {
   ConflictException,
   ForbiddenException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -127,7 +128,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     if (isNil(user)) {
-      throw new ForbiddenException('This account does not exist.');
+      throw new NotFoundException('This account does not exist.');
     }
 
     try {

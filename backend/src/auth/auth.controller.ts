@@ -77,7 +77,7 @@ export class AuthController {
     return this.authService.resetPassword(resetPasswordDto);
   }
 
-  @Post('/resend-welcome-email')
+  @Post('/resend-activation-email')
   @HttpCode(HttpStatus.OK)
   resendWelcomeEmail(
     @Body() userEmailDto: UserEmailDto,

@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadGatewayException, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { v4 as uuid } from 'uuid';
 
 import { Roles } from './../src/common/enums';
+import { calculateExpirationDate } from './../src/common/functions';
 import { AppModule } from './../src/app.module';
 import { UserRepository, UserRoleRepository } from './../src/repositories';
 import { MailService } from './../src/mail/mail.service';
@@ -15,6 +17,7 @@ import {
   VALID_SIGN_UP_DATA,
   INVALID_SIGN_UP_DATA,
   INVALID_ACCESS_TOKEN,
+  USER_TWO,
 } from './helpers/auth-data';
 import type { User, Credentials } from './helpers/auth-data';
 import { mailService } from './mocks/mail-service';
@@ -69,6 +72,24 @@ describe('AuthController (e2e)', () => {
     return updatedUser;
   };
 
+  const createActiveUserWithRecoveryToken = async (
+    userData: any,
+    expirationTime: number,
+  ) => {
+    await authService.createUserAccount(userData);
+    const user = await userRepository.findOne({
+      where: { email: userData.email },
+      relations: { roles: true },
+    });
+    user.activationToken = null;
+    user.isActive = true;
+    user.resetToken = uuid();
+    user.resetTokenExpirationDate = calculateExpirationDate(expirationTime);
+
+    const updatedUser = await userRepository.save(user);
+    return updatedUser;
+  };
+
   const getUserFromDB = async (email: string) => {
     const user = await userRepository.findOne({
       where: { email },
@@ -113,6 +134,30 @@ describe('AuthController (e2e)', () => {
       .post('/auth/logout')
       .set('Authorization', `Bearer ${token}`)
       .send();
+    return response;
+  };
+
+  const sendAccountRecoveryRequest = async (email: string) => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/account-recovery')
+      .send({ email });
+    return response;
+  };
+
+  const sendResetPasswordRequest = async (
+    resetToken: string,
+    password: string,
+  ) => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/reset-password')
+      .send({ resetToken, password });
+    return response;
+  };
+
+  const sendRresendActivationEmailRequest = async (email: string) => {
+    const response = await request(app.getHttpServer())
+      .post('/auth/resend-activation-email')
+      .send({ email });
     return response;
   };
 
@@ -173,9 +218,9 @@ describe('AuthController (e2e)', () => {
     });
 
     it('sends an activation email with activationToken', async () => {
+      const sendWelcomeEmail = jest.spyOn(mailService, 'sendWelcomeEmail');
       const { email, firstName } = VALID_SIGN_UP_DATA;
       await sendSignUpRequest(VALID_SIGN_UP_DATA);
-      const sendWelcomeEmail = jest.spyOn(mailService, 'sendWelcomeEmail');
       const user = await getUserFromDB(VALID_SIGN_UP_DATA.email);
       expect(sendWelcomeEmail).toHaveBeenCalledWith(
         email,
@@ -479,7 +524,7 @@ describe('AuthController (e2e)', () => {
       expect(response.status).toBe(200);
     });
 
-    it('returns succcess message status code', async () => {
+    it('returns succcess message', async () => {
       await createActiveUser(USER_ONE);
       const {
         body: { data },
@@ -519,8 +564,235 @@ describe('AuthController (e2e)', () => {
       await createActiveUser(USER_ONE);
       await sendLoginRequest(USER_ONE_CREDENTIALS);
       const response = await sendLogoutRequest(INVALID_ACCESS_TOKEN);
-      console.log(response.body.message);
       expect(response.status).toBe(401);
+    });
+  });
+
+  // -------------------------  Account Recovery - Valid Request  ------------------------- \\
+
+  describe('/account-recovery (POST) - Valid Request', () => {
+    it('returns 200 status code', async () => {
+      await createActiveUser(USER_ONE);
+      const response = await sendAccountRecoveryRequest(USER_ONE.email);
+      expect(response.status).toBe(200);
+    });
+
+    it('returns succcess message', async () => {
+      await createActiveUser(USER_ONE);
+      const response = await sendAccountRecoveryRequest(USER_ONE.email);
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper success response object', async () => {
+      await createActiveUser(USER_ONE);
+      const response = await sendAccountRecoveryRequest(USER_ONE.email);
+      expect(Object.keys(response.body)).toEqual([
+        'stausCode',
+        'message',
+        'error',
+      ]);
+    });
+
+    it('creates resetToken in database', async () => {
+      await createActiveUser(USER_ONE);
+      await sendAccountRecoveryRequest(USER_ONE.email);
+      const user = await getUserFromDB(USER_ONE.email);
+      expect(user.resetToken).toBeTruthy();
+    });
+
+    it('creates resetTokenExpirationDate in database', async () => {
+      await createActiveUser(USER_ONE);
+      await sendAccountRecoveryRequest(USER_ONE.email);
+      const user = await getUserFromDB(USER_ONE.email);
+      expect(user.resetTokenExpirationDate).toBeTruthy();
+    });
+
+    it('sends an account recovery email with resetToken', async () => {
+      const sendWelcomeEmail = jest.spyOn(mailService, 'sendRecoveryEmail');
+      await createActiveUser(USER_ONE);
+      await sendAccountRecoveryRequest(USER_ONE.email);
+      const user = await getUserFromDB(USER_ONE.email);
+      expect(sendWelcomeEmail).toHaveBeenCalledWith(
+        user.email,
+        user.firstName,
+        user.resetToken,
+      );
+    });
+  });
+
+  // ------------------------ Account Recovery - Invalid Request ------------------------- \\
+
+  describe('/account-recovery (POST) - Invalid Request', () => {
+    it('returns 400 status code when request is send with invalid e-mail', async () => {
+      const response = await sendAccountRecoveryRequest('INVALID_EMAIL');
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 404 status code when request is send with unknown e-mail', async () => {
+      const response = await sendAccountRecoveryRequest(USER_ONE.email);
+      expect(response.status).toBe(404);
+    });
+
+    it('returns a 502 status code when the sending of the recovery email fails`', async () => {
+      jest
+        .spyOn(mailService, 'sendRecoveryEmail')
+        .mockImplementationOnce(async () => {
+          throw new BadGatewayException();
+        });
+      await createActiveUser(USER_ONE);
+      const response = await sendAccountRecoveryRequest(USER_ONE.email);
+      expect(response.status).toBe(502);
+    });
+  });
+
+  // ------------------------- Reset Password - Valid Request ---------------------------- \\
+
+  describe('/reset-password (POST) - Valid Request', () => {
+    it('returns 200 status code', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      const response = await sendResetPasswordRequest(
+        user.resetToken,
+        USER_TWO.password,
+      );
+      expect(response.status).toBe(200);
+    });
+
+    it('returns succcess message', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      const response = await sendResetPasswordRequest(
+        user.resetToken,
+        USER_TWO.password,
+      );
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper success response object', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      const response = await sendResetPasswordRequest(
+        user.resetToken,
+        USER_TWO.password,
+      );
+      expect(Object.keys(response.body)).toEqual([
+        'stausCode',
+        'message',
+        'error',
+      ]);
+    });
+
+    it('sets new password in database', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      await sendResetPasswordRequest(user.resetToken, USER_TWO.password);
+      const updatedUser = await getUserFromDB(USER_ONE.email);
+      expect(user.password).not.toBe(updatedUser.password);
+    });
+
+    it('sets resetToken to null', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      await sendResetPasswordRequest(user.resetToken, USER_TWO.password);
+      const updatedUser = await getUserFromDB(USER_ONE.email);
+      expect(updatedUser.resetToken).toBe(null);
+    });
+
+    it('sets resetTokenExpirationDate to null', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      await sendResetPasswordRequest(user.resetToken, USER_TWO.password);
+      const updatedUser = await getUserFromDB(USER_ONE.email);
+      expect(updatedUser.resetTokenExpirationDate).toBe(null);
+    });
+  });
+
+  // ------------------------- Reset Password - Invalid Request -------------------------- \\
+
+  describe('/reset-password (POST) - Invalid Request', () => {
+    it('returns 400 status code when password is not strong enough', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      const response = await sendResetPasswordRequest(user.resetToken, 'Pass');
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when resetToken is not provided', async () => {
+      const response = await sendResetPasswordRequest('', USER_TWO.password);
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 403 status code when resetToken is invalid', async () => {
+      await createActiveUserWithRecoveryToken(USER_ONE, 3600);
+      const response = await sendResetPasswordRequest(
+        RANDOM_UUID,
+        USER_TWO.password,
+      );
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 403 status code when resetToken expired', async () => {
+      const user = await createActiveUserWithRecoveryToken(USER_ONE, -3600);
+      const response = await sendResetPasswordRequest(
+        user.resetToken,
+        USER_TWO.password,
+      );
+      expect(response.status).toBe(403);
+    });
+  });
+
+  // ---------------------- Resend Activation Email - Valid Request ---------------------- \\
+
+  describe('/resend-activation-email (POST) - Valid Request', () => {
+    it('returns 200 status code', async () => {
+      await createInactiveUser(USER_ONE);
+      const response = await sendRresendActivationEmailRequest(USER_ONE.email);
+      expect(response.status).toBe(200);
+    });
+
+    it('returns succcess message', async () => {
+      await createInactiveUser(USER_ONE);
+      const response = await sendRresendActivationEmailRequest(USER_ONE.email);
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper success response object', async () => {
+      await createInactiveUser(USER_ONE);
+      const response = await sendRresendActivationEmailRequest(USER_ONE.email);
+      expect(Object.keys(response.body)).toEqual([
+        'stausCode',
+        'message',
+        'error',
+      ]);
+    });
+
+    it('resends an activation email with activationToken', async () => {
+      const sendWelcomeEmail = jest.spyOn(mailService, 'sendWelcomeEmail');
+      const user = await createInactiveUser(USER_ONE);
+      expect(sendWelcomeEmail).toHaveBeenCalledWith(
+        user.email,
+        user.firstName,
+        user.activationToken,
+      );
+    });
+  });
+
+  // --------------------- Resend Activation Email - Invalid Request --------------------- \\
+
+  describe('/resend-activation-email (POST) - Invalid Request', () => {
+    it('returns 400 status code when request is send with invalid e-mail', async () => {
+      const response = await sendRresendActivationEmailRequest('INVALID_EMAIL');
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 403 status code when request is send for active user', async () => {
+      await createActiveUser(USER_ONE);
+      const response = await sendRresendActivationEmailRequest(USER_ONE.email);
+      expect(response.status).toBe(403);
+    });
+
+    it('returns a 502 status code when the sending email fails', async () => {
+      await createInactiveUser(USER_ONE);
+      jest
+        .spyOn(mailService, 'sendWelcomeEmail')
+        .mockImplementationOnce(async () => {
+          throw new BadGatewayException();
+        });
+      const response = await sendRresendActivationEmailRequest(USER_ONE.email);
+      expect(response.status).toBe(502);
     });
   });
 

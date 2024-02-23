@@ -1,6 +1,7 @@
 import {
   ForbiddenException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -132,7 +133,7 @@ export class AuthService {
     const user = await this.userRepository.getUserByEmail(email);
 
     if (isNil(user)) {
-      throw new ForbiddenException();
+      throw new NotFoundException();
     }
 
     if (isNil(user.activationToken)) {
