@@ -3,14 +3,14 @@ import { Expose } from 'class-transformer';
 import type { UserEntity } from '../../entities';
 import { SuccesMessage } from '../../common/classes';
 import type { SuccesMessageArgs } from '../../common/classes';
-import { Roles } from '../../common/enums';
 import { ResponseWithPayload } from '../../common/interfaces';
+import { UserRoleDto } from './role.dto';
 
 class UserProfileDto {
   @Expose()
   id: string;
   @Expose()
-  firsName: string;
+  firstName: string;
   @Expose()
   lastName: string;
   @Expose()
@@ -18,13 +18,14 @@ class UserProfileDto {
   @Expose()
   phoneNumber: string;
   @Expose()
-  roles: Roles[];
+  roles: UserRoleDto[];
   @Expose()
   createdAt: string;
 
   constructor(user: UserEntity) {
     Object.assign(this, user);
     this.createdAt = user.createdAt.toISOString();
+    this.roles = user.roles.map((role) => new UserRoleDto(role));
   }
 }
 

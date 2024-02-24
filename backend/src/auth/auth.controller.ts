@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -14,21 +13,20 @@ import { UserEntity } from '../entities';
 import type { SuccesMessage } from '../common/classes';
 import type { RefreshTokenPayload } from '../common/types';
 
+import { AuthService } from './auth.service';
 import {
   GetAccessTokenPayload,
   GetCurrentUser,
   GetRefreshTokenPayload,
 } from './decorators';
+import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from './guards';
 import {
   UserEmailDto,
   CreateUserDto,
-  ProfileDto,
   ResetPasswordDto,
+  AccessTokenDto,
+  TokensDto,
 } from './dto';
-import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from './guards';
-import { AuthService } from './auth.service';
-import { TokensDto } from './dto/tokens.dto';
-import { AccessTokenDto } from './dto/access-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -85,17 +83,10 @@ export class AuthController {
     return this.authService.resendWelcomeEmail(userEmailDto);
   }
 
-  @Get('/profile')
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AccessTokenGuard)
-  getUserProfile(@GetAccessTokenPayload() userId: string): Promise<ProfileDto> {
-    return this.authService.getUserProfile(userId);
-  }
-
-  @Post('/activate/:token')
+  @Post('/activation/:token')
   @HttpCode(HttpStatus.OK)
   activateAccount(
-    @Param('token', new ParseUUIDPipe()) token: string,
+    @Param('token', ParseUUIDPipe) token: string,
   ): Promise<SuccesMessage> {
     return this.authService.activateUserAccount(token);
   }

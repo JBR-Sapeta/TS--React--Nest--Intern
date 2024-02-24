@@ -10,16 +10,16 @@ import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { equals, isNil, not } from 'ramda';
 
+import { UserEntity } from '../entities';
+import { UserRepository, UserRoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
 import { SuccesMessage } from '../common/classes';
 import { calculateExpirationDate } from '../common/functions';
 
-import { UserEntity } from '../entities';
-import { UserRepository, UserRoleRepository } from '../repositories';
 import { MailService } from '../mail/mail.service';
 
-import { AccessTokenDto, RefreshToken, TokensDto, ProfileDto } from './dto';
+import { AccessTokenDto, RefreshToken, TokensDto } from './dto';
 import type { UserEmailDto, CreateUserDto, ResetPasswordDto } from './dto';
 
 @Injectable()
@@ -32,6 +32,7 @@ export class AuthService {
     private readonly userRoleRepository: UserRoleRepository,
   ) {}
 
+  // ----------------------------------------------------------------------- \\
   public async createUserAccount({
     firstName,
     lastName,
@@ -39,7 +40,7 @@ export class AuthService {
     password,
   }: CreateUserDto): Promise<SuccesMessage> {
     const activationToken = uuid();
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await this.hashPassword(password);
     const roles = await this.userRoleRepository.getRolesByIds([Roles.USER]);
 
     await this.userRepository.createUser(
@@ -56,6 +57,7 @@ export class AuthService {
     return new SuccesMessage({ statusCode: 201 });
   }
 
+  // ----------------------------------------------------------------------- \\
   public async login(user: UserEntity): Promise<TokensDto> {
     const refreshToken = await this.createRefreshToken(user.id);
     await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
@@ -64,12 +66,14 @@ export class AuthService {
     return new TokensDto({}, accessToken, refreshToken);
   }
 
+  // ----------------------------------------------------------------------- \\
   public async logout(userId: string): Promise<SuccesMessage> {
     await this.userRepository.updateRefreshToken(userId, null);
 
     return new SuccesMessage({});
   }
 
+  // ----------------------------------------------------------------------- \\
   public async refreshToken(
     userId: string,
     refreshToken: string,
@@ -91,12 +95,14 @@ export class AuthService {
     return new AccessTokenDto({}, accessToken);
   }
 
+  // ----------------------------------------------------------------------- \\
   public async activateUserAccount(token: string): Promise<SuccesMessage> {
     await this.userRepository.activateAccount(token);
 
     return new SuccesMessage({});
   }
 
+  // ----------------------------------------------------------------------- \\
   public async accountRecovery({
     email,
   }: UserEmailDto): Promise<SuccesMessage> {
@@ -117,6 +123,7 @@ export class AuthService {
     return new SuccesMessage({});
   }
 
+  // ----------------------------------------------------------------------- \\
   public async resetPassword({
     resetToken,
     password,
@@ -127,6 +134,7 @@ export class AuthService {
     return new SuccesMessage({});
   }
 
+  // ----------------------------------------------------------------------- \\
   public async resendWelcomeEmail({
     email,
   }: UserEmailDto): Promise<SuccesMessage> {
@@ -149,12 +157,7 @@ export class AuthService {
     return new SuccesMessage({});
   }
 
-  public async getUserProfile(userId: string): Promise<ProfileDto> {
-    const user = await this.userRepository.getUserById(userId);
-
-    return new ProfileDto({}, user);
-  }
-
+  // ----------------------------------------------------------------------- \\
   public async validateUserCredentials(
     email: string,
     password: string,
@@ -169,7 +172,7 @@ export class AuthService {
       throw new ForbiddenException('Your account is inactive.');
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await this.verifyPassword(password, user.password);
 
     if (not(isValidPassword)) {
       throw new UnauthorizedException('Invalid credentials.');
@@ -178,8 +181,42 @@ export class AuthService {
     return user;
   }
 
-  // --------------------------- Helpers --------------------------- //
+  // ----------------------------------------------------------------------- \\
+  public async validateUserPassword(
+    userId: string,
+    password: string,
+  ): Promise<UserEntity> {
+    const user = await this.userRepository.getUserById(userId);
 
+    if (isNil(user)) {
+      throw new UnauthorizedException('Invalid credentials.');
+    }
+
+    const isValidPassword = await this.verifyPassword(password, user.password);
+
+    if (not(isValidPassword)) {
+      throw new UnauthorizedException('Invalid credentials.');
+    }
+
+    return user;
+  }
+
+  // ------------------------------ Helper ------------------------------- \\
+  public async hashPassword(password: string): Promise<string> {
+    const hashedPassword = await bcrypt.hash(password, 12);
+    return hashedPassword;
+  }
+
+  // ------------------------------ Helper ------------------------------- \\
+  private async verifyPassword(
+    password: string,
+    hash: string,
+  ): Promise<boolean> {
+    const isValidPassword = await bcrypt.compare(password, hash);
+    return isValidPassword;
+  }
+
+  // ------------------------------ Helper ------------------------------- \\
   private async createAccessToken(userId: string): Promise<string> {
     return this.jwtService.signAsync(
       { userId },
@@ -194,6 +231,7 @@ export class AuthService {
     );
   }
 
+  // ------------------------------ Helper ------------------------------- \\
   private async createRefreshToken(userId: string): Promise<RefreshToken> {
     const now = new Date().getTime();
     const expirationTime = 24 * 60 * 60 * 1000;

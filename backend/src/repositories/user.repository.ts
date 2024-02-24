@@ -20,6 +20,7 @@ export class UserRepository extends Repository<UserEntity> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
+  // ----------------------------------------------------------------------- \\
   public async createUser(
     firstName: string,
     lastName: string,
@@ -48,24 +49,65 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  public async getUserById(userId: string): Promise<Nullable<UserEntity>> {
+  // ----------------------------------------------------------------------- \\
+  public async updateUserProfile(
+    userId: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+  ): Promise<UserEntity> {
+    let user: Nullable<UserEntity> = null;
+
     try {
-      const user = await this.findOneBy({ id: userId });
-      return user;
+      user = await this.findOne({
+        where: { id: userId },
+        relations: { roles: true },
+      });
     } catch {
       throw new InternalServerErrorException('Internal Server Error');
     }
-  }
 
-  public async getUserByEmail(email: string): Promise<Nullable<UserEntity>> {
+    if (isNil(user)) {
+      throw new ForbiddenException('This account does not exist.');
+    }
+
     try {
-      const user = await this.findOneBy({ email });
-      return user;
-    } catch {
-      throw new InternalServerErrorException('Internal Server Error');
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.phoneNumber = phoneNumber;
+      return this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
     }
   }
 
+  // ----------------------------------------------------------------------- \\
+  public async updateUserEmail(
+    user: UserEntity,
+    email: string,
+  ): Promise<UserEntity> {
+    try {
+      user.email = email;
+      return this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async updateUserPassword(
+    user: UserEntity,
+    password: string,
+  ): Promise<void> {
+    try {
+      user.password = password;
+      await this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async updateRefreshToken(
     userId: string,
     refreshToken: Nullable<string>,
@@ -90,6 +132,60 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
+  // ----------------------------------------------------------------------- \\
+  public async getUserById(userId: string): Promise<Nullable<UserEntity>> {
+    try {
+      const user = await this.findOne({
+        where: { id: userId },
+        relations: { roles: true },
+      });
+      return user;
+    } catch {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getUserByEmail(email: string): Promise<Nullable<UserEntity>> {
+    try {
+      const user = await this.findOne({
+        where: { email },
+        relations: { roles: true },
+      });
+      return user;
+    } catch {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async setResetToken(
+    email: string,
+    resetToken: string,
+    resetTokenExpirationDate: Date,
+  ): Promise<UserEntity> {
+    let user: Nullable<UserEntity> = null;
+
+    try {
+      user = await this.findOneBy({ email });
+    } catch (error) {
+      throw new InternalServerErrorException('Internal Server Error');
+    }
+
+    if (isNil(user)) {
+      throw new NotFoundException('This account does not exist.');
+    }
+
+    try {
+      user.resetToken = resetToken;
+      user.resetTokenExpirationDate = resetTokenExpirationDate;
+      return this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async activateAccount(activationToken: string): Promise<void> {
     let user: Nullable<UserEntity> = null;
 
@@ -114,32 +210,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  public async setResetToken(
-    email: string,
-    resetToken: string,
-    resetTokenExpirationDate: Date,
-  ): Promise<UserEntity> {
-    let user: Nullable<UserEntity> = null;
-
-    try {
-      user = await this.findOneBy({ email });
-    } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
-    }
-
-    if (isNil(user)) {
-      throw new NotFoundException('This account does not exist.');
-    }
-
-    try {
-      user.resetToken = resetToken;
-      user.resetTokenExpirationDate = resetTokenExpirationDate;
-      return await this.save(user);
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
-  }
-
+  // ----------------------------------------------------------------------- \\
   public async resetPassword(
     resetToken: string,
     password: string,
@@ -168,6 +239,15 @@ export class UserRepository extends Repository<UserEntity> {
       user.resetTokenExpirationDate = null;
       user.password = password;
       await this.save(user);
+    } catch (error) {
+      throw new InternalServerErrorException();
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteUser(userId: string): Promise<void> {
+    try {
+      await this.delete({ id: userId });
     } catch (error) {
       throw new InternalServerErrorException();
     }

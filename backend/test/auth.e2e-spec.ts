@@ -109,7 +109,7 @@ describe('AuthController (e2e)', () => {
 
   const sendActivationRequest = async (token: string) => {
     const response = await request(app.getHttpServer())
-      .post(`/auth/activate/${token}`)
+      .post(`/auth/activation/${token}`)
       .send();
     return response;
   };
