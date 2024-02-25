@@ -1,2 +1,2 @@
 export { Roles } from './roles.enum';
-export { PostgresqlErrorCodes } from './postgresql-error-codes.enum';
+export { PostgresqlErrorCode } from './db-error-codes.enum';

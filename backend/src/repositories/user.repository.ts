@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
 import { UserEntity, UserRoleEntity } from '../entities';
-import { PostgresqlErrorCodes } from '../common/enums';
+import { PostgresqlErrorCode } from '../common/enums';
 import type { Nullable } from '../common/types';
 
 export class UserRepository extends Repository<UserEntity> {
@@ -42,7 +42,7 @@ export class UserRepository extends Repository<UserEntity> {
       const createdUser = await this.save(user);
       return createdUser;
     } catch (error) {
-      if (error?.code === PostgresqlErrorCodes.UNIQUE_VIOLATION) {
+      if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
         throw new ConflictException('Email already in use.');
       }
       throw new InternalServerErrorException('Internal Server Error');
@@ -88,9 +88,13 @@ export class UserRepository extends Repository<UserEntity> {
   ): Promise<UserEntity> {
     try {
       user.email = email;
-      return this.save(user);
+      const updatedUser = await this.save(user);
+      return updatedUser;
     } catch (error) {
-      throw new InternalServerErrorException();
+      if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
+        throw new ConflictException('Email already in use.');
+      }
+      throw new InternalServerErrorException('Internal Server Error');
     }
   }
 

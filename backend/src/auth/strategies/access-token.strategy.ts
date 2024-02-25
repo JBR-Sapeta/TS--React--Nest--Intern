@@ -18,7 +18,7 @@ export class AccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(payload: JWTPayload): string {
-    return payload.userId;
+  validate(payload: JWTPayload) {
+    return payload;
   }
 }

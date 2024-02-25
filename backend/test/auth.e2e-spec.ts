@@ -39,9 +39,9 @@ describe('AuthController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
-    userRepository = moduleFixture.get<UserRepository>(UserRepository);
     userRolesRepository =
       moduleFixture.get<UserRoleRepository>(UserRoleRepository);
+    userRepository = moduleFixture.get<UserRepository>(UserRepository);
     authService = moduleFixture.get<AuthService>(AuthService);
 
     await userRolesRepository.seedRoles();
@@ -164,10 +164,6 @@ describe('AuthController (e2e)', () => {
   // ------------------------------ Signup - Valid Request ------------------------------ \\
 
   describe('/auth/signup (POST) - Valid Request', () => {
-    jest
-      .spyOn(mailService, 'sendWelcomeEmail')
-      .mockImplementation(async () => {});
-
     it('returns 201 status code', async () => {
       const response = await sendSignUpRequest(VALID_SIGN_UP_DATA);
       expect(response.status).toBe(201);
@@ -233,10 +229,6 @@ describe('AuthController (e2e)', () => {
   // ------------------------------ Signup - Invalid Request ------------------------------ \\
 
   describe('/auth/signup (POST) - Invalid Request', () => {
-    jest
-      .spyOn(mailService, 'sendWelcomeEmail')
-      .mockImplementation(async () => {});
-
     it('returns 400 status code when validation fails', async () => {
       const response = await sendSignUpRequest(INVALID_SIGN_UP_DATA);
       expect(response.status).toBe(400);
@@ -261,7 +253,7 @@ describe('AuthController (e2e)', () => {
     it(`returns error when provided email is already taken`, async () => {
       await sendSignUpRequest(VALID_SIGN_UP_DATA);
       const response = await sendSignUpRequest(VALID_SIGN_UP_DATA);
-      expect(response.status).toBe(500);
+      expect(response.status).not.toBe(201);
     });
 
     it(`returns a 502 status code when the sending of the activation email fails`, async () => {

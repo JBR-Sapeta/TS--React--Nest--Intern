@@ -55,7 +55,7 @@ export class UserController {
   }
 
   @Put('/:userId/password')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   updateUserPassword(
     @GetAccessTokenPayload() userId: string,
@@ -65,7 +65,7 @@ export class UserController {
   }
 
   @Delete('/:userId/delete')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   delteUserAccount(
     @GetAccessTokenPayload() userId: string,
