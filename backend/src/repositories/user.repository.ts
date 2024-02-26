@@ -61,7 +61,6 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOne({
         where: { id: userId },
-        relations: { roles: true },
       });
     } catch {
       throw new InternalServerErrorException('Internal Server Error');
@@ -141,7 +140,6 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       const user = await this.findOne({
         where: { id: userId },
-        relations: { roles: true },
       });
       return user;
     } catch {
@@ -154,7 +152,6 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       const user = await this.findOne({
         where: { email },
-        relations: { roles: true },
       });
       return user;
     } catch {

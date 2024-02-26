@@ -12,9 +12,10 @@ import { ENV_KEYS } from './common/constants';
 
 import { exceptionFactory } from './common/functions';
 import type { DatabaseConfigType } from './common/config';
+import { CacheModule } from './cache/cache.module';
+import { MailModule } from './mail/mail.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { MailModule } from './mail/mail.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -55,6 +56,7 @@ import { AppService } from './app.service';
     UserModule,
     AuthModule,
     MailModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [
