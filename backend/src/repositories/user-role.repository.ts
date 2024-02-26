@@ -1,4 +1,7 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  OnApplicationBootstrap,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
@@ -6,7 +9,10 @@ import { isEmpty } from 'ramda';
 import { UserRoleEntity } from '../entities';
 import { USER_ROLES_ARRAY } from '../common/config/roles';
 
-export class UserRoleRepository extends Repository<UserRoleEntity> {
+export class UserRoleRepository
+  extends Repository<UserRoleEntity>
+  implements OnApplicationBootstrap
+{
   constructor(
     @InjectRepository(UserRoleEntity)
     private readonly repository: Repository<UserRoleEntity>,
@@ -37,5 +43,9 @@ export class UserRoleRepository extends Repository<UserRoleEntity> {
     } catch (error) {
       throw new InternalServerErrorException();
     }
+  }
+
+  public async onApplicationBootstrap() {
+    await this.seedRoles();
   }
 }

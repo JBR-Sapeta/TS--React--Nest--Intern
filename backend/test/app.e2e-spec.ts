@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+
 import { AppModule } from './../src/app.module';
+import { CacheService } from './../src/cache/cache.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
+  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -12,14 +15,21 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    cacheService = moduleFixture.get<CacheService>(CacheService);
+
     await app.init();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer()).get('/').expect(200);
+  afterEach(async () => {
+    await cacheService.onApplicationShutdown();
   });
 
   afterAll(async () => {
     await app.close();
+  });
+
+  it('/ (GET)', () => {
+    return request(app.getHttpServer()).get('/').expect(200);
   });
 });

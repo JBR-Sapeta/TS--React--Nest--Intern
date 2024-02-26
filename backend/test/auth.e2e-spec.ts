@@ -6,7 +6,8 @@ import { v4 as uuid } from 'uuid';
 import { Roles } from './../src/common/enums';
 import { calculateExpirationDate } from './../src/common/functions';
 import { AppModule } from './../src/app.module';
-import { UserRepository, UserRoleRepository } from './../src/repositories';
+import { UserRepository } from './../src/repositories';
+import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { AuthService } from './../src/auth/auth.service';
 
@@ -25,8 +26,8 @@ import { mailService } from './mocks/mail-service';
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let userRepository: UserRepository;
-  let userRolesRepository: UserRoleRepository;
   let authService: AuthService;
+  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -39,13 +40,19 @@ describe('AuthController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
-    userRolesRepository =
-      moduleFixture.get<UserRoleRepository>(UserRoleRepository);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
+    cacheService = moduleFixture.get<CacheService>(CacheService);
     authService = moduleFixture.get<AuthService>(AuthService);
 
-    await userRolesRepository.seedRoles();
     await app.init();
+  });
+
+  afterEach(async () => {
+    await cacheService.onApplicationShutdown();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   // ------------------------------------  Helpers  ------------------------------------- \\
@@ -54,7 +61,6 @@ describe('AuthController (e2e)', () => {
     await authService.createUserAccount(userData);
     const user = await userRepository.findOne({
       where: { email: userData.email },
-      relations: { roles: true },
     });
     return user;
   };
@@ -63,7 +69,6 @@ describe('AuthController (e2e)', () => {
     await authService.createUserAccount(userData);
     const user = await userRepository.findOne({
       where: { email: userData.email },
-      relations: { roles: true },
     });
     user.activationToken = null;
     user.isActive = true;
@@ -79,7 +84,6 @@ describe('AuthController (e2e)', () => {
     await authService.createUserAccount(userData);
     const user = await userRepository.findOne({
       where: { email: userData.email },
-      relations: { roles: true },
     });
     user.activationToken = null;
     user.isActive = true;
@@ -93,7 +97,6 @@ describe('AuthController (e2e)', () => {
   const getUserFromDB = async (email: string) => {
     const user = await userRepository.findOne({
       where: { email },
-      relations: { roles: true },
     });
     return user;
   };
@@ -786,9 +789,5 @@ describe('AuthController (e2e)', () => {
       const response = await sendRresendActivationEmailRequest(USER_ONE.email);
       expect(response.status).toBe(502);
     });
-  });
-
-  afterAll(async () => {
-    await app.close();
   });
 });
