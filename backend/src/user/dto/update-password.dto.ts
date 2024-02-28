@@ -7,7 +7,10 @@ export class UpdatePasswordDto {
 
   @IsStrongPassword(
     { minLength: 8 },
-    { message: 'Password is not strong enough!' },
+    {
+      message:
+        'Password must contain both uppercase and lowercase letters, one number and special character.',
+    },
   )
   readonly newPassword: string;
 }

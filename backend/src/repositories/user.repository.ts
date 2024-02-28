@@ -67,7 +67,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     if (isNil(user)) {
-      throw new ForbiddenException('This account does not exist.');
+      throw new NotFoundException('User does not exist.');
     }
 
     try {

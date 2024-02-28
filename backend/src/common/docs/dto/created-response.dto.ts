@@ -7,6 +7,6 @@ export class CreatedResponseDto {
   @ApiProperty({ example: 'Created.' })
   message: string;
 
-  @ApiProperty({ example: null })
-  error: string;
+  @ApiProperty({ type: () => typeof null, example: null })
+  error: null;
 }

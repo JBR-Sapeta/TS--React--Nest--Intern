@@ -1,17 +1,18 @@
+import { SuccessMessageDto } from '../classes';
+
 import {
   ConflictExceptionResponseDto,
   CreatedResponseDto,
   ForbiddenExceptionResponseDto,
   InternalServerErrorExceptionResponseDto,
   NotFoundExceptionResponseDto,
-  OkResponseDto,
   UnauthorizedExceptionResponseDto,
 } from './dto';
 
 export const OK = {
   status: 200,
   description: 'Succes',
-  type: OkResponseDto,
+  type: SuccessMessageDto,
 };
 
 export const CREATED = {

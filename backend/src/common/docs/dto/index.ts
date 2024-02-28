@@ -1,4 +1,3 @@
-export { OkResponseDto } from './ok-response.dto';
 export { CreatedResponseDto } from './created-response.dto';
 export { UnauthorizedExceptionResponseDto } from './unauthorized-exception-response.dto';
 export { ForbiddenExceptionResponseDto } from './forbidden-exception-response.dto';

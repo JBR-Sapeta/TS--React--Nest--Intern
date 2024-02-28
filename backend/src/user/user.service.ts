@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { isNil } from 'ramda';
 
 import { UserRepository } from '../repositories';
-import { SuccesMessage } from '../common/classes';
+import { SuccessMessageDto } from '../common/classes';
 import { AuthService } from '../auth/auth.service';
 
 import {
@@ -22,6 +23,10 @@ export class UserService {
   // ----------------------------------------------------------------------- \\
   public async getUserProfile(userId: string): Promise<ProfileDto> {
     const user = await this.userRepository.getUserById(userId);
+
+    if (isNil(user)) {
+      throw new NotFoundException('User does not exist.');
+    }
 
     return new ProfileDto({}, user);
   }
@@ -59,22 +64,22 @@ export class UserService {
   public async updatePassword(
     userId: string,
     { password, newPassword }: UpdatePasswordDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     const user = await this.authService.validateUserPassword(userId, password);
     const hashedPassword = await this.authService.hashPassword(newPassword);
     await this.userRepository.updateUserPassword(user, hashedPassword);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\\
   public async deleteUserProfile(
     userId: string,
     { password }: DeleteUserDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     await this.authService.validateUserPassword(userId, password);
     await this.userRepository.deleteUser(userId);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 }

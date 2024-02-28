@@ -1,2 +1,2 @@
-export { SuccesMessage } from './succes-message';
-export type { SuccesMessageArgs } from './succes-message';
+export { SuccessMessageDto } from './success-message';
+export type { SuccessMessageArgs } from './success-message';

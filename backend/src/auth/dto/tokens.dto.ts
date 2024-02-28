@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { SuccesMessage } from '../../common/classes';
-import type { SuccesMessageArgs } from '../../common/classes';
+import { SuccessMessageDto } from '../../common/classes';
+import type { SuccessMessageArgs } from '../../common/classes';
 import { ResponseWithPayload } from '../../common/interfaces';
 
 export class RefreshToken {
@@ -42,7 +42,7 @@ class Tokens {
 }
 
 export class TokensDto
-  extends SuccesMessage
+  extends SuccessMessageDto
   implements ResponseWithPayload<Tokens>
 {
   @ApiProperty()
@@ -50,7 +50,7 @@ export class TokensDto
   data: Tokens;
 
   constructor(
-    args: SuccesMessageArgs,
+    args: SuccessMessageArgs,
     accessToken: string,
     refreshToken: RefreshToken,
   ) {

@@ -8,9 +8,17 @@ import {
   Body,
   Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+  ApiHeader,
+  ApiParam,
+  ApiResponse,
+} from '@nestjs/swagger';
 
-import { SuccesMessage } from '../common/classes';
+import { SuccessMessageDto } from '../common/classes';
+import { HEADER } from '../common/docs';
 
 import { AccessTokenGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
@@ -23,6 +31,7 @@ import {
   UpdatePasswordDto,
   UpdateUserDto,
 } from './dto';
+import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('User')
 @Controller('users')
@@ -32,6 +41,13 @@ export class UserController {
   @Get('/me')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.ME)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.ME.OK)
+  @ApiResponse(RES.ME.UNAUTHORIZED)
+  @ApiResponse(RES.ME.NOT_FOUND)
+  @ApiResponse(RES.ME.INTERNAL_SERVER_ERROR)
   getUserProfile(@GetAccessTokenPayload() userId: string): Promise<ProfileDto> {
     return this.userService.getUserProfile(userId);
   }
@@ -39,6 +55,14 @@ export class UserController {
   @Put('/:userId/update')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.UPDATE)
+  @ApiBearerAuth()
+  @ApiParam(PARAM.USER_ID)
+  @ApiResponse(RES.UPDATE.OK)
+  @ApiResponse(RES.UPDATE.BAD_REQUEST)
+  @ApiResponse(RES.UPDATE.UNAUTHORIZED)
+  @ApiResponse(RES.UPDATE.NOT_FOUND)
+  @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
   updateUserProfile(
     @GetAccessTokenPayload() userId: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -49,6 +73,15 @@ export class UserController {
   @Put('/:userId/email')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.EMAIL)
+  @ApiBearerAuth()
+  @ApiParam(PARAM.USER_ID)
+  @ApiResponse(RES.EMAIL.OK)
+  @ApiResponse(RES.EMAIL.BAD_REQUEST)
+  @ApiResponse(RES.EMAIL.UNAUTHORIZED)
+  @ApiResponse(RES.EMAIL.NOT_FOUND)
+  @ApiResponse(RES.EMAIL.CONFLICT)
+  @ApiResponse(RES.EMAIL.INTERNAL_SERVER_ERROR)
   updateUserEmail(
     @GetAccessTokenPayload() userId: string,
     @Body() updateEmailDto: UpdateEmailDto,
@@ -59,20 +92,34 @@ export class UserController {
   @Put('/:userId/password')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.PASSWORD)
+  @ApiBearerAuth()
+  @ApiParam(PARAM.USER_ID)
+  @ApiResponse(RES.PASSWORD.OK)
+  @ApiResponse(RES.PASSWORD.BAD_REQUEST)
+  @ApiResponse(RES.PASSWORD.UNAUTHORIZED)
+  @ApiResponse(RES.PASSWORD.INTERNAL_SERVER_ERROR)
   updateUserPassword(
     @GetAccessTokenPayload() userId: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     return this.userService.updatePassword(userId, updatePasswordDto);
   }
 
   @Delete('/:userId/delete')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.DELETE)
+  @ApiBearerAuth()
+  @ApiParam(PARAM.USER_ID)
+  @ApiResponse(RES.DELETE.OK)
+  @ApiResponse(RES.DELETE.BAD_REQUEST)
+  @ApiResponse(RES.DELETE.UNAUTHORIZED)
+  @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   delteUserAccount(
     @GetAccessTokenPayload() userId: string,
     @Body() deleteUserDto: DeleteUserDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     return this.userService.deleteUserProfile(userId, deleteUserDto);
   }
 }

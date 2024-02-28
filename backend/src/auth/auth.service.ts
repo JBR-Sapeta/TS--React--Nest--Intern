@@ -14,7 +14,7 @@ import { UserEntity } from '../entities';
 import { UserRepository, UserRoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
-import { SuccesMessage } from '../common/classes';
+import { SuccessMessageDto } from '../common/classes';
 import { calculateExpirationDate } from '../common/functions';
 
 import { MailService } from '../mail/mail.service';
@@ -38,7 +38,7 @@ export class AuthService {
     lastName,
     email,
     password,
-  }: CreateUserDto): Promise<SuccesMessage> {
+  }: CreateUserDto): Promise<SuccessMessageDto> {
     const activationToken = uuid();
     const hashedPassword = await this.hashPassword(password);
     const roles = await this.userRoleRepository.getRolesByIds([Roles.USER]);
@@ -54,7 +54,7 @@ export class AuthService {
 
     await this.mailService.sendWelcomeEmail(email, firstName, activationToken);
 
-    return new SuccesMessage({ statusCode: 201, message: 'Created' });
+    return new SuccessMessageDto({ statusCode: 201, message: 'Created' });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -67,10 +67,10 @@ export class AuthService {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async logout(userId: string): Promise<SuccesMessage> {
+  public async logout(userId: string): Promise<SuccessMessageDto> {
     await this.userRepository.updateRefreshToken(userId, null);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\
@@ -96,16 +96,16 @@ export class AuthService {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async activateUserAccount(token: string): Promise<SuccesMessage> {
+  public async activateUserAccount(token: string): Promise<SuccessMessageDto> {
     await this.userRepository.activateAccount(token);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\
   public async accountRecovery({
     email,
-  }: UserEmailDto): Promise<SuccesMessage> {
+  }: UserEmailDto): Promise<SuccessMessageDto> {
     const resetToken = uuid();
     const expirationTime = +this.configService.get<string>(
       ENV_KEYS.RESET_TOKEN_EXPIRATION_TIME,
@@ -120,24 +120,24 @@ export class AuthService {
 
     await this.mailService.sendRecoveryEmail(email, firstName, resetToken);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\
   public async resetPassword({
     resetToken,
     password,
-  }: ResetPasswordDto): Promise<SuccesMessage> {
+  }: ResetPasswordDto): Promise<SuccessMessageDto> {
     const hashedPassword = await bcrypt.hash(password, 12);
     await this.userRepository.resetPassword(resetToken, hashedPassword);
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\
   public async resendWelcomeEmail({
     email,
-  }: UserEmailDto): Promise<SuccesMessage> {
+  }: UserEmailDto): Promise<SuccessMessageDto> {
     const user = await this.userRepository.getUserByEmail(email);
 
     if (isNil(user)) {
@@ -154,7 +154,7 @@ export class AuthService {
       user.activationToken,
     );
 
-    return new SuccesMessage({});
+    return new SuccessMessageDto({});
   }
 
   // ----------------------------------------------------------------------- \\

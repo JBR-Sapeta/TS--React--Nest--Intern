@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import type { SuccesMessage } from './common/classes';
+import type { SuccessMessageDto } from './common/classes';
 
 import { AppService } from './app.service';
 
@@ -12,7 +12,7 @@ export class AppController {
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  rootPage(): SuccesMessage {
+  rootPage(): SuccessMessageDto {
     return this.appService.getHello();
   }
 }

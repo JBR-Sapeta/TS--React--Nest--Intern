@@ -1,24 +1,38 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 import type { UserEntity } from '../../entities';
-import { SuccesMessage } from '../../common/classes';
-import type { SuccesMessageArgs } from '../../common/classes';
+import { SuccessMessageDto } from '../../common/classes';
+import type { SuccessMessageArgs } from '../../common/classes';
 import { ResponseWithPayload } from '../../common/interfaces';
 import { UserRoleDto } from './role.dto';
 
 class UserProfileDto {
+  @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
   @Expose()
   id: string;
+
+  @ApiProperty({ example: 'John' })
   @Expose()
   firstName: string;
+
+  @ApiProperty({ example: 'Smith' })
   @Expose()
   lastName: string;
+
+  @ApiProperty({ example: 'user@mail.com' })
   @Expose()
   email: string;
+
+  @ApiProperty({ example: '723442564' })
   @Expose()
   phoneNumber: string;
+
+  @ApiProperty({ example: [{ id: 2, name: 'user' }] })
   @Expose()
   roles: UserRoleDto[];
+
+  @ApiProperty({ example: '2024-02-28T23:20:32.083Z' })
   @Expose()
   createdAt: string;
 
@@ -30,17 +44,15 @@ class UserProfileDto {
 }
 
 export class ProfileDto
-  extends SuccesMessage
+  extends SuccessMessageDto
   implements ResponseWithPayload<UserProfileDto>
 {
+  @ApiProperty()
   @Expose()
   data: UserProfileDto;
 
-  constructor(args: SuccesMessageArgs, data: any) {
+  constructor(args: SuccessMessageArgs, data: any) {
     super(args);
     this.data = new UserProfileDto(data);
   }
 }
-
-// -------  Base Solution Dose Not Work ------- //
-// https://github.com/typestack/class-transformer/issues/740

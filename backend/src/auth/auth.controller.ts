@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 
 import { UserEntity } from '../entities';
-import type { SuccesMessage } from '../common/classes';
+import type { SuccessMessageDto } from '../common/classes';
 import type { RefreshTokenPayload } from '../common/types';
 import { HEADER } from '../common/docs';
 
@@ -53,7 +53,7 @@ export class AuthController {
   @ApiResponse(RES.SIGN_UP.CONFLICT)
   @ApiResponse(RES.SIGN_UP.INTERNAL_SERVER_ERROR)
   @ApiResponse(RES.SIGN_UP.BAD_GATEWAY)
-  signup(@Body() createUserDto: CreateUserDto): Promise<SuccesMessage> {
+  signup(@Body() createUserDto: CreateUserDto): Promise<SuccessMessageDto> {
     return this.authService.createUserAccount(createUserDto);
   }
 
@@ -81,7 +81,7 @@ export class AuthController {
   @ApiResponse(RES.LOGOUT.UNAUTHORIZED)
   @ApiResponse(RES.LOGOUT.FORBIDDEN)
   @ApiResponse(RES.LOGOUT.INTERNAL_SERVER_ERROR)
-  logout(@GetAccessTokenPayload() userId: string): Promise<SuccesMessage> {
+  logout(@GetAccessTokenPayload() userId: string): Promise<SuccessMessageDto> {
     return this.authService.logout(userId);
   }
 
@@ -108,7 +108,9 @@ export class AuthController {
   @ApiResponse(RES.ACCOUNT_RECOVERY.NOT_FOUND)
   @ApiResponse(RES.ACCOUNT_RECOVERY.INTERNAL_SERVER_ERROR)
   @ApiResponse(RES.ACCOUNT_RECOVERY.BAD_GATEWAY)
-  accountRecovery(@Body() userEmailDto: UserEmailDto): Promise<SuccesMessage> {
+  accountRecovery(
+    @Body() userEmailDto: UserEmailDto,
+  ): Promise<SuccessMessageDto> {
     return this.authService.accountRecovery(userEmailDto);
   }
 
@@ -121,7 +123,7 @@ export class AuthController {
   @ApiResponse(RES.RESET_PASSWORD.INTERNAL_SERVER_ERROR)
   resetPassword(
     @Body() resetPasswordDto: ResetPasswordDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     return this.authService.resetPassword(resetPasswordDto);
   }
 
@@ -136,7 +138,7 @@ export class AuthController {
   @ApiResponse(RES.RESEND_ACTIVATION_EMAIL.BAD_GATEWAY)
   resendWelcomeEmail(
     @Body() userEmailDto: UserEmailDto,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     return this.authService.resendWelcomeEmail(userEmailDto);
   }
 
@@ -150,7 +152,7 @@ export class AuthController {
   @ApiResponse(RES.ACTIVATION.INTERNAL_SERVER_ERROR)
   activateAccount(
     @Param('token', ParseUUIDPipe) token: string,
-  ): Promise<SuccesMessage> {
+  ): Promise<SuccessMessageDto> {
     return this.authService.activateUserAccount(token);
   }
 }
