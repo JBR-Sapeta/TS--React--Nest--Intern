@@ -8,6 +8,7 @@ import {
   Body,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { SuccesMessage } from '../common/classes';
 
@@ -23,6 +24,7 @@ import {
   UpdateUserDto,
 } from './dto';
 
+@ApiTags('User')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

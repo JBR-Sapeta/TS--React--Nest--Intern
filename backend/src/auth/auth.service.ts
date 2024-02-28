@@ -54,7 +54,7 @@ export class AuthService {
 
     await this.mailService.sendWelcomeEmail(email, firstName, activationToken);
 
-    return new SuccesMessage({ statusCode: 201 });
+    return new SuccesMessage({ statusCode: 201, message: 'Created' });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -81,13 +81,13 @@ export class AuthService {
     const user = await this.userRepository.getUserById(userId);
 
     if (isNil(user) || isNil(user.refreshToken)) {
-      throw new ForbiddenException('Access Denied');
+      throw new ForbiddenException('Access denied.');
     }
 
     const isValidToken = equals(refreshToken, user.refreshToken);
 
     if (not(isValidToken)) {
-      throw new ForbiddenException('Access Denied');
+      throw new ForbiddenException('Access denied.');
     }
 
     const accessToken = await this.createAccessToken(user.id);
