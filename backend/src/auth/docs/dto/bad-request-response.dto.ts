@@ -25,7 +25,10 @@ export class LoginBadRequestResponseDto {
   statusCode: number;
 
   @ApiProperty({
-    example: 'Please enter correct email address.',
+    example: {
+      email: 'Please enter correct email address.',
+      password: 'Please enter your password.',
+    },
   })
   message: string;
 

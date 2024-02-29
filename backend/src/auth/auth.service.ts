@@ -20,7 +20,12 @@ import { calculateExpirationDate } from '../common/functions';
 import { MailService } from '../mail/mail.service';
 
 import { AccessTokenDto, RefreshToken, TokensDto } from './dto';
-import type { UserEmailDto, CreateUserDto, ResetPasswordDto } from './dto';
+import type {
+  UserEmailDto,
+  CreateUserDto,
+  ResetPasswordDto,
+  LoginUserDto,
+} from './dto';
 
 @Injectable()
 export class AuthService {
@@ -58,7 +63,8 @@ export class AuthService {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async login(user: UserEntity): Promise<TokensDto> {
+  public async login({ email, password }: LoginUserDto): Promise<TokensDto> {
+    const user = await this.validateUserCredentials(email, password);
     const refreshToken = await this.createRefreshToken(user.id);
     await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
     const accessToken = await this.createAccessToken(user.id);

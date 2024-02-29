@@ -62,7 +62,10 @@ describe('AppController (e2e)', () => {
     user.isActive = true;
 
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login(updatedUser);
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
     return { user: updatedUser, accessToken: tokens.data.accessToken };
   };
 

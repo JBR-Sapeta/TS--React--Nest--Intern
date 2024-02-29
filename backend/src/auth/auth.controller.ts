@@ -19,24 +19,20 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 
-import { UserEntity } from '../entities';
 import type { SuccessMessageDto } from '../common/classes';
 import type { RefreshTokenPayload } from '../common/types';
 import { HEADER } from '../common/docs';
 
 import { AuthService } from './auth.service';
-import {
-  GetAccessTokenPayload,
-  GetCurrentUser,
-  GetRefreshTokenPayload,
-} from './decorators';
-import { AccessTokenGuard, LocalAuthGuard, RefreshTokenGuard } from './guards';
+import { GetAccessTokenPayload, GetRefreshTokenPayload } from './decorators';
+import { AccessTokenGuard, RefreshTokenGuard } from './guards';
 import {
   UserEmailDto,
   CreateUserDto,
   ResetPasswordDto,
   AccessTokenDto,
   TokensDto,
+  LoginUserDto,
 } from './dto';
 import { BODY, OPERATION, PARAM, RES } from './docs';
 
@@ -59,7 +55,6 @@ export class AuthController {
 
   @Post('/login')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LocalAuthGuard)
   @ApiOperation(OPERATION.LOGIN)
   @ApiBasicAuth()
   @ApiBody(BODY.LOGIN)
@@ -67,8 +62,8 @@ export class AuthController {
   @ApiResponse(RES.LOGIN.BAD_REQUEST)
   @ApiResponse(RES.LOGIN.UNAUTHORIZED)
   @ApiResponse(RES.LOGIN.INTERNAL_SERVER_ERROR)
-  signin(@GetCurrentUser() user: UserEntity): Promise<TokensDto> {
-    return this.authService.login(user);
+  signin(@Body() loginUserDto: LoginUserDto): Promise<TokensDto> {
+    return this.authService.login(loginUserDto);
   }
 
   @Post('/logout')
