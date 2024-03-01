@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsEmail } from 'class-validator';
 
+import { PL_ERRORS } from '../../locales';
+
 export class LoginUserDto {
   @ApiProperty({ required: true, example: 'user1@mail.com' })
-  @IsEmail({}, { message: 'Please enter correct email address.' })
+  @IsEmail({}, { message: PL_ERRORS.VALIDATIO_EMAIL })
   readonly email: string;
 
   @ApiProperty({ required: true, example: 'Password123#' })
-  @IsNotEmpty({ message: 'Please enter your password.' })
+  @IsNotEmpty({ message: PL_ERRORS.VALIDATIO_EMPTY_PASSWORD })
   readonly password: string;
 }

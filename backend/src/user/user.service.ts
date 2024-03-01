@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { isNil } from 'ramda';
 
+import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { UserRepository } from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
 import { AuthService } from '../auth/auth.service';
@@ -25,10 +26,10 @@ export class UserService {
     const user = await this.userRepository.getUserById(userId);
 
     if (isNil(user)) {
-      throw new NotFoundException('User does not exist.');
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_USER);
     }
 
-    return new ProfileDto({}, user);
+    return new ProfileDto({ message: PL_MESSAGES.BASE_SUCCESS }, user);
   }
 
   // ----------------------------------------------------------------------- \\\
@@ -43,7 +44,7 @@ export class UserService {
       phoneNumber,
     );
 
-    return new ProfileDto({}, user);
+    return new ProfileDto({ message: PL_MESSAGES.USER_ACCOUNT_UPDATE }, user);
   }
 
   // ----------------------------------------------------------------------- \\\
@@ -57,7 +58,10 @@ export class UserService {
       newEmail,
     );
 
-    return new ProfileDto({}, updatedUser);
+    return new ProfileDto(
+      { message: PL_MESSAGES.USER_EMAIL_UPDATE },
+      updatedUser,
+    );
   }
 
   // ----------------------------------------------------------------------- \\\
@@ -69,7 +73,7 @@ export class UserService {
     const hashedPassword = await this.authService.hashPassword(newPassword);
     await this.userRepository.updateUserPassword(user, hashedPassword);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({ message: PL_MESSAGES.USER_PASSWORD_UPDATE });
   }
 
   // ----------------------------------------------------------------------- \\\
@@ -80,6 +84,6 @@ export class UserService {
     await this.authService.validateUserPassword(userId, password);
     await this.userRepository.deleteUser(userId);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({ message: PL_MESSAGES.USER_DELETE_ACCOUNT });
   }
 }

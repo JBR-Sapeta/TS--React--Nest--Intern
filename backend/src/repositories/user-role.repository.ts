@@ -7,6 +7,7 @@ import { In, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
 import { UserRoleEntity } from '../entities';
+import { PL_ERRORS } from '../locales';
 import { USER_ROLES_ARRAY } from '../common/config/roles';
 
 export class UserRoleRepository
@@ -41,7 +42,7 @@ export class UserRoleRepository
       const roles = await this.find({ where: { id: In(ids) } });
       return roles;
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 

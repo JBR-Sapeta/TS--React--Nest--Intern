@@ -1,14 +1,15 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
 import { UserEntity, UserRoleEntity } from '../entities';
+import { PL_ERRORS } from '../locales';
 import { PostgresqlErrorCode } from '../common/enums';
 import type { Nullable } from '../common/types';
 
@@ -43,9 +44,9 @@ export class UserRepository extends Repository<UserEntity> {
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
-        throw new ConflictException('Email already in use.');
+        throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
       }
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -63,11 +64,11 @@ export class UserRepository extends Repository<UserEntity> {
         where: { id: userId },
       });
     } catch {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
     if (isNil(user)) {
-      throw new NotFoundException('User does not exist.');
+      throw new BadRequestException(PL_ERRORS.FORBIDDEN);
     }
 
     try {
@@ -76,7 +77,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.phoneNumber = phoneNumber;
       return this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -91,9 +92,9 @@ export class UserRepository extends Repository<UserEntity> {
       return updatedUser;
     } catch (error) {
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
-        throw new ConflictException('Email already in use.');
+        throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
       }
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -106,7 +107,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.password = password;
       await this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -120,18 +121,18 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ id: userId });
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
     if (isNil(user)) {
-      throw new ForbiddenException('This account does not exist.');
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     try {
       user.refreshToken = refreshToken;
       await this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -143,7 +144,7 @@ export class UserRepository extends Repository<UserEntity> {
       });
       return user;
     } catch {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -155,7 +156,7 @@ export class UserRepository extends Repository<UserEntity> {
       });
       return user;
     } catch {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -170,11 +171,11 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ email });
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
     if (isNil(user)) {
-      throw new NotFoundException('This account does not exist.');
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     try {
@@ -182,7 +183,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.resetTokenExpirationDate = resetTokenExpirationDate;
       return this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -193,13 +194,11 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ activationToken });
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
     if (isNil(user)) {
-      throw new ForbiddenException(
-        'This account is either active or provided token is invalid.',
-      );
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ACCOUNT_ACTIVATION);
     }
 
     try {
@@ -207,7 +206,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.isActive = true;
       await this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -221,18 +220,18 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ resetToken });
     } catch (error) {
-      throw new InternalServerErrorException('Internal Server Error');
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
     if (isNil(user)) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(PL_ERRORS.NOT_FUOND_USER);
     }
 
     const now = new Date().getTime();
     const expirationDate = new Date(user.resetTokenExpirationDate).getTime();
 
     if (now > expirationDate) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_RESET_TOKEN);
     }
 
     try {
@@ -241,7 +240,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.password = password;
       await this.save(user);
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -250,7 +249,7 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       await this.delete({ id: userId });
     } catch (error) {
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
 }

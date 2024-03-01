@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { ENV_KEYS } from '../common/constants';
+import { PL_ERRORS } from '../locales';
 
 @Injectable()
 export class MailService {
@@ -30,7 +31,7 @@ export class MailService {
       });
     } catch (error) {
       console.log(error);
-      throw new BadGatewayException('Sending email failed.');
+      throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }
   }
 
@@ -53,7 +54,7 @@ export class MailService {
       });
     } catch (error) {
       console.log(error);
-      throw new BadGatewayException('Sending email failed.');
+      throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }
   }
 }

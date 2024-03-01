@@ -623,9 +623,9 @@ describe('AuthController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
-    it('returns 404 status code when request is send with unknown e-mail', async () => {
+    it('returns 403 status code when request is send with unknown e-mail', async () => {
       const response = await sendAccountRecoveryRequest(USER_ONE.email);
-      expect(response.status).toBe(404);
+      expect(response.status).toBe(403);
     });
 
     it('returns a 502 status code when the sending of the recovery email fails`', async () => {

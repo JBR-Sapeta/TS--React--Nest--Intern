@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { equals, isNil, not } from 'ramda';
 
 import { UserEntity } from '../entities';
+import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { UserRepository, UserRoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
@@ -59,7 +60,10 @@ export class AuthService {
 
     await this.mailService.sendWelcomeEmail(email, firstName, activationToken);
 
-    return new SuccessMessageDto({ statusCode: 201, message: 'Created' });
+    return new SuccessMessageDto({
+      statusCode: 201,
+      message: PL_MESSAGES.AUTH_ACCOUNT_CREATED,
+    });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -69,14 +73,18 @@ export class AuthService {
     await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
     const accessToken = await this.createAccessToken(user.id);
 
-    return new TokensDto({}, accessToken, refreshToken);
+    return new TokensDto(
+      { message: PL_MESSAGES.AUTH_LOGGED_IN },
+      accessToken,
+      refreshToken,
+    );
   }
 
   // ----------------------------------------------------------------------- \\
   public async logout(userId: string): Promise<SuccessMessageDto> {
     await this.userRepository.updateRefreshToken(userId, null);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({ message: PL_MESSAGES.AUTH_LOGGED_OUT });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -87,25 +95,30 @@ export class AuthService {
     const user = await this.userRepository.getUserById(userId);
 
     if (isNil(user) || isNil(user.refreshToken)) {
-      throw new ForbiddenException('Access denied.');
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     const isValidToken = equals(refreshToken, user.refreshToken);
 
     if (not(isValidToken)) {
-      throw new ForbiddenException('Access denied.');
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     const accessToken = await this.createAccessToken(user.id);
 
-    return new AccessTokenDto({}, accessToken);
+    return new AccessTokenDto(
+      { message: PL_MESSAGES.BASE_SUCCESS },
+      accessToken,
+    );
   }
 
   // ----------------------------------------------------------------------- \\
   public async activateUserAccount(token: string): Promise<SuccessMessageDto> {
     await this.userRepository.activateAccount(token);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({
+      message: PL_MESSAGES.AUTH_ACCOUNT_ACTIVATION,
+    });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -126,7 +139,9 @@ export class AuthService {
 
     await this.mailService.sendRecoveryEmail(email, firstName, resetToken);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({
+      message: PL_MESSAGES.AUTH_ACCOUNT_RECOVERY,
+    });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -137,7 +152,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, 12);
     await this.userRepository.resetPassword(resetToken, hashedPassword);
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({ message: PL_MESSAGES.AUTH_PASSWORD_RESET });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -147,11 +162,11 @@ export class AuthService {
     const user = await this.userRepository.getUserByEmail(email);
 
     if (isNil(user)) {
-      throw new NotFoundException();
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_USER);
     }
 
     if (isNil(user.activationToken)) {
-      throw new ForbiddenException();
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     await this.mailService.sendWelcomeEmail(
@@ -160,7 +175,9 @@ export class AuthService {
       user.activationToken,
     );
 
-    return new SuccessMessageDto({});
+    return new SuccessMessageDto({
+      message: PL_MESSAGES.AUTH_RESEND_ACTIVATION_EMAIL,
+    });
   }
 
   // ----------------------------------------------------------------------- \\
@@ -171,17 +188,21 @@ export class AuthService {
     const user = await this.userRepository.getUserByEmail(email);
 
     if (isNil(user)) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException(
+        PL_ERRORS.UNAUTHORIZED_INVALID_CREDENTIALS,
+      );
     }
 
     if (not(user.isActive)) {
-      throw new ForbiddenException('Your account is inactive.');
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INACTIVE_ACCOUNT);
     }
 
     const isValidPassword = await this.verifyPassword(password, user.password);
 
     if (not(isValidPassword)) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException(
+        PL_ERRORS.UNAUTHORIZED_INVALID_CREDENTIALS,
+      );
     }
 
     return user;
@@ -195,13 +216,13 @@ export class AuthService {
     const user = await this.userRepository.getUserById(userId);
 
     if (isNil(user)) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException(PL_ERRORS.UNAUTHORIZED_INVALID_PASSWORD);
     }
 
     const isValidPassword = await this.verifyPassword(password, user.password);
 
     if (not(isValidPassword)) {
-      throw new UnauthorizedException('Invalid credentials.');
+      throw new UnauthorizedException(PL_ERRORS.UNAUTHORIZED_INVALID_PASSWORD);
     }
 
     return user;
