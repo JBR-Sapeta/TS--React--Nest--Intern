@@ -37,12 +37,7 @@ export class MailService {
         },
       });
     } catch (error) {
-      this.logger.error(
-        MailService.name,
-        'sendWelcomeEmail',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(MailService.name + ' - sendWelcomeEmail', error.stack);
 
       throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }
@@ -66,12 +61,7 @@ export class MailService {
         },
       });
     } catch (error) {
-      this.logger.error(
-        MailService.name,
-        'sendRecoveryEmail',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(MailService.name + ' - sendRecoveryEmail', error.stack);
 
       throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }

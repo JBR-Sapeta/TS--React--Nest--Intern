@@ -47,12 +47,7 @@ export class UserRepository extends Repository<UserEntity> {
       const createdUser = await this.save(user);
       return createdUser;
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'createUser',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - createUser', error.stack);
 
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
         throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
@@ -77,9 +72,7 @@ export class UserRepository extends Repository<UserEntity> {
       });
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateUserProfile',
-        error.message,
+        UserRepository.name + ' - updateUserProfile',
         error.stack,
       );
 
@@ -97,9 +90,7 @@ export class UserRepository extends Repository<UserEntity> {
       return this.save(user);
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateUserProfile',
-        error.message,
+        UserRepository.name + ' - updateUserProfile',
         error.stack,
       );
 
@@ -118,9 +109,7 @@ export class UserRepository extends Repository<UserEntity> {
       return updatedUser;
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateUserEmail',
-        error.message,
+        UserRepository.name + ' - updateUserEmail',
         error.stack,
       );
 
@@ -141,9 +130,7 @@ export class UserRepository extends Repository<UserEntity> {
       await this.save(user);
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateUserPassword',
-        error.message,
+        UserRepository.name + ' - updateUserPassword',
         error.stack,
       );
 
@@ -162,9 +149,7 @@ export class UserRepository extends Repository<UserEntity> {
       user = await this.findOneBy({ id: userId });
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateRefreshToken',
-        error.message,
+        UserRepository.name + ' - updateRefreshToken',
         error.stack,
       );
 
@@ -180,9 +165,7 @@ export class UserRepository extends Repository<UserEntity> {
       await this.save(user);
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'updateRefreshToken',
-        error.message,
+        UserRepository.name + ' - updateRefreshToken',
         error.stack,
       );
 
@@ -198,12 +181,7 @@ export class UserRepository extends Repository<UserEntity> {
       });
       return user;
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'getUserById',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - getUserById', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -217,12 +195,7 @@ export class UserRepository extends Repository<UserEntity> {
       });
       return user;
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'getUserByEmail',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - getUserByEmail', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -239,12 +212,7 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ email });
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'setResetToken',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - setResetToken', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -258,12 +226,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.resetTokenExpirationDate = resetTokenExpirationDate;
       return this.save(user);
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'setResetToken',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - setResetToken', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -277,9 +240,7 @@ export class UserRepository extends Repository<UserEntity> {
       user = await this.findOneBy({ activationToken });
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'activateAccount',
-        error.message,
+        UserRepository.name + ' - activateAccount',
         error.stack,
       );
 
@@ -296,9 +257,7 @@ export class UserRepository extends Repository<UserEntity> {
       await this.save(user);
     } catch (error) {
       this.logger.error(
-        UserRepository.name,
-        'activateAccount',
-        error.message,
+        UserRepository.name + ' - activateAccount',
         error.stack,
       );
 
@@ -316,12 +275,7 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ resetToken });
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'resetPassword',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - resetPassword', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -343,12 +297,7 @@ export class UserRepository extends Repository<UserEntity> {
       user.password = password;
       await this.save(user);
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'resetPassword',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - resetPassword', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -359,12 +308,7 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       await this.delete({ id: userId });
     } catch (error) {
-      this.logger.error(
-        UserRepository.name,
-        'deleteUser',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(UserRepository.name + ' - deleteUser', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

@@ -25,12 +25,7 @@ export class CacheService implements OnApplicationShutdown {
     try {
       await this.redis.set(key, data);
     } catch (error) {
-      this.logger.error(
-        CacheService.name,
-        'setData',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(CacheService.name + ' - setData', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -41,12 +36,7 @@ export class CacheService implements OnApplicationShutdown {
       const data = await this.redis.get(key);
       return isNil(data) ? null : (JSON.parse(data) as T);
     } catch (error) {
-      this.logger.error(
-        CacheService.name,
-        'getData',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(CacheService.name + ' - getData', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -56,12 +46,7 @@ export class CacheService implements OnApplicationShutdown {
     try {
       await this.redis.del(key);
     } catch (error) {
-      this.logger.error(
-        CacheService.name,
-        'removeData',
-        error.message,
-        error.stack,
-      );
+      this.logger.error(CacheService.name + ' - removeData', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

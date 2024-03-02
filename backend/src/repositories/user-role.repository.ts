@@ -37,9 +37,7 @@ export class UserRoleRepository
           .execute();
       } catch (error) {
         this.logger.error(
-          UserRoleRepository.name,
-          'setData',
-          error.message,
+          UserRoleRepository.name + ' - seedRoles',
           error.stack,
         );
       }
@@ -52,9 +50,7 @@ export class UserRoleRepository
       return roles;
     } catch (error) {
       this.logger.error(
-        UserRoleRepository.name,
-        'setData',
-        error.message,
+        UserRoleRepository.name + ' - getRolesByIds',
         error.stack,
       );
 
