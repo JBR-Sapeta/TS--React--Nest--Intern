@@ -1,4 +1,10 @@
-import { BadGatewayException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Inject,
+  Injectable,
+  Logger,
+  LoggerService,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -8,6 +14,7 @@ import { PL_ERRORS } from '../locales';
 @Injectable()
 export class MailService {
   constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
   ) {}
@@ -30,7 +37,13 @@ export class MailService {
         },
       });
     } catch (error) {
-      console.log(error);
+      this.logger.error(
+        MailService.name,
+        'sendWelcomeEmail',
+        error.message,
+        error.stack,
+      );
+
       throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }
   }
@@ -53,7 +66,13 @@ export class MailService {
         },
       });
     } catch (error) {
-      console.log(error);
+      this.logger.error(
+        MailService.name,
+        'sendRecoveryEmail',
+        error.message,
+        error.stack,
+      );
+
       throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_EMAIL_DELIVERY);
     }
   }

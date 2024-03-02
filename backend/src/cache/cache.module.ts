@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { RedisModule } from '@nestjs-modules/ioredis';
 
 import type { RedisConfigType } from '../common/config';
@@ -23,7 +23,7 @@ import { CacheService } from './cache.service';
       },
     }),
   ],
-  providers: [CacheService],
+  providers: [Logger, CacheService],
   exports: [CacheService],
 })
 export class CacheModule {}

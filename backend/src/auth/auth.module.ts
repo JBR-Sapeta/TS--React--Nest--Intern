@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,6 +19,7 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
   ],
   controllers: [AuthController],
   providers: [
+    Logger,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,

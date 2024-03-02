@@ -2,7 +2,10 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  Inject,
   InternalServerErrorException,
+  Logger,
+  LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -17,6 +20,7 @@ export class UserRepository extends Repository<UserEntity> {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,
+    @Inject(Logger) private readonly logger: LoggerService,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
@@ -43,9 +47,17 @@ export class UserRepository extends Repository<UserEntity> {
       const createdUser = await this.save(user);
       return createdUser;
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'createUser',
+        error.message,
+        error.stack,
+      );
+
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
         throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
       }
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -63,7 +75,14 @@ export class UserRepository extends Repository<UserEntity> {
       user = await this.findOne({
         where: { id: userId },
       });
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateUserProfile',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
@@ -77,6 +96,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.phoneNumber = phoneNumber;
       return this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateUserProfile',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -91,6 +117,13 @@ export class UserRepository extends Repository<UserEntity> {
       const updatedUser = await this.save(user);
       return updatedUser;
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateUserEmail',
+        error.message,
+        error.stack,
+      );
+
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
         throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
       }
@@ -107,6 +140,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.password = password;
       await this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateUserPassword',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -121,6 +161,13 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ id: userId });
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateRefreshToken',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
@@ -132,6 +179,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.refreshToken = refreshToken;
       await this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'updateRefreshToken',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -143,7 +197,14 @@ export class UserRepository extends Repository<UserEntity> {
         where: { id: userId },
       });
       return user;
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'getUserById',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -155,7 +216,14 @@ export class UserRepository extends Repository<UserEntity> {
         where: { email },
       });
       return user;
-    } catch {
+    } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'getUserByEmail',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -171,6 +239,13 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ email });
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'setResetToken',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
@@ -183,6 +258,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.resetTokenExpirationDate = resetTokenExpirationDate;
       return this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'setResetToken',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -194,6 +276,13 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ activationToken });
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'activateAccount',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
@@ -206,6 +295,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.isActive = true;
       await this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'activateAccount',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -220,6 +316,13 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user = await this.findOneBy({ resetToken });
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'resetPassword',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
@@ -240,6 +343,13 @@ export class UserRepository extends Repository<UserEntity> {
       user.password = password;
       await this.save(user);
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'resetPassword',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
@@ -249,6 +359,13 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       await this.delete({ id: userId });
     } catch (error) {
+      this.logger.error(
+        UserRepository.name,
+        'deleteUser',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }

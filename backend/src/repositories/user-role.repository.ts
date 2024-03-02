@@ -1,5 +1,8 @@
 import {
+  Inject,
   InternalServerErrorException,
+  Logger,
+  LoggerService,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +20,7 @@ export class UserRoleRepository
   constructor(
     @InjectRepository(UserRoleEntity)
     private readonly repository: Repository<UserRoleEntity>,
+    @Inject(Logger) private readonly logger: LoggerService,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
@@ -32,7 +36,12 @@ export class UserRoleRepository
           .values(USER_ROLES_ARRAY)
           .execute();
       } catch (error) {
-        console.log(error);
+        this.logger.error(
+          UserRoleRepository.name,
+          'setData',
+          error.message,
+          error.stack,
+        );
       }
     }
   }
@@ -42,6 +51,13 @@ export class UserRoleRepository
       const roles = await this.find({ where: { id: In(ids) } });
       return roles;
     } catch (error) {
+      this.logger.error(
+        UserRoleRepository.name,
+        'setData',
+        error.message,
+        error.stack,
+      );
+
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
