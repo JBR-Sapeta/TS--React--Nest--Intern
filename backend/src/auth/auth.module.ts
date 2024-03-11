@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserEntity, UserRoleEntity } from '../entities';
+import { UserEntity, RoleEntity } from '../entities';
 import { UserRepository, UserRoleRepository } from '../repositories';
 import { MailService } from '../mail/mail.service';
 
@@ -15,7 +15,7 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
   imports: [
     PassportModule,
     JwtModule.register({}),
-    TypeOrmModule.forFeature([UserEntity, UserRoleEntity]),
+    TypeOrmModule.forFeature([UserEntity, RoleEntity]),
   ],
   controllers: [AuthController],
   providers: [

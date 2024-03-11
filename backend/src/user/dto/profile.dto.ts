@@ -5,7 +5,7 @@ import type { UserEntity } from '../../entities';
 import { SuccessMessageDto } from '../../common/classes';
 import type { SuccessMessageArgs } from '../../common/classes';
 import { ResponseWithPayload } from '../../common/interfaces';
-import { UserRoleDto } from './role.dto';
+import { RoleDto } from './role.dto';
 
 class UserProfileDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
@@ -30,7 +30,7 @@ class UserProfileDto {
 
   @ApiProperty({ example: [{ id: 2, name: 'user' }] })
   @Expose()
-  roles: UserRoleDto[];
+  roles: RoleDto[];
 
   @ApiProperty({ example: '2024-02-28T23:20:32.083Z' })
   @Expose()
@@ -39,7 +39,7 @@ class UserProfileDto {
   constructor(user: UserEntity) {
     Object.assign(this, user);
     this.createdAt = user.createdAt.toISOString();
-    this.roles = user.roles.map((role) => new UserRoleDto(role));
+    this.roles = user.roles.map((role) => new RoleDto(role));
   }
 }
 

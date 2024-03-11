@@ -9,17 +9,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
-import { UserRoleEntity } from '../entities';
+import { RoleEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { USER_ROLES_ARRAY } from '../common/config/roles';
 
 export class UserRoleRepository
-  extends Repository<UserRoleEntity>
+  extends Repository<RoleEntity>
   implements OnApplicationBootstrap
 {
   constructor(
-    @InjectRepository(UserRoleEntity)
-    private readonly repository: Repository<UserRoleEntity>,
+    @InjectRepository(RoleEntity)
+    private readonly repository: Repository<RoleEntity>,
     @Inject(Logger) private readonly logger: LoggerService,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
@@ -32,7 +32,7 @@ export class UserRoleRepository
       try {
         await this.createQueryBuilder()
           .insert()
-          .into(UserRoleEntity)
+          .into(RoleEntity)
           .values(USER_ROLES_ARRAY)
           .execute();
       } catch (error) {
@@ -44,7 +44,7 @@ export class UserRoleRepository
     }
   }
 
-  public async getRolesByIds(ids: number[]): Promise<UserRoleEntity[]> {
+  public async getRolesByIds(ids: number[]): Promise<RoleEntity[]> {
     try {
       const roles = await this.find({ where: { id: In(ids) } });
       return roles;

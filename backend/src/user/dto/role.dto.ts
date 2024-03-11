@@ -1,14 +1,14 @@
 import { Expose } from 'class-transformer';
-import { UserRoleEntity } from 'src/entities';
+import { RoleEntity } from 'src/entities';
 
-export class UserRoleDto {
+export class RoleDto {
   @Expose()
   id: number;
 
   @Expose()
   name: string;
 
-  constructor(role: UserRoleEntity) {
+  constructor(role: RoleEntity) {
     Object.assign(this, role);
   }
 }

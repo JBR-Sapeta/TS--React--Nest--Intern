@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
-import { UserEntity, UserRoleEntity } from '../entities';
+import { UserEntity, RoleEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { PostgresqlErrorCode } from '../common/enums';
 import type { Nullable } from '../common/types';
@@ -32,7 +32,7 @@ export class UserRepository extends Repository<UserEntity> {
     email: string,
     password: string,
     activationToken: string,
-    roles: UserRoleEntity[],
+    roles: RoleEntity[],
   ): Promise<UserEntity> {
     const user = this.create({
       firstName,

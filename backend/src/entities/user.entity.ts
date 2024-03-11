@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 
-import { UserRoleEntity } from './user-role.entity';
+import { RoleEntity } from './role.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -51,7 +51,7 @@ export class UserEntity {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @ManyToMany(() => UserRoleEntity, { eager: true, onDelete: 'CASCADE' })
-  @JoinTable({ name: 'users_user_roles' })
-  public roles: UserRoleEntity[];
+  @ManyToMany(() => RoleEntity, { eager: true, onDelete: 'CASCADE' })
+  @JoinTable({ name: 'users_roles' })
+  public roles: RoleEntity[];
 }
