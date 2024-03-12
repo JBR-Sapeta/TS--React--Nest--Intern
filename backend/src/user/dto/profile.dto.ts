@@ -26,7 +26,7 @@ class UserProfileDto {
 
   @ApiProperty({ example: '723442564' })
   @Expose()
-  phoneNumber: string;
+  phoneNumber: string | null;
 
   @ApiProperty({ example: [{ id: 2, name: 'user' }] })
   @Expose()

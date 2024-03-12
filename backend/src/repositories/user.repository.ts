@@ -67,9 +67,7 @@ export class UserRepository extends Repository<UserEntity> {
     let user: Nullable<UserEntity> = null;
 
     try {
-      user = await this.findOne({
-        where: { id: userId },
-      });
+      user = await this.findOne({ where: { id: userId } });
     } catch (error) {
       this.logger.error(
         UserRepository.name + ' - updateUserProfile',
@@ -176,9 +174,7 @@ export class UserRepository extends Repository<UserEntity> {
   // ----------------------------------------------------------------------- \\
   public async getUserById(userId: string): Promise<Nullable<UserEntity>> {
     try {
-      const user = await this.findOne({
-        where: { id: userId },
-      });
+      const user = await this.findOne({ where: { id: userId } });
       return user;
     } catch (error) {
       this.logger.error(UserRepository.name + ' - getUserById', error.stack);
@@ -190,9 +186,7 @@ export class UserRepository extends Repository<UserEntity> {
   // ----------------------------------------------------------------------- \\
   public async getUserByEmail(email: string): Promise<Nullable<UserEntity>> {
     try {
-      const user = await this.findOne({
-        where: { email },
-      });
+      const user = await this.findOne({ where: { email } });
       return user;
     } catch (error) {
       this.logger.error(UserRepository.name + ' - getUserByEmail', error.stack);

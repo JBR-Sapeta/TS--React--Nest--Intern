@@ -12,7 +12,7 @@ import { equals, isNil, not } from 'ramda';
 
 import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { UserRepository, UserRoleRepository } from '../repositories';
+import { UserRepository, RoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
 import { SuccessMessageDto } from '../common/classes';
@@ -35,7 +35,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
     private readonly userRepository: UserRepository,
-    private readonly userRoleRepository: UserRoleRepository,
+    private readonly roleRepository: RoleRepository,
   ) {}
 
   // ----------------------------------------------------------------------- \\
@@ -47,7 +47,7 @@ export class AuthService {
   }: CreateUserDto): Promise<SuccessMessageDto> {
     const activationToken = uuid();
     const hashedPassword = await this.hashPassword(password);
-    const roles = await this.userRoleRepository.getRolesByIds([Roles.USER]);
+    const roles = await this.roleRepository.getRolesByIds([Roles.USER]);
 
     await this.userRepository.createUser(
       firstName,

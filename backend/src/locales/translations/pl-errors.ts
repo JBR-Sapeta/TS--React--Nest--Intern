@@ -9,6 +9,14 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATIO_PASSWORD:
     'Hasło musi składać się minimum z 8 znaków i zawierać małe i duże litery a także cyfrę i znak specjalny.',
   VALIDATIO_RESET_TOKEN: 'Token jest wymagany.',
+  VALIDATE_COMPANY_DESCRIPTION:
+    'Opis powinień składać się minimum z 32 znaków.',
+  VALIDATE_COMPANY_NAME: 'Nazwa firmy powinno składać się z 2 do 255 znaków.',
+  VALIDATE_COMPANY_PHONE: 'Wprowadź prawidłowy numer telefonu.',
+  VALIDATE_COMPANY_SIZE: 'Rozmiar firmy powinien być cyfrą większą od zera.',
+  VALIDATE_COMPANY_SLUG:
+    "Pole slug powinno składać się z liter i cyfer oddzielonych za pomocą myślników '-'.",
+  VALIDATE_COMPANY_SLUG_SIZE: 'Slug powinno składać się z 2 do 255 znaków.',
   UNAUTHORIZED_INVALID_CREDENTIALS: 'Nieprawidłowe hasło lub adres E-mail.',
   UNAUTHORIZED_INVALID_PASSWORD: 'Podano nieprawidłowe hasło.',
   FORBIDDEN: 'Odmowa dostępu.',
@@ -18,6 +26,7 @@ export const PL_ERRORS: ErrorTranslations = {
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
   FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
+  NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
   NOT_FUOND_USER: 'Nie znaleziono użytkownika.',
   CONFLICT_EMAIL_TAKEN: 'Podany adres E-mail jest już używany.',
   INTERNAL_SERVER_ERROR: 'Coś poszło nie tak. Spróbuj ponownie później.',

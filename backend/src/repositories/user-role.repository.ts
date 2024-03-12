@@ -13,7 +13,7 @@ import { RoleEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { USER_ROLES_ARRAY } from '../common/config/roles';
 
-export class UserRoleRepository
+export class RoleRepository
   extends Repository<RoleEntity>
   implements OnApplicationBootstrap
 {
@@ -36,10 +36,7 @@ export class UserRoleRepository
           .values(USER_ROLES_ARRAY)
           .execute();
       } catch (error) {
-        this.logger.error(
-          UserRoleRepository.name + ' - seedRoles',
-          error.stack,
-        );
+        this.logger.error(RoleRepository.name + ' - seedRoles', error.stack);
       }
     }
   }
@@ -49,10 +46,7 @@ export class UserRoleRepository
       const roles = await this.find({ where: { id: In(ids) } });
       return roles;
     } catch (error) {
-      this.logger.error(
-        UserRoleRepository.name + ' - getRolesByIds',
-        error.stack,
-      );
+      this.logger.error(RoleRepository.name + ' - getRolesByIds', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

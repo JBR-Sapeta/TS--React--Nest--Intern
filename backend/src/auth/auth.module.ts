@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity, RoleEntity } from '../entities';
-import { UserRepository, UserRoleRepository } from '../repositories';
+import { UserRepository, RoleRepository } from '../repositories';
 import { MailService } from '../mail/mail.service';
 
 import { AuthController } from './auth.controller';
@@ -25,7 +25,7 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
     AuthService,
     MailService,
     UserRepository,
-    UserRoleRepository,
+    RoleRepository,
   ],
   exports: [AuthService],
 })

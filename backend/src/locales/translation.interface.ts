@@ -5,6 +5,12 @@ export interface ErrorTranslations {
   VALIDATIO_LAST_NAME: string;
   VALIDATIO_PASSWORD: string;
   VALIDATIO_RESET_TOKEN: string;
+  VALIDATE_COMPANY_NAME: string;
+  VALIDATE_COMPANY_PHONE: string;
+  VALIDATE_COMPANY_SLUG: string;
+  VALIDATE_COMPANY_SLUG_SIZE: string;
+  VALIDATE_COMPANY_DESCRIPTION: string;
+  VALIDATE_COMPANY_SIZE: string;
   UNAUTHORIZED_INVALID_CREDENTIALS: string;
   UNAUTHORIZED_INVALID_PASSWORD: string;
   FORBIDDEN: string;
@@ -12,6 +18,7 @@ export interface ErrorTranslations {
   FORBIDDEN_INACTIVE_ACCOUNT: string;
   FORBIDDEN_RESET_TOKEN: string;
   NOT_FUOND: string;
+  NOT_FUOND_COMPANY: string;
   NOT_FUOND_USER: string;
   CONFLICT_EMAIL_TAKEN: string;
   INTERNAL_SERVER_ERROR: string;
@@ -28,6 +35,9 @@ export interface MessageTranslations {
   AUTH_PASSWORD_RESET: string;
   AUTH_RESEND_ACTIVATION_EMAIL: string;
   BASE_SUCCESS: string;
+  COMPANY_CREATED: string;
+  COMPANY_UPDATED: string;
+  COMPANY_DELETED: string;
   USER_ACCOUNT_UPDATE: string;
   USER_DELETE_ACCOUNT: string;
   USER_EMAIL_UPDATE: string;

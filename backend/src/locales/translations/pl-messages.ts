@@ -12,6 +12,9 @@ export const PL_MESSAGES: MessageTranslations = {
   AUTH_RESEND_ACTIVATION_EMAIL:
     'Wiadomośc z linkiem aktywacyjnym została ponownie przesłana.',
   BASE_SUCCESS: 'Sukces.',
+  COMPANY_CREATED: 'Firma została utworzona.',
+  COMPANY_DELETED: 'Dane firmy zostały usunięte',
+  COMPANY_UPDATED: 'Dane firmy zostały zaktualizowane.',
   USER_ACCOUNT_UPDATE: 'Twoje dane zostały zmienione.',
   USER_DELETE_ACCOUNT: 'Twoje konto zostało usunięte.',
   USER_EMAIL_UPDATE: 'Twój adres E-mail zostało zmieniony.',

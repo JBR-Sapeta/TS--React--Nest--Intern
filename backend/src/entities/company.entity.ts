@@ -1,0 +1,53 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserEntity } from './user.entity';
+
+@Entity({ name: 'companies' })
+export class CompanyEntity {
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
+
+  @Column({ type: 'varchar', length: 255, unique: true })
+  public name: string;
+
+  @Column({ type: 'varchar', length: 255, unique: true })
+  public slug: string;
+
+  @Column({ type: 'varchar', length: 255 })
+  public email: string;
+
+  @Column({ type: 'varchar', length: 15, nullable: true, default: null })
+  public phoneNumber: string | null;
+
+  @Column({ type: 'varchar', length: 511, default: 'company-logo.wep' })
+  public logoUrl: string;
+
+  @Column({ type: 'varchar', length: 511, default: 'company.wep' })
+  public mainPhotoUrl: string;
+
+  @Column({ type: 'text' })
+  public description: string;
+
+  @Column({ type: 'int' })
+  public size: number;
+
+  @Column({ type: 'boolean', default: false })
+  public isVerfied: boolean;
+
+  @CreateDateColumn()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  public updatedAt: Date;
+
+  @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
+}

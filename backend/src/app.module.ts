@@ -19,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { AppService } from './app.service';
     AuthModule,
     MailModule,
     CacheModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [

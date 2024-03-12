@@ -1,2 +1,3 @@
 export { UserRepository } from './user.repository';
-export { UserRoleRepository } from './user-role.repository';
+export { RoleRepository } from './user-role.repository';
+export { CompanyRepository } from './company.repository';
