@@ -124,4 +124,41 @@ export class CompanyRepository extends Repository<CompanyEntity> {
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
+
+  // ----------------------------------------------------------------------- \\
+  public async getCompanies(
+    pageNumber: number,
+    limit: number,
+  ): Promise<[CompanyEntity[], number]> {
+    try {
+      const companies = await this.findAndCount({
+        order: {
+          createdAt: 'DESC',
+        },
+        // relations: { image: true, tags: true, user: true },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          email: true,
+          phoneNumber: true,
+          logoUrl: true,
+          mainPhotoUrl: true,
+          description: true,
+          size: true,
+          isVerfied: true,
+        },
+        skip: pageNumber * limit,
+        take: limit,
+      });
+      return companies;
+    } catch (error) {
+      this.logger.error(
+        CompanyRepository.name + ' - getCompanies',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
 }

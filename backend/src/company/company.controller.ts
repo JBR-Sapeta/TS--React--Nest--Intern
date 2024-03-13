@@ -9,11 +9,12 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { SuccessMessageDto } from '../common/classes';
+import { PaginationParams, SuccessMessageDto } from '../common/classes';
 import { AccessTokenGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
 
@@ -25,6 +26,12 @@ import { CompanyDto } from './dto/response';
 @Controller('companies')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
+
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  getCompanies(@Query() { pageNumber, limit }: PaginationParams) {
+    return this.companyService.getCompanies(pageNumber, limit);
+  }
 
   @Get('/:slug')
   @HttpCode(HttpStatus.OK)

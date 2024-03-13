@@ -59,7 +59,7 @@ export class CompanyDto
   @Expose()
   data: CompanyPreviewDto;
 
-  constructor(args: SuccessMessageArgs, data: any) {
+  constructor(args: SuccessMessageArgs, data: CompanyEntity) {
     super(args);
     this.data = new CompanyPreviewDto(data);
   }

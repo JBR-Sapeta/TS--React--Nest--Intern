@@ -10,7 +10,7 @@ import { CompanyRepository, UserRepository } from '../repositories';
 
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
 import { SuccessMessageDto } from '../common/classes';
-import { CompanyDto } from './dto/response';
+import { CompaniesDto, CompanyDto } from './dto/response';
 
 @Injectable()
 export class CompanyService {
@@ -90,5 +90,18 @@ export class CompanyService {
     }
 
     return new CompanyDto({}, company);
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async getCompanies(
+    pageNumber: number,
+    limit: number,
+  ): Promise<CompaniesDto> {
+    const [data, count] = await this.companyRepository.getCompanies(
+      pageNumber,
+      limit,
+    );
+
+    return new CompaniesDto({ limit, pageNumber, count }, data);
   }
 }

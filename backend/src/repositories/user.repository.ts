@@ -81,7 +81,8 @@ export class UserRepository extends Repository<UserEntity> {
 
     try {
       Object.assign(user, fieldsToUpdate);
-      return this.save(user);
+      const updatedUser = await this.save(user);
+      return updatedUser;
     } catch (error) {
       this.logger.error(
         UserRepository.name + ' - updateUserProfile',
@@ -214,7 +215,8 @@ export class UserRepository extends Repository<UserEntity> {
     try {
       user.resetToken = resetToken;
       user.resetTokenExpirationDate = resetTokenExpirationDate;
-      return this.save(user);
+      const updatedUser = await this.save(user);
+      return updatedUser;
     } catch (error) {
       this.logger.error(UserRepository.name + ' - setResetToken', error.stack);
 
