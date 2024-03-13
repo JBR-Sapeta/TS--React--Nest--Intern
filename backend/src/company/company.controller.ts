@@ -46,7 +46,7 @@ export class CompanyController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   updateCompany(
-    @Param('companyId', new ParseUUIDPipe()) companyId: string,
+    @Param('companyId', ParseUUIDPipe) companyId: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
     @GetAccessTokenPayload() userId: string,
   ): Promise<SuccessMessageDto> {
@@ -61,7 +61,7 @@ export class CompanyController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   deleteCompany(
-    @Param('companyId', new ParseUUIDPipe()) companyId: string,
+    @Param('companyId', ParseUUIDPipe) companyId: string,
     @GetAccessTokenPayload() userId: string,
   ): Promise<SuccessMessageDto> {
     return this.companyService.deleteCompany(userId, companyId);

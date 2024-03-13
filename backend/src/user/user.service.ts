@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { isNil } from 'ramda';
 
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
@@ -35,14 +39,18 @@ export class UserService {
   // ----------------------------------------------------------------------- \\\
   public async updateUserProfile(
     userId: string,
+    userIdParam: string,
     { firstName, lastName, phoneNumber }: UpdateUserDto,
   ): Promise<ProfileDto> {
-    const user = await this.userRepository.updateUserProfile(
-      userId,
+    if (userId !== userIdParam) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const user = await this.userRepository.updateUserProfile(userId, {
       firstName,
       lastName,
       phoneNumber,
-    );
+    });
 
     return new ProfileDto({ message: PL_MESSAGES.USER_ACCOUNT_UPDATE }, user);
   }
@@ -50,8 +58,13 @@ export class UserService {
   // ----------------------------------------------------------------------- \\\
   public async updateEmail(
     userId: string,
+    userIdParam: string,
     { newEmail, password }: UpdateEmailDto,
   ): Promise<ProfileDto> {
+    if (userId !== userIdParam) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
     const user = await this.authService.validateUserPassword(userId, password);
     const updatedUser = await this.userRepository.updateUserEmail(
       user,
@@ -67,8 +80,13 @@ export class UserService {
   // ----------------------------------------------------------------------- \\\
   public async updatePassword(
     userId: string,
+    userIdParam: string,
     { password, newPassword }: UpdatePasswordDto,
   ): Promise<SuccessMessageDto> {
+    if (userId !== userIdParam) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
     const user = await this.authService.validateUserPassword(userId, password);
     const hashedPassword = await this.authService.hashPassword(newPassword);
     await this.userRepository.updateUserPassword(user, hashedPassword);
@@ -79,8 +97,13 @@ export class UserService {
   // ----------------------------------------------------------------------- \\\
   public async deleteUserProfile(
     userId: string,
+    userIdParam: string,
     { password }: DeleteUserDto,
   ): Promise<SuccessMessageDto> {
+    if (userId !== userIdParam) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
     await this.authService.validateUserPassword(userId, password);
     await this.userRepository.deleteUser(userId);
 

@@ -60,9 +60,7 @@ export class UserRepository extends Repository<UserEntity> {
   // ----------------------------------------------------------------------- \\
   public async updateUserProfile(
     userId: string,
-    firstName: string,
-    lastName: string,
-    phoneNumber: string,
+    fieldsToUpdate: Partial<UserEntity>,
   ): Promise<UserEntity> {
     let user: Nullable<UserEntity> = null;
 
@@ -82,9 +80,7 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     try {
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.phoneNumber = phoneNumber;
+      Object.assign(user, fieldsToUpdate);
       return this.save(user);
     } catch (error) {
       this.logger.error(

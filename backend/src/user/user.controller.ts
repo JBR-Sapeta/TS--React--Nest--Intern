@@ -7,6 +7,8 @@ import {
   Put,
   Body,
   Delete,
+  Param,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -64,10 +66,15 @@ export class UserController {
   @ApiResponse(RES.UPDATE.NOT_FOUND)
   @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
   updateUserProfile(
+    @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<ProfileDto> {
-    return this.userService.updateUserProfile(userId, updateUserDto);
+    return this.userService.updateUserProfile(
+      userId,
+      userIdParam,
+      updateUserDto,
+    );
   }
 
   @Put('/:userId/email')
@@ -83,10 +90,11 @@ export class UserController {
   @ApiResponse(RES.EMAIL.CONFLICT)
   @ApiResponse(RES.EMAIL.INTERNAL_SERVER_ERROR)
   updateUserEmail(
+    @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() userId: string,
     @Body() updateEmailDto: UpdateEmailDto,
   ): Promise<ProfileDto> {
-    return this.userService.updateEmail(userId, updateEmailDto);
+    return this.userService.updateEmail(userId, userIdParam, updateEmailDto);
   }
 
   @Put('/:userId/password')
@@ -100,10 +108,15 @@ export class UserController {
   @ApiResponse(RES.PASSWORD.UNAUTHORIZED)
   @ApiResponse(RES.PASSWORD.INTERNAL_SERVER_ERROR)
   updateUserPassword(
+    @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() userId: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<SuccessMessageDto> {
-    return this.userService.updatePassword(userId, updatePasswordDto);
+    return this.userService.updatePassword(
+      userId,
+      userIdParam,
+      updatePasswordDto,
+    );
   }
 
   @Delete('/:userId/delete')
@@ -117,9 +130,14 @@ export class UserController {
   @ApiResponse(RES.DELETE.UNAUTHORIZED)
   @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   delteUserAccount(
+    @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() userId: string,
     @Body() deleteUserDto: DeleteUserDto,
   ): Promise<SuccessMessageDto> {
-    return this.userService.deleteUserProfile(userId, deleteUserDto);
+    return this.userService.deleteUserProfile(
+      userId,
+      userIdParam,
+      deleteUserDto,
+    );
   }
 }
