@@ -135,19 +135,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
         order: {
           createdAt: 'DESC',
         },
-        // relations: { image: true, tags: true, user: true },
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          email: true,
-          phoneNumber: true,
-          logoUrl: true,
-          mainPhotoUrl: true,
-          description: true,
-          size: true,
-          isVerfied: true,
-        },
+        // relations: { user: true },
         skip: pageNumber * limit,
         take: limit,
       });

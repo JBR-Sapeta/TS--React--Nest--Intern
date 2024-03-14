@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { BranchEntity } from './branch.entity';
 
 @Entity({ name: 'companies' })
 export class CompanyEntity {
@@ -50,4 +52,9 @@ export class CompanyEntity {
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
+
+  @OneToMany(() => BranchEntity, (branch: BranchEntity) => branch.company, {
+    onDelete: 'CASCADE',
+  })
+  public branches: BranchEntity[];
 }
