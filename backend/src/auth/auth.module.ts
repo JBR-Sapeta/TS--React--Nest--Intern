@@ -9,7 +9,11 @@ import { MailService } from '../mail/mail.service';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
+import {
+  AccessTokenStrategy,
+  ExtendedAccessTokenStrategy,
+  RefreshTokenStrategy,
+} from './strategies';
 
 @Module({
   imports: [
@@ -21,6 +25,7 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
   providers: [
     Logger,
     AccessTokenStrategy,
+    ExtendedAccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,
     MailService,
