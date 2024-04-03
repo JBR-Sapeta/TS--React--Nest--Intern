@@ -135,7 +135,6 @@ export class CompanyRepository extends Repository<CompanyEntity> {
         order: {
           createdAt: 'DESC',
         },
-        // relations: { user: true },
         skip: pageNumber * limit,
         take: limit,
       });

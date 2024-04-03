@@ -5,7 +5,7 @@ import { CompanyEntity } from '../../../entities';
 import { PaginationArgs, PaginationDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 
-import { CompanyPreviewDto } from './comapny.dto';
+import { CompanyPreviewDto } from './company-preview.dto';
 
 export class CompaniesDto
   extends PaginationDto

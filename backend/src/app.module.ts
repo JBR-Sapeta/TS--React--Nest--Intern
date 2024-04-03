@@ -6,20 +6,23 @@ import {
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { ENV_KEYS } from './common/constants';
 
 import { exceptionFactory } from './common/functions';
 import type { DatabaseConfigType } from './common/config';
+import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
 import { MailModule } from './mail/mail.module';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { BranchModule } from './branch/branch.module';
 import { CompanyModule } from './company/company.module';
+import { GeocoderModule } from './geocoder/geocoder.module';
 
 @Module({
   imports: [
@@ -53,12 +56,18 @@ import { CompanyModule } from './company/company.module';
           autoLoadEntities: true,
         };
       },
+      dataSourceFactory: async (options) => {
+        const dataSource = await new DataSource(options).initialize();
+        return dataSource;
+      },
     }),
     UserModule,
     AuthModule,
     MailModule,
     CacheModule,
     CompanyModule,
+    GeocoderModule,
+    BranchModule,
   ],
   controllers: [AppController],
   providers: [
@@ -67,6 +76,7 @@ import { CompanyModule } from './company/company.module';
       provide: APP_PIPE,
       useValue: new ValidationPipe({
         whitelist: true,
+        transform: true,
         exceptionFactory,
       }),
     },

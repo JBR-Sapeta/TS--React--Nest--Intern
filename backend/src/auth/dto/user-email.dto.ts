@@ -5,6 +5,6 @@ import { PL_ERRORS } from '../../locales';
 
 export class UserEmailDto {
   @ApiProperty({ required: true, example: 'user@mail.com' })
-  @IsEmail({}, { message: PL_ERRORS.VALIDATIO_EMAIL })
+  @IsEmail({}, { message: PL_ERRORS.VALIDATION_EMAIL })
   readonly email: string;
 }

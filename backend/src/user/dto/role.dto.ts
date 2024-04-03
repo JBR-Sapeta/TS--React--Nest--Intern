@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { RoleEntity } from 'src/entities';
+import { RoleEntity } from '../../entities';
 
 export class RoleDto {
   @Expose()
