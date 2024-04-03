@@ -1,10 +1,12 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { AddressEntity } from './address.entity';
 import { CompanyEntity } from './company.entity';
@@ -14,13 +16,31 @@ export class BranchEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ type: 'varchar', length: 255 })
   public name: string;
 
-  @OneToOne(() => AddressEntity, { eager: true, onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
-  address: AddressEntity;
+  @CreateDateColumn()
+  public createdAt: Date;
 
-  @ManyToOne(() => CompanyEntity, (company: CompanyEntity) => company.branches)
+  @UpdateDateColumn()
+  public updatedAt: Date;
+
+  @OneToOne(() => AddressEntity, (address: AddressEntity) => address.branch, {
+    eager: true,
+    cascade: true,
+  })
+  public address: AddressEntity;
+
+  @ManyToOne(
+    () => CompanyEntity,
+    (company: CompanyEntity) => company.branches,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
+  @JoinColumn({ name: 'company_id' })
   public company: CompanyEntity;
+
+  @Column({ name: 'company_id', nullable: false })
+  public companyId: string;
 }

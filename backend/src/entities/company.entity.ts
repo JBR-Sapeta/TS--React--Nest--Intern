@@ -49,12 +49,13 @@ export class CompanyEntity {
   @UpdateDateColumn()
   public updatedAt: Date;
 
+  @Column({ name: 'user_id', nullable: false })
+  public userId: string;
+
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @OneToMany(() => BranchEntity, (branch: BranchEntity) => branch.company, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(() => BranchEntity, (branch: BranchEntity) => branch.company)
   public branches: BranchEntity[];
 }
