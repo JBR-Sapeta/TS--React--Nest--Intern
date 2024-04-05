@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsStrongPassword } from 'class-validator';
 
-import { PL_ERRORS } from '../../locales';
+import { PL_ERRORS } from '../../../locales';
 
 export class ResetPasswordDto {
   @ApiProperty({

@@ -6,7 +6,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { PL_ERRORS } from '../../locales';
+import { PL_ERRORS } from '../../../locales';
 
 export class CreateUserDto {
   @ApiProperty({ required: true, example: 'John' })

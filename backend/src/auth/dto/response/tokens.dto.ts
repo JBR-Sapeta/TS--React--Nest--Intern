@@ -1,9 +1,9 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { SuccessMessageDto } from '../../common/classes';
-import type { SuccessMessageArgs } from '../../common/classes';
-import { ResponseWithPayload } from '../../common/interfaces';
+import { SuccessMessageDto } from '../../../common/classes';
+import type { SuccessMessageArgs } from '../../../common/classes';
+import { ResponseWithPayload } from '../../../common/interfaces';
 
 export class RefreshToken {
   @ApiProperty({

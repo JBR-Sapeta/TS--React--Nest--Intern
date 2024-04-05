@@ -1,6 +1,4 @@
 export { CreateUserDto } from './create-user.dto';
-export { TokensDto, RefreshToken } from './tokens.dto';
-export { AccessTokenDto } from './access-token.dto';
 export { UserEmailDto } from './user-email.dto';
 export { ResetPasswordDto } from './reset-password.dto';
 export { LoginUserDto } from './login-user.dto';

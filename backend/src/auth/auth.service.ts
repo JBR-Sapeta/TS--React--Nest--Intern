@@ -20,13 +20,13 @@ import { calculateExpirationDate } from '../common/functions';
 
 import { MailService } from '../mail/mail.service';
 
-import { AccessTokenDto, RefreshToken, TokensDto } from './dto';
+import { AccessTokenDto, RefreshToken, TokensDto } from './dto/response';
 import type {
   UserEmailDto,
   CreateUserDto,
   ResetPasswordDto,
   LoginUserDto,
-} from './dto';
+} from './dto/request';
 
 @Injectable()
 export class AuthService {

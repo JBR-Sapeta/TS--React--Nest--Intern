@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 
-import { SuccessMessageDto } from '../../common/classes';
-import type { SuccessMessageArgs } from '../../common/classes';
-import { ResponseWithPayload } from '../../common/interfaces';
+import { SuccessMessageDto } from '../../../common/classes';
+import type { SuccessMessageArgs } from '../../../common/classes';
+import { ResponseWithPayload } from '../../../common/interfaces';
 
 class AccessToken {
   @Expose()

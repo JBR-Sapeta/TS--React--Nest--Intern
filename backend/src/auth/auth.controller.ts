@@ -26,14 +26,13 @@ import { HEADER } from '../common/docs';
 import { AuthService } from './auth.service';
 import { GetAccessTokenPayload, GetRefreshTokenPayload } from './decorators';
 import { AccessTokenGuard, RefreshTokenGuard } from './guards';
+import { AccessTokenDto, TokensDto } from './dto/response';
 import {
   UserEmailDto,
   CreateUserDto,
   ResetPasswordDto,
-  AccessTokenDto,
-  TokensDto,
   LoginUserDto,
-} from './dto';
+} from './dto/request';
 import { BODY, OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Auth')

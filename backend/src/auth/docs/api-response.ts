@@ -7,7 +7,7 @@ import {
   INTERNAL_SERVER_ERROR,
 } from '../../common/docs';
 
-import { TokensDto } from '../dto';
+import { TokensDto } from '../dto/response';
 
 import {
   ConflictExceptionResponseDto,
