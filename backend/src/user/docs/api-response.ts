@@ -5,7 +5,7 @@ import {
   INTERNAL_SERVER_ERROR,
 } from '../../common/docs';
 
-import { ProfileDto } from '../dto';
+import { ProfileDto } from '../dto/response';
 
 import {
   ConflictExceptionResponseDto,

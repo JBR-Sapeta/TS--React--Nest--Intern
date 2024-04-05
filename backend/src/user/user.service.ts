@@ -10,13 +10,13 @@ import { UserRepository } from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
 import { AuthService } from '../auth/auth.service';
 
+import { ProfileDto } from './dto/response';
 import {
   DeleteUserDto,
-  ProfileDto,
   UpdateEmailDto,
   UpdatePasswordDto,
   UpdateUserDto,
-} from './dto';
+} from './dto/request';
 
 @Injectable()
 export class UserService {
