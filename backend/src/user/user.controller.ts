@@ -15,6 +15,7 @@ import {
   ApiOperation,
   ApiBearerAuth,
   ApiHeader,
+  ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
 
@@ -32,7 +33,7 @@ import {
   UpdatePasswordDto,
   UpdateUserDto,
 } from './dto/request';
-import { OPERATION, RES } from './docs';
+import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('User')
 @Controller('users')
@@ -58,6 +59,8 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.UPDATE)
   @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.USER_ID)
   @ApiResponse(RES.UPDATE.OK)
   @ApiResponse(RES.UPDATE.BAD_REQUEST)
   @ApiResponse(RES.UPDATE.UNAUTHORIZED)
@@ -80,6 +83,8 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.EMAIL)
   @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.USER_ID)
   @ApiResponse(RES.EMAIL.OK)
   @ApiResponse(RES.EMAIL.BAD_REQUEST)
   @ApiResponse(RES.EMAIL.UNAUTHORIZED)
@@ -99,6 +104,8 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.PASSWORD)
   @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.USER_ID)
   @ApiResponse(RES.PASSWORD.OK)
   @ApiResponse(RES.PASSWORD.BAD_REQUEST)
   @ApiResponse(RES.PASSWORD.UNAUTHORIZED)
@@ -120,6 +127,8 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.DELETE)
   @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.USER_ID)
   @ApiResponse(RES.DELETE.OK)
   @ApiResponse(RES.DELETE.BAD_REQUEST)
   @ApiResponse(RES.DELETE.UNAUTHORIZED)

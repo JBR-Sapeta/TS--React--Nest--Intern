@@ -15,6 +15,7 @@ import {
 import {
   ApiBearerAuth,
   ApiHeader,
+  ApiParam,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -32,7 +33,7 @@ import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
 import { BranchService } from './branch.service';
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
-import { OPERATION, RES } from './docs';
+import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Branches')
 @Controller('branches')
@@ -44,6 +45,7 @@ export class BranchController {
   @ApiOperation(OPERATION.GET_COMAPNY_BRANCHES)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
   @ApiResponse(RES.GET_COMAPNY_BRANCHES.OK)
   @ApiResponse(RES.GET_COMAPNY_BRANCHES.BAD_REQUEST_PARAMS)
   @ApiResponse(RES.GET_COMAPNY_BRANCHES.INTERNAL_SERVER_ERROR)
@@ -59,6 +61,7 @@ export class BranchController {
   @ApiOperation(OPERATION.CREATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
   @ApiResponse(RES.CREATE.OK)
   @ApiResponse(RES.CREATE.BAD_REQUEST)
   @ApiResponse(RES.CREATE.UNAUTHORIZED)
@@ -80,6 +83,8 @@ export class BranchController {
   @ApiOperation(OPERATION.UPDATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.BRANCH_ID)
   @ApiResponse(RES.UPDATE.OK)
   @ApiResponse(RES.UPDATE.BAD_REQUEST)
   @ApiResponse(RES.UPDATE.UNAUTHORIZED)
@@ -107,6 +112,8 @@ export class BranchController {
   @ApiOperation(OPERATION.DELETE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.BRANCH_ID)
   @ApiResponse(RES.DELETE.OK)
   @ApiResponse(RES.DELETE.BAD_REQUEST_PARAMS)
   @ApiResponse(RES.DELETE.UNAUTHORIZED)
