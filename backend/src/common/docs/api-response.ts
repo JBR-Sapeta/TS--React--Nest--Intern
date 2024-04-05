@@ -7,6 +7,7 @@ import {
   InternalServerErrorExceptionResponseDto,
   NotFoundExceptionResponseDto,
   UnauthorizedExceptionResponseDto,
+  BadRequestExceptionResponseDto,
 } from './dto';
 
 export const OK = {
@@ -19,6 +20,12 @@ export const CREATED = {
   status: 201,
   description: 'Created',
   type: CreatedResponseDto,
+};
+
+export const BAD_REQUEST_PARAMS = {
+  status: 400,
+  description: 'Bad request',
+  type: BadRequestExceptionResponseDto,
 };
 
 export const UNAUTHORIZED = {

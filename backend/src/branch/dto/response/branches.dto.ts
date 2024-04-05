@@ -11,7 +11,7 @@ export class BranchesDto
   extends SuccessMessageDto
   implements ResponseWithPayload<BranchPreviewDto[]>
 {
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: BranchPreviewDto })
   @Expose()
   data: BranchPreviewDto[];
 

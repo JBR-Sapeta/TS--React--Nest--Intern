@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateBadRequestResponseDto {
+export class UpdateBadRequestExceptionResponseDto {
   @ApiProperty({ default: 400 })
   statusCode: number;
 
@@ -18,7 +18,7 @@ export class UpdateBadRequestResponseDto {
 }
 
 // ----------------------------------------------------------------------- \\
-export class EmailBadRequestResponseDto {
+export class EmailBadRequestExceptionResponseDto {
   @ApiProperty({ default: 400 })
   statusCode: number;
 
@@ -35,7 +35,7 @@ export class EmailBadRequestResponseDto {
 }
 
 // ----------------------------------------------------------------------- \\
-export class PasswordBadRequestResponseDto {
+export class PasswordBadRequestExceptionResponseDto {
   @ApiProperty({ default: 400 })
   statusCode: number;
 
@@ -53,7 +53,7 @@ export class PasswordBadRequestResponseDto {
 }
 
 // ----------------------------------------------------------------------- \\
-export class DeleteBadRequestResponseDto {
+export class DeleteBadRequestExceptionResponseDto {
   @ApiProperty({ default: 400 })
   statusCode: number;
 

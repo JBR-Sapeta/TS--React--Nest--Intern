@@ -9,10 +9,10 @@ import { ProfileDto } from '../dto';
 
 import {
   ConflictExceptionResponseDto,
-  DeleteBadRequestResponseDto,
-  EmailBadRequestResponseDto,
-  PasswordBadRequestResponseDto,
-  UpdateBadRequestResponseDto,
+  DeleteBadRequestExceptionResponseDto,
+  EmailBadRequestExceptionResponseDto,
+  PasswordBadRequestExceptionResponseDto,
+  UpdateBadRequestExceptionResponseDto,
 } from './dto';
 
 export const RES = {
@@ -35,7 +35,7 @@ export const RES = {
     BAD_REQUEST: {
       status: 400,
       description: 'Bad request',
-      type: UpdateBadRequestResponseDto,
+      type: UpdateBadRequestExceptionResponseDto,
     },
     UNAUTHORIZED,
     NOT_FOUND,
@@ -50,7 +50,7 @@ export const RES = {
     BAD_REQUEST: {
       status: 400,
       description: 'Bad request',
-      type: EmailBadRequestResponseDto,
+      type: EmailBadRequestExceptionResponseDto,
     },
     UNAUTHORIZED,
     NOT_FOUND,
@@ -67,7 +67,7 @@ export const RES = {
     BAD_REQUEST: {
       status: 400,
       description: 'Bad request',
-      type: PasswordBadRequestResponseDto,
+      type: PasswordBadRequestExceptionResponseDto,
     },
     UNAUTHORIZED,
     INTERNAL_SERVER_ERROR,
@@ -77,7 +77,7 @@ export const RES = {
     BAD_REQUEST: {
       status: 400,
       description: 'Bad request',
-      type: DeleteBadRequestResponseDto,
+      type: DeleteBadRequestExceptionResponseDto,
     },
     UNAUTHORIZED,
     INTERNAL_SERVER_ERROR,

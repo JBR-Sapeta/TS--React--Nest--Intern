@@ -12,7 +12,13 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { UserEntity } from '../entities';
 import { SuccessMessageDto } from '../common/classes';
@@ -20,11 +26,13 @@ import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
 } from '../auth/decorators';
+import { HEADER } from '../common/docs';
 import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
 
 import { BranchService } from './branch.service';
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
+import { OPERATION, RES } from './docs';
 
 @ApiTags('Branches')
 @Controller('branches')
@@ -33,6 +41,12 @@ export class BranchController {
 
   @Get('/:companyId')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_COMAPNY_BRANCHES)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.GET_COMAPNY_BRANCHES.OK)
+  @ApiResponse(RES.GET_COMAPNY_BRANCHES.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.GET_COMAPNY_BRANCHES.INTERNAL_SERVER_ERROR)
   getCompanyBranches(
     @Param('companyId', ParseUUIDPipe) companyId: string,
   ): Promise<BranchesDto> {
@@ -42,18 +56,37 @@ export class BranchController {
   @Post('/:companyId/create')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ExtendedAccessTokenGuard)
+  @ApiOperation(OPERATION.CREATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.CREATE.OK)
+  @ApiResponse(RES.CREATE.BAD_REQUEST)
+  @ApiResponse(RES.CREATE.UNAUTHORIZED)
+  @ApiResponse(RES.CREATE.FORBIDDEN)
+  @ApiResponse(RES.CREATE.NOT_FOUND)
+  @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.CREATE.BAD_GATEWAY)
   createCompanyBranch(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @GetAccessTokentExtendedPayload() user: UserEntity,
     @Body() createBranchDto: CreateBranchDto,
   ): Promise<SuccessMessageDto> {
-    console.log(createBranchDto);
     return this.branchService.createBranch(companyId, user, createBranchDto);
   }
 
   @Put('/:companyId/:branchId/update')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.UPDATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.UPDATE.OK)
+  @ApiResponse(RES.UPDATE.BAD_REQUEST)
+  @ApiResponse(RES.UPDATE.UNAUTHORIZED)
+  @ApiResponse(RES.UPDATE.FORBIDDEN)
+  @ApiResponse(RES.UPDATE.NOT_FOUND)
+  @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.UPDATE.BAD_GATEWAY)
   updateCompanyBranch(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('branchId', ParseIntPipe) branchId: number,
@@ -71,6 +104,15 @@ export class BranchController {
   @Delete('/:companyId/:branchId/delete')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.DELETE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.DELETE.OK)
+  @ApiResponse(RES.DELETE.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.DELETE.UNAUTHORIZED)
+  @ApiResponse(RES.DELETE.FORBIDDEN)
+  @ApiResponse(RES.DELETE.NOT_FOUND)
+  @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   deleteCompanyBranch(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('branchId', ParseIntPipe) branchId: number,

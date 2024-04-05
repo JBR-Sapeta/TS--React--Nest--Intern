@@ -5,3 +5,4 @@ export { NotFoundExceptionResponseDto } from './not-found-exception-response.dto
 export { ConflictExceptionResponseDto } from './conflict-exception-response.dto';
 export { InternalServerErrorExceptionResponseDto } from './internal-server-error-exception-response.dto';
 export { BadGatewayExceptionResponseDto } from './bad-gateway-exception-response.dto';
+export { BadRequestExceptionResponseDto } from './bad-request-exception-response.dto';

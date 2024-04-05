@@ -10,19 +10,19 @@ import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { ENV_KEYS } from './common/constants';
-
-import { exceptionFactory } from './common/functions';
 import type { DatabaseConfigType } from './common/config';
+import { exceptionFactory } from './common/functions';
+
 import { AuthModule } from './auth/auth.module';
+import { BranchModule } from './branch/branch.module';
 import { CacheModule } from './cache/cache.module';
+import { CompanyModule } from './company/company.module';
+import { GeocoderModule } from './geocoder/geocoder.module';
 import { MailModule } from './mail/mail.module';
 import { UserModule } from './user/user.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BranchModule } from './branch/branch.module';
-import { CompanyModule } from './company/company.module';
-import { GeocoderModule } from './geocoder/geocoder.module';
 
 @Module({
   imports: [
