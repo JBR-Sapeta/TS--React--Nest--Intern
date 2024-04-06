@@ -46,6 +46,7 @@ export const PL_ERRORS: ErrorTranslations = {
   FORBIDDEN_INACTIVE_ACCOUNT:
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
   FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
+  FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
   NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
   NOT_FUOND_BRANCH: 'Nie znaleziono oddziału firmy.',

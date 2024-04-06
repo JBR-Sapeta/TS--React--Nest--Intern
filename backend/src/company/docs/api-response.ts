@@ -1,0 +1,76 @@
+import {
+  OK,
+  BAD_REQUEST_PARAMS,
+  UNAUTHORIZED,
+  NOT_FOUND,
+  INTERNAL_SERVER_ERROR,
+  FORBIDDEN,
+} from '../../common/docs';
+
+import { CompaniesDto, CompanyDto } from '../dto/response';
+import {
+  ConflictExceptionResponseDto,
+  CreateCompanyBadRequestResponseDto,
+  UpdateCompanyBadRequestResponseDto,
+} from './dto';
+
+export const RES = {
+  GET_COMPANIES: {
+    OK: {
+      status: 200,
+      description: 'Success',
+      type: CompaniesDto,
+    },
+    INTERNAL_SERVER_ERROR,
+  },
+  GET_COMPANY_BY_SLUG: {
+    OK: {
+      status: 200,
+      description: 'Success',
+      type: CompanyDto,
+    },
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+  },
+  CREATE: {
+    OK,
+    BAD_REQUEST: {
+      status: 400,
+      description: 'Bad request',
+      type: CreateCompanyBadRequestResponseDto,
+    },
+    UNAUTHORIZED,
+    FORBIDDEN,
+    CONFLICT: {
+      status: 409,
+      description: 'Conflict',
+      type: ConflictExceptionResponseDto,
+    },
+    INTERNAL_SERVER_ERROR,
+  },
+  UPDATE: {
+    OK,
+    BAD_REQUEST: {
+      status: 400,
+      description: 'Bad request',
+      type: UpdateCompanyBadRequestResponseDto,
+    },
+    UNAUTHORIZED,
+    FORBIDDEN,
+    CONFLICT: {
+      status: 409,
+      description: 'Conflict',
+      type: ConflictExceptionResponseDto,
+    },
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+  },
+  DELETE: {
+    OK,
+    UNAUTHORIZED,
+    BAD_REQUEST_PARAMS,
+    FORBIDDEN,
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+  },
+};

@@ -11,7 +11,7 @@ export class CompaniesDto
   extends PaginationDto
   implements ResponseWithPayload<CompanyPreviewDto[]>
 {
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: CompanyPreviewDto })
   @Expose()
   data: CompanyPreviewDto[];
 

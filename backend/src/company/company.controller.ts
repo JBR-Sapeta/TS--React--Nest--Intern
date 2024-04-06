@@ -12,15 +12,28 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { UserEntity } from '../entities';
+import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
+import {
+  GetAccessTokenPayload,
+  GetAccessTokentExtendedPayload,
+} from '../auth/decorators';
 import { PaginationParams, SuccessMessageDto } from '../common/classes';
-import { AccessTokenGuard } from '../auth/guards';
-import { GetAccessTokenPayload } from '../auth/decorators';
+import { HEADER } from '../common/docs';
 
 import { CompanyService } from './company.service';
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
-import { CompanyDto } from './dto/response';
+import { CompaniesDto, CompanyDto } from './dto/response';
+import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Company')
 @Controller('companies')
@@ -29,29 +42,58 @@ export class CompanyController {
 
   @Get('/')
   @HttpCode(HttpStatus.OK)
-  getCompanies(@Query() { pageNumber, limit }: PaginationParams) {
+  @ApiOperation(OPERATION.GET_COMPANIES)
+  @ApiResponse(RES.GET_COMPANIES.OK)
+  @ApiResponse(RES.GET_COMPANIES.INTERNAL_SERVER_ERROR)
+  getCompanies(
+    @Query() { pageNumber, limit }: PaginationParams,
+  ): Promise<CompaniesDto> {
     return this.companyService.getCompanies(pageNumber, limit);
   }
 
   @Get('/:slug')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_COMPANY_BY_SLUG)
+  @ApiResponse(RES.GET_COMPANY_BY_SLUG.OK)
+  @ApiResponse(RES.GET_COMPANY_BY_SLUG.NOT_FOUND)
+  @ApiResponse(RES.GET_COMPANY_BY_SLUG.INTERNAL_SERVER_ERROR)
   getCompanyBySlug(@Param('slug') slug: string): Promise<CompanyDto> {
     return this.companyService.getCompanyBySlug(slug);
   }
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(ExtendedAccessTokenGuard)
+  @ApiOperation(OPERATION.CREATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.CREATE.OK)
+  @ApiResponse(RES.CREATE.BAD_REQUEST)
+  @ApiResponse(RES.CREATE.UNAUTHORIZED)
+  @ApiResponse(RES.CREATE.FORBIDDEN)
+  @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.CREATE.CONFLICT)
   createCompany(
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
     @Body() createCompanyDto: CreateCompanyDto,
   ): Promise<SuccessMessageDto> {
-    return this.companyService.createCompany(userId, createCompanyDto);
+    return this.companyService.createCompany(user, createCompanyDto);
   }
 
   @Put('/:companyId/update')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.UPDATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiResponse(RES.UPDATE.OK)
+  @ApiResponse(RES.UPDATE.BAD_REQUEST)
+  @ApiResponse(RES.UPDATE.UNAUTHORIZED)
+  @ApiResponse(RES.UPDATE.FORBIDDEN)
+  @ApiResponse(RES.UPDATE.NOT_FOUND)
+  @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.UPDATE.CONFLICT)
   updateCompany(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
@@ -67,6 +109,15 @@ export class CompanyController {
   @Delete('/:companyId/delete')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.DELETE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiResponse(RES.DELETE.OK)
+  @ApiResponse(RES.DELETE.UNAUTHORIZED)
+  @ApiResponse(RES.DELETE.FORBIDDEN)
+  @ApiResponse(RES.DELETE.NOT_FOUND)
+  @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   deleteCompany(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @GetAccessTokenPayload() userId: string,

@@ -3,10 +3,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { isNil } from 'ramda';
+import { isNil, isNotNil } from 'ramda';
 
+import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { CompanyRepository, UserRepository } from '../repositories';
+import { CompanyRepository } from '../repositories';
 
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
 import { SuccessMessageDto } from '../common/classes';
@@ -14,17 +15,21 @@ import { CompaniesDto, CompanyDto } from './dto/response';
 
 @Injectable()
 export class CompanyService {
-  constructor(
-    private readonly companyRepository: CompanyRepository,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly companyRepository: CompanyRepository) {}
 
   // ----------------------------------------------------------------------- \\
   public async createCompany(
-    userId: string,
+    user: UserEntity,
     { name, slug, email, description, size }: CreateCompanyDto,
   ): Promise<SuccessMessageDto> {
-    const user = await this.userRepository.getUserById(userId);
+    const userCompany = await this.companyRepository.findOneBy({
+      userId: user.id,
+    });
+
+    if (isNotNil(userCompany)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ONE_COMPANY_PER_USER);
+    }
+
     await this.companyRepository.createCompany(
       name,
       slug,
@@ -52,7 +57,7 @@ export class CompanyService {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
-    if (company.user.id !== userId) {
+    if (company.userId !== userId) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
@@ -72,7 +77,7 @@ export class CompanyService {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
-    if (company.user.id !== userId) {
+    if (company.userId !== userId) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 

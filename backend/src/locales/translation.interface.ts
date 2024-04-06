@@ -30,6 +30,7 @@ export interface ErrorTranslations {
   FORBIDDEN_ACCOUNT_ACTIVATION: string;
   FORBIDDEN_INACTIVE_ACCOUNT: string;
   FORBIDDEN_RESET_TOKEN: string;
+  FORBIDDEN_ONE_COMPANY_PER_USER: string;
   NOT_FUOND: string;
   NOT_FUOND_COMPANY: string;
   NOT_FUOND_BRANCH: string;
