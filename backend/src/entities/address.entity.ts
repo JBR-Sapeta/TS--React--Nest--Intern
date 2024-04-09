@@ -42,6 +42,6 @@ export class AddressEntity {
   @JoinColumn({ name: 'branch_id' })
   public branch: BranchEntity;
 
-  @Column({ name: 'branch_id', nullable: false })
+  @Column({ name: 'branch_id', nullable: true })
   public branchId: number;
 }

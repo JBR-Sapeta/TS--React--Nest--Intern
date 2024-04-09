@@ -19,7 +19,7 @@ import {
   VALID_UPDATE_PROFILE_DATA,
 } from './helpers/user-data';
 
-describe('AppController (e2e)', () => {
+describe('UserController (e2e)', () => {
   let app: INestApplication;
   let userRepository: UserRepository;
   let authService: AuthService;
