@@ -23,6 +23,7 @@ import { UserModule } from './user/user.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -61,13 +62,14 @@ import { AppService } from './app.service';
         return dataSource;
       },
     }),
+    CacheModule,
+    MailModule,
+    GeocoderModule,
     UserModule,
     AuthModule,
-    MailModule,
-    CacheModule,
     CompanyModule,
-    GeocoderModule,
     BranchModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

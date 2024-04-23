@@ -1,14 +1,17 @@
 import {
   Inject,
+  InternalServerErrorException,
   Logger,
   LoggerService,
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
-import { CategoryEntity } from '../entities/category.entity';
+import { CategoryEntity } from '../entities';
+import { PL_ERRORS } from '../locales';
+
 import { MAIN_CATEGORIES_ARRAY, CATEGORIES_ARRAY } from '../common/config';
 
 export class CategoryRepository
@@ -23,8 +26,17 @@ export class CategoryRepository
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
+  // ----------------------------------------------------------------------- \\
   public async seedRoles(): Promise<void> {
-    const categories = await this.find();
+    let categories: CategoryEntity[] = [];
+
+    try {
+      categories = await this.find();
+    } catch (error) {
+      this.logger.error(CategoryRepository.name + ' - seedRoles', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
 
     if (isEmpty(categories)) {
       try {
@@ -48,6 +60,40 @@ export class CategoryRepository
     }
   }
 
+  // ----------------------------------------------------------------------- \\
+  public async getCategoriesTree(): Promise<CategoryEntity[]> {
+    try {
+      const categories = await this.find({
+        where: { parentId: IsNull() },
+        relations: { children: true },
+      });
+      return categories;
+    } catch (error) {
+      this.logger.error(
+        CategoryRepository.name + ' - getCategoriesTree',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getCategories(): Promise<CategoryEntity[]> {
+    try {
+      const categories = await this.find();
+      return categories;
+    } catch (error) {
+      this.logger.error(
+        CategoryRepository.name + ' - getCategories',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async onApplicationBootstrap() {
     await this.seedRoles();
   }

@@ -22,8 +22,6 @@ export class CategoryEntity {
   @Column({ name: 'parent_id', nullable: true, default: null })
   parentId: number | null;
 
-  @OneToMany(() => CategoryEntity, (category) => category.parent, {
-    eager: true,
-  })
+  @OneToMany(() => CategoryEntity, (category) => category.parent)
   children: CategoryEntity[];
 }
