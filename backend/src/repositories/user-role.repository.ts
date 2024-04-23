@@ -26,7 +26,15 @@ export class RoleRepository
   }
 
   public async seedRoles(): Promise<void> {
-    const roles = await this.find();
+    let roles: RoleEntity[] = [];
+
+    try {
+      roles = await this.find();
+    } catch (error) {
+      this.logger.error(RoleRepository.name + ' - seedRoles', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
 
     if (isEmpty(roles)) {
       try {
