@@ -11,7 +11,7 @@ export class CategoriesDto
   extends SuccessMessageDto
   implements ResponseWithPayload<CategoryPreviewDto[]>
 {
-  @ApiProperty()
+  @ApiProperty({ isArray: true, type: CategoryPreviewDto })
   @Expose()
   data: CategoryPreviewDto[];
 

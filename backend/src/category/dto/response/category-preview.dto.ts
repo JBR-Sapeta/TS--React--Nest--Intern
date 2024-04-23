@@ -7,17 +7,25 @@ import { isEmpty } from 'class-validator';
 export class CategoryPreviewDto {
   @ApiProperty({ example: 10 })
   @Expose()
-  id: string;
+  id: number;
 
   @ApiProperty({ example: 'Logistics' })
   @Expose()
   public name: string;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: null })
   @Expose()
   public parentId: number | null;
 
-  @ApiProperty({ isArray: true, type: CategoryPreviewDto })
+  @ApiProperty({
+    isArray: true,
+    type: CategoryPreviewDto,
+    example: [
+      { id: 62, name: 'Driver', parentId: 10, children: [] },
+      { id: 63, name: 'Freight forwarder', parentId: 10, children: [] },
+      { id: 64, name: 'Warehouse workerr', parentId: 10, children: [] },
+    ],
+  })
   @Expose()
   public children: CategoryPreviewDto[];
 
