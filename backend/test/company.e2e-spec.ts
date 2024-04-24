@@ -7,10 +7,9 @@ import { CompanyRepository, UserRepository } from './../src/repositories';
 import { AppModule } from './../src/app.module';
 
 import { MailService } from './../src/mail/mail.service';
+import { GeocoderService } from './../src/geocoder/geocoder.service';
 import { CacheService } from './../src/cache/cache.service';
 import { AuthService } from './../src/auth/auth.service';
-
-import { mailService } from './mocks/mail-service';
 
 import { INVALID_ACCESS_TOKEN, USER_ONE, USER_TWO } from './helpers/auth-data';
 import {
@@ -19,6 +18,9 @@ import {
   INVALID_COMPANY,
   INVALID_COMPANY_ID,
 } from './helpers/company-data';
+
+import { mailService } from './mocks/mail-service';
+import { geocoderService } from './mocks/geocoder-service';
 
 describe('CompanyController', () => {
   let app: INestApplication;
@@ -33,6 +35,8 @@ describe('CompanyController', () => {
     })
       .overrideProvider(MailService)
       .useValue(mailService)
+      .overrideProvider(GeocoderService)
+      .useValue(geocoderService)
       .compile();
 
     app = moduleFixture.createNestApplication();

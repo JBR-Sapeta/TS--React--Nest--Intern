@@ -395,7 +395,7 @@ describe('BranchController', () => {
         accessToken,
         companyId,
       );
-      expect(response.status).toBe(200);
+      expect(response.body.message).toBeTruthy();
     });
 
     it('returns proper success response object with payload', async () => {

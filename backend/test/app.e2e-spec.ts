@@ -4,6 +4,11 @@ import * as request from 'supertest';
 
 import { AppModule } from './../src/app.module';
 import { CacheService } from './../src/cache/cache.service';
+import { MailService } from './../src/mail/mail.service';
+import { GeocoderService } from './../src/geocoder/geocoder.service';
+
+import { mailService } from './mocks/mail-service';
+import { geocoderService } from './mocks/geocoder-service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -12,7 +17,12 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(MailService)
+      .useValue(mailService)
+      .overrideProvider(GeocoderService)
+      .useValue(geocoderService)
+      .compile();
 
     app = moduleFixture.createNestApplication();
 

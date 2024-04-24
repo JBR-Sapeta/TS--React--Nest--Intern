@@ -6,10 +6,11 @@ import { AppModule } from './../src/app.module';
 import { UserRepository } from './../src/repositories';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
+import { GeocoderService } from './../src/geocoder/geocoder.service';
 import { AuthService } from './../src/auth/auth.service';
 
-import { mailService } from './mocks/mail-service';
 import { INVALID_ACCESS_TOKEN, USER_ONE, USER_TWO } from './helpers/auth-data';
+
 import {
   INVALID_NEW_EMAIL,
   INVALID_NEW_PASSWORD,
@@ -18,6 +19,9 @@ import {
   VALID_NEW_PASSWORD,
   VALID_UPDATE_PROFILE_DATA,
 } from './helpers/user-data';
+
+import { mailService } from './mocks/mail-service';
+import { geocoderService } from './mocks/geocoder-service';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
@@ -31,6 +35,8 @@ describe('UserController (e2e)', () => {
     })
       .overrideProvider(MailService)
       .useValue(mailService)
+      .overrideProvider(GeocoderService)
+      .useValue(geocoderService)
       .compile();
 
     app = moduleFixture.createNestApplication();
