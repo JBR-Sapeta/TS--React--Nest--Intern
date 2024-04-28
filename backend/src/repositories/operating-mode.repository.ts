@@ -26,7 +26,7 @@ export class OperatingModeRepository
   }
 
   // ----------------------------------------------------------------------- \\
-  public async seedRoles(): Promise<void> {
+  public async seedOperatingModes(): Promise<void> {
     let operatingModes: OperatingModeEntity[] = [];
 
     try {
@@ -58,6 +58,6 @@ export class OperatingModeRepository
 
   // ----------------------------------------------------------------------- \\
   public async onApplicationBootstrap() {
-    await this.seedRoles();
+    await this.seedOperatingModes();
   }
 }

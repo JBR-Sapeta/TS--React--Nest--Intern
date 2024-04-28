@@ -27,13 +27,16 @@ export class CategoryRepository
   }
 
   // ----------------------------------------------------------------------- \\
-  public async seedRoles(): Promise<void> {
+  public async seedCategories(): Promise<void> {
     let categories: CategoryEntity[] = [];
 
     try {
       categories = await this.find();
     } catch (error) {
-      this.logger.error(CategoryRepository.name + ' - seedRoles', error.stack);
+      this.logger.error(
+        CategoryRepository.name + ' - seedCategories',
+        error.stack,
+      );
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -53,7 +56,7 @@ export class CategoryRepository
           .execute();
       } catch (error) {
         this.logger.error(
-          CategoryRepository.name + ' - seedRoles',
+          CategoryRepository.name + ' - seedCategories',
           error.stack,
         );
       }
@@ -95,6 +98,6 @@ export class CategoryRepository
 
   // ----------------------------------------------------------------------- \\
   public async onApplicationBootstrap() {
-    await this.seedRoles();
+    await this.seedCategories();
   }
 }
