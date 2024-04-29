@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 } from 'typeorm';
 import { AddressEntity } from './address.entity';
 import { CompanyEntity } from './company.entity';
+import { OfferEntity } from './offer.entity';
 
 @Entity({ name: 'branches' })
 export class BranchEntity {
@@ -43,4 +45,7 @@ export class BranchEntity {
 
   @Column({ name: 'company_id', nullable: false })
   public companyId: string;
+
+  @ManyToMany(() => OfferEntity, (offer: OfferEntity) => offer.branches)
+  public offers: OfferEntity[];
 }

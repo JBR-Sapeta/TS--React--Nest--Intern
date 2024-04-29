@@ -2,26 +2,31 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { OfferEntity } from './offer.entity';
 
 @Entity({ name: 'categories' })
 export class CategoryEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  public id: number;
 
   @Column({ type: 'varchar', length: 255 })
   public name: string;
 
   @ManyToOne(() => CategoryEntity, (category) => category.children)
   @JoinColumn({ name: 'parent_id' })
-  parent: CategoryEntity;
+  public parent: CategoryEntity;
 
   @Column({ name: 'parent_id', nullable: true, default: null })
-  parentId: number | null;
+  public parentId: number | null;
 
   @OneToMany(() => CategoryEntity, (category) => category.parent)
-  children: CategoryEntity[];
+  public children: CategoryEntity[];
+
+  @ManyToMany(() => OfferEntity, (offer: OfferEntity) => offer.categories)
+  public offers: OfferEntity[];
 }

@@ -24,13 +24,24 @@ import { UserModule } from './user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CategoryModule } from './category/category.module';
+import { OfferModule } from './offer/offer.module';
 
 @Module({
   imports: [
+    AuthModule,
+    CacheModule,
+    CategoryModule,
+    CompanyModule,
+
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
     }),
+    BranchModule,
+    GeocoderModule,
+    MailModule,
+    OfferModule,
+    UserModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -62,14 +73,6 @@ import { CategoryModule } from './category/category.module';
         return dataSource;
       },
     }),
-    CacheModule,
-    MailModule,
-    GeocoderModule,
-    UserModule,
-    AuthModule,
-    CompanyModule,
-    BranchModule,
-    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

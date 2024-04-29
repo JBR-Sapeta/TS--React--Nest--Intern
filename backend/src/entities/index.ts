@@ -1,6 +1,9 @@
-export { UserEntity } from './user.entity';
-export { RoleEntity } from './role.entity';
+export { AddressEntity } from './address.entity';
+export { BranchEntity } from './branch.entity';
 export { CategoryEntity } from './category.entity';
 export { CompanyEntity } from './company.entity';
-export { BranchEntity } from './branch.entity';
-export { AddressEntity } from './address.entity';
+export { EmploymentTypeEntity } from './employment-type.entity';
+export { OfferEntity } from './offer.entity';
+export { OperatingModeEntity } from './operating-mode.entity';
+export { UserEntity } from './user.entity';
+export { RoleEntity } from './role.entity';

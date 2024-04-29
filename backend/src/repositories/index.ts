@@ -2,5 +2,8 @@ export { AddressRepository } from './address.repository';
 export { BranchRepository } from './branch.repository';
 export { CategoryRepository } from './category.repository';
 export { CompanyRepository } from './company.repository';
+export { EmploymentTypeRepository } from './employment-type.repository';
+export { OfferRepository } from './offer.repository';
+export { OperatingModeRepository } from './operating-mode.repository';
 export { UserRepository } from './user.repository';
 export { RoleRepository } from './user-role.repository';
