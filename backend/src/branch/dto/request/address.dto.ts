@@ -37,13 +37,13 @@ export class AddressDto {
   houseNumber: string;
 
   @ApiProperty({ required: true, example: 42.3393541 })
-  @IsNumber({}, { message: PL_ERRORS.VALIDATION_IS_NUMBER })
+  @IsNumber({}, { message: PL_ERRORS.VALIDATION_COMMON_IS_NUMBER })
   @Min(-90, { message: PL_ERRORS.VALIDATION_ADDRESS_LATITUDE })
   @Max(90, { message: PL_ERRORS.VALIDATION_ADDRESS_LATITUDE })
   latitude: number;
 
   @ApiProperty({ required: true, example: -71.04881 })
-  @IsNumber({}, { message: PL_ERRORS.VALIDATION_IS_NUMBER })
+  @IsNumber({}, { message: PL_ERRORS.VALIDATION_COMMON_IS_NUMBER })
   @Min(-180, { message: PL_ERRORS.VALIDATION_ADDRESS_LONGITUDE })
   @Max(180, { message: PL_ERRORS.VALIDATION_ADDRESS_LONGITUDE })
   longitude: number;

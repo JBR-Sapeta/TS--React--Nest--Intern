@@ -24,8 +24,8 @@ export class CreateCompanyDto {
   readonly slug: string;
 
   @ApiProperty({ required: true, example: 'newcomapny@mail.com' })
-  @IsEmail({}, { message: PL_ERRORS.VALIDATION_EMAIL })
-  @MaxLength(255, { message: PL_ERRORS.VALIDATION_EMAIL })
+  @IsEmail({}, { message: PL_ERRORS.VALIDATION_COMMON_EMAIL })
+  @MaxLength(255, { message: PL_ERRORS.VALIDATION_COMMON_EMAIL })
   readonly email: string;
 
   @ApiProperty({ required: true, example: 'Comapny Description' })

@@ -130,7 +130,7 @@ export class BranchService {
     }
 
     if (isNil(name) && isNil(address)) {
-      throw new BadRequestException(PL_ERRORS.VALIDATION_NO_BODY);
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
     if (isNotNil(address)) {

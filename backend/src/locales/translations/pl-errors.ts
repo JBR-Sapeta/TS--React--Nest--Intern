@@ -1,26 +1,8 @@
 /* eslint-disable prettier/prettier */
+
 import { ErrorTranslations } from '../translation.interface';
 
 export const PL_ERRORS: ErrorTranslations = {
-  VALIDATION_IS_NUMBER: 'Wprowadzona wartość nie jest cyfrą.',
-  VALIDATION_NO_BODY: 'Nie żądanie nie zaiwera żadnych danych.',
-  VALIDATION_EMAIL: 'Wprowadź prawidłowy adres E-mail.',
-  VALIDATION_EMPTY_PASSWORD: 'Hasło jest wymagane.',
-  VALIDATION_FIRST_NAME: 'Imię powinno składać się z 2 do 255 znaków.',
-  VALIDATION_LAST_NAME: 'Nazwisko powinno składać się z 2 do 255 znaków.',
-  VALIDATION_PASSWORD:
-    'Hasło musi składać się minimum z 8 znaków i zawierać małe i duże litery a także cyfrę i znak specjalny.',
-  VALIDATION_RESET_TOKEN: 'Token jest wymagany.',
-  VALIDATION_COMPANY_DESCRIPTION:
-    'Opis powinień składać się minimum z 32 znaków.',
-  VALIDATION_COMPANY_NAME: 'Nazwa firmy powinno składać się z 2 do 255 znaków.',
-  VALIDATION_COMPANY_PHONE: 'Wprowadź prawidłowy numer telefonu.',
-  VALIDATION_COMPANY_SIZE: 'Rozmiar firmy powinien być cyfrą większą od zera.',
-  VALIDATION_COMPANY_SLUG:
-    "Pole slug powinno składać się z liter i cyfer oddzielonych za pomocą myślników '-'.",
-  VALIDATION_COMPANY_SLUG_SIZE: 'Slug powinno składać się z 2 do 255 znaków.',
-  VALIDATION_BRANCH_NAME:
-    'Nazwa oddziału powinno składać się z 4 do 255 znaków.',
   VALIDATION_ADDRESS_DEFINED:
     'Wprowadź adres zawierający wszytskie wymagane pola.',
   VALIDATION_ADDRESS_COUNTRY: 'Nazwa kraju nie może być pusta.',
@@ -38,6 +20,44 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_ADDRESS_LONGITUDE: 'Nieprawidłowa wartość długości geograficznej.',
   VALIDATION_ADDRESS_CHECK:
     'Nie udało się nam zweryfikować wprowadzonego adresu.',
+  VALIDATION_AUTH_FIRST_NAME: 'Imię powinno składać się z 2 do 255 znaków.',
+  VALIDATION_AUTH_LAST_NAME: 'Nazwisko powinno składać się z 2 do 255 znaków.',
+  VALIDATION_AUTH_PASSWORD:
+    'Hasło musi składać się minimum z 8 znaków i zawierać małe i duże litery a także cyfrę i znak specjalny.',
+  VALIDATION_AUTH_RESET_TOKEN: 'Token jest wymagany.',
+  VALIDATION_BRANCH_NAME:
+    'Nazwa oddziału powinno składać się z 4 do 255 znaków.',
+  VALIDATION_COMMON_EMAIL: 'Wprowadź prawidłowy adres E-mail.',
+  VALIDATION_COMMON_EMPTY_PASSWORD: 'Hasło jest wymagane.',
+  VALIDATION_COMMON_IS_NUMBER: 'Wprowadzona wartość nie jest cyfrą.',
+  VALIDATION_COMMON_NO_BODY: 'Nie żądanie nie zaiwera żadnych danych.',
+  VALIDATION_COMPANY_DESCRIPTION:
+    'Opis powinień składać się minimum z 32 znaków.',
+  VALIDATION_COMPANY_NAME: 'Nazwa firmy powinno składać się z 2 do 255 znaków.',
+  VALIDATION_COMPANY_PHONE: 'Wprowadź prawidłowy numer telefonu.',
+  VALIDATION_COMPANY_SIZE: 'Rozmiar firmy powinien być cyfrą większą od zera.',
+  VALIDATION_COMPANY_SLUG:
+    "Pole slug powinno składać się z liter i cyfer oddzielonych za pomocą myślników '-'.",
+  VALIDATION_COMPANY_SLUG_SIZE: 'Slug powinno składać się z 2 do 255 znaków.',
+  VALIDATION_OFFER_BRANCHES:
+    'Nieprawidłowa wartość. Wprowadź tablicę liczb całkowitych.',
+  VALIDATION_OFFER_CATEGORIES:
+    'Nieprawidłowa wartość. Wprowadź tablicę liczb całkowitych.',
+  VALIDATION_OFFER_DESCRIPTION:
+    'Opis ogłoszenia powinien składać się z 24 do 3072 znaków.',
+  VALIDATION_OFFER_EMPLOYMENT_TYPE:
+    'Nieprawidłowa wartość. Wprowadź dodatnią liczbę całkowitą.',
+  VALIDATION_OFFER_EXPIRATION_TIME:
+    'Wartość pola powinna być liczbą całkowitą z przedziału od 7 do 42.',
+  VALIDATION_OFFER_IS_PAID:
+    'Nieprawidłowa wartość. Wprowadź wartośc typu boolean.',
+  VALIDATION_OFFER_IS_ACTIVE: 'Wprowadź wartośc typu boolean.',
+  VALIDATION_OFFER_POSITION:
+    'Nazwa stanowiska powinna składać się z 2 do 64 znaków.',
+  VALIDATION_OFFER_OPERATING_MODE:
+    'Nieprawidłowa wartość. Wprowadź dodatnią liczbę całkowitą.',
+  VALIDATION_OFFER_TITLE:
+    'Tytuł ogłoszenia powinien składać się z 4 do 64 znaków.',
   UNAUTHORIZED_INVALID_CREDENTIALS: 'Nieprawidłowe hasło lub adres E-mail.',
   UNAUTHORIZED_INVALID_PASSWORD: 'Podano nieprawidłowe hasło.',
   FORBIDDEN: 'Odmowa dostępu.',
@@ -45,8 +65,8 @@ export const PL_ERRORS: ErrorTranslations = {
     'Konto zostało już aktywowane lub przesłany token jest nieprawidłowy.',
   FORBIDDEN_INACTIVE_ACCOUNT:
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
-  FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
   FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',
+  FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
   NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
   NOT_FUOND_BRANCH: 'Nie znaleziono oddziału firmy.',

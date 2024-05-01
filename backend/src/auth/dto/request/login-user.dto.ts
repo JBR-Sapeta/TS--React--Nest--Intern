@@ -5,10 +5,10 @@ import { PL_ERRORS } from '../../../locales';
 
 export class LoginUserDto {
   @ApiProperty({ required: true, example: 'user1@mail.com' })
-  @IsEmail({}, { message: PL_ERRORS.VALIDATION_EMAIL })
+  @IsEmail({}, { message: PL_ERRORS.VALIDATION_COMMON_EMAIL })
   readonly email: string;
 
   @ApiProperty({ required: true, example: 'Password123#' })
-  @IsNotEmpty({ message: PL_ERRORS.VALIDATION_EMPTY_PASSWORD })
+  @IsNotEmpty({ message: PL_ERRORS.VALIDATION_COMMON_EMPTY_PASSWORD })
   readonly password: string;
 }

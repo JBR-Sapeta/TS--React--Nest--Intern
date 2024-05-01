@@ -9,7 +9,7 @@ export class ResetPasswordDto {
     example: 'eeb122d3-4801-42aa-a74c-3054ff843b59',
   })
   @IsString()
-  @IsNotEmpty({ message: PL_ERRORS.VALIDATION_RESET_TOKEN })
+  @IsNotEmpty({ message: PL_ERRORS.VALIDATION_AUTH_RESET_TOKEN })
   resetToken: string;
 
   @ApiProperty({
@@ -18,7 +18,7 @@ export class ResetPasswordDto {
   })
   @IsStrongPassword(
     { minLength: 8 },
-    { message: PL_ERRORS.VALIDATION_PASSWORD },
+    { message: PL_ERRORS.VALIDATION_AUTH_PASSWORD },
   )
   password: string;
 }

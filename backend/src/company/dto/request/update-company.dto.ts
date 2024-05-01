@@ -29,8 +29,8 @@ export class UpdateCompanyDto {
 
   @ApiProperty({ required: true, example: 'newcomapny@mail.com' })
   @IsOptional()
-  @IsEmail({}, { message: PL_ERRORS.VALIDATION_EMAIL })
-  @MaxLength(255, { message: PL_ERRORS.VALIDATION_EMAIL })
+  @IsEmail({}, { message: PL_ERRORS.VALIDATION_COMMON_EMAIL })
+  @MaxLength(255, { message: PL_ERRORS.VALIDATION_COMMON_EMAIL })
   readonly email?: string;
 
   @ApiProperty({ example: '48 731 432 561' })
