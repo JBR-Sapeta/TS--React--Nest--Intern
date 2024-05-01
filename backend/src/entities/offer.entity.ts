@@ -14,32 +14,30 @@ import { BranchEntity } from './branch.entity';
 import { CategoryEntity } from './category.entity';
 import { EmploymentTypeEntity } from './employment-type.entity';
 import { OperatingModeEntity } from './operating-mode.entity';
+import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'offers' })
 export class OfferEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 64 })
   public title: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 64 })
   public position: string;
 
   @Column({ type: 'varchar', length: 3072 })
   public description: string;
 
   @Column({ type: 'boolean', default: false })
-  public paid: boolean;
+  public isPaid: boolean;
 
   @Column({ type: 'boolean', default: false })
   public isActive: boolean;
 
   @Column()
   public expirationDate: Date;
-
-  @Column()
-  public publicationDate: Date;
 
   @CreateDateColumn()
   public createdAt: Date;
@@ -68,4 +66,13 @@ export class OfferEntity {
   @ManyToMany(() => CategoryEntity, { eager: true })
   @JoinTable({ name: 'offers_categories' })
   public categories: CategoryEntity[];
+
+  @ManyToOne(() => CompanyEntity, (company: CompanyEntity) => company.offers, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'company_id' })
+  public company: CompanyEntity;
+
+  @Column({ name: 'company_id', nullable: false })
+  public companyId: string;
 }

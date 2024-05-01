@@ -40,9 +40,9 @@ export const PL_ERRORS: ErrorTranslations = {
     "Pole slug powinno składać się z liter i cyfer oddzielonych za pomocą myślników '-'.",
   VALIDATION_COMPANY_SLUG_SIZE: 'Slug powinno składać się z 2 do 255 znaków.',
   VALIDATION_OFFER_BRANCHES:
-    'Nieprawidłowa wartość. Wprowadź tablicę liczb całkowitych.',
+    'Nieprawidłowa wartość. Wymagana tablica liczb całkowitych.',
   VALIDATION_OFFER_CATEGORIES:
-    'Nieprawidłowa wartość. Wprowadź tablicę liczb całkowitych.',
+    'Nieprawidłowa wartość. Wymagana tablica liczb całkowitych.',
   VALIDATION_OFFER_DESCRIPTION:
     'Opis ogłoszenia powinien składać się z 24 do 3072 znaków.',
   VALIDATION_OFFER_EMPLOYMENT_TYPE:
@@ -51,7 +51,8 @@ export const PL_ERRORS: ErrorTranslations = {
     'Wartość pola powinna być liczbą całkowitą z przedziału od 7 do 42.',
   VALIDATION_OFFER_IS_PAID:
     'Nieprawidłowa wartość. Wprowadź wartośc typu boolean.',
-  VALIDATION_OFFER_IS_ACTIVE: 'Wprowadź wartośc typu boolean.',
+  VALIDATION_OFFER_IS_ACTIVE:
+    'Nieprawidłowa wartość.Wprowadź wartośc typu boolean.',
   VALIDATION_OFFER_POSITION:
     'Nazwa stanowiska powinna składać się z 2 do 64 znaków.',
   VALIDATION_OFFER_OPERATING_MODE:
@@ -68,8 +69,12 @@ export const PL_ERRORS: ErrorTranslations = {
   FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',
   FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
-  NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
   NOT_FUOND_BRANCH: 'Nie znaleziono oddziału firmy.',
+  NOT_FUOND_BRANCHES: 'Nie znaleziono oddziałów firmy.',
+  NOT_FUOND_CATEGORIES: 'Nie znaleziono kategorii.',
+  NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
+  NOT_FUOND_EMPLOYMENT_TYPE: 'Nie znaleziono typu zatrudnienia',
+  NOT_FUOND_OPERATING_MODE: 'Nie znaleziono trybu pracy.',
   NOT_FUOND_USER: 'Nie znaleziono użytkownika.',
   CONFLICT_EMAIL_TAKEN: 'Podany adres E-mail jest już używany.',
   INTERNAL_SERVER_ERROR: 'Coś poszło nie tak. Spróbuj ponownie później.',

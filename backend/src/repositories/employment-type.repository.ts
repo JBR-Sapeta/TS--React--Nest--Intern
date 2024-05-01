@@ -12,6 +12,7 @@ import { isEmpty } from 'ramda';
 import { EmploymentTypeEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { EMPLOYMENT_TYPES_ARRAY } from '../common/config';
+import { Nullable } from '../common/types';
 
 export class EmploymentTypeRepository
   extends Repository<EmploymentTypeEntity>
@@ -23,6 +24,23 @@ export class EmploymentTypeRepository
     @Inject(Logger) private readonly logger: LoggerService,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getEmploymentTypeById(
+    employmentTypeId: number,
+  ): Promise<Nullable<EmploymentTypeEntity>> {
+    try {
+      const employmentType = await this.findOneBy({ id: employmentTypeId });
+      return employmentType;
+    } catch (error) {
+      this.logger.error(
+        EmploymentTypeRepository.name + ' - getEmploymentTypeById',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // ----------------------------------------------------------------------- \\

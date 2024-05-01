@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { BranchEntity } from './branch.entity';
+import { OfferEntity } from './offer.entity';
 
 @Entity({ name: 'companies' })
 export class CompanyEntity {
@@ -58,4 +59,7 @@ export class CompanyEntity {
 
   @OneToMany(() => BranchEntity, (branch: BranchEntity) => branch.company)
   public branches: BranchEntity[];
+
+  @OneToMany(() => OfferEntity, (offer: OfferEntity) => offer.company)
+  public offers: OfferEntity[];
 }

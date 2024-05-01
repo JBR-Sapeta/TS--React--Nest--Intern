@@ -3,12 +3,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
   BranchEntity,
+  CategoryEntity,
+  CompanyEntity,
   EmploymentTypeEntity,
   OfferEntity,
   OperatingModeEntity,
 } from '../entities';
 import {
   BranchRepository,
+  CategoryRepository,
+  CompanyRepository,
   EmploymentTypeRepository,
   OfferRepository,
   OperatingModeRepository,
@@ -24,6 +28,8 @@ import { OfferController } from './offer.controller';
     AuthModule,
     TypeOrmModule.forFeature([
       BranchEntity,
+      CategoryEntity,
+      CompanyEntity,
       EmploymentTypeEntity,
       OfferEntity,
       OperatingModeEntity,
@@ -33,6 +39,8 @@ import { OfferController } from './offer.controller';
   providers: [
     Logger,
     OfferService,
+    CategoryRepository,
+    CompanyRepository,
     BranchRepository,
     EmploymentTypeRepository,
     OfferRepository,

@@ -6,7 +6,7 @@ import {
   OnApplicationBootstrap,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository } from 'typeorm';
+import { In, IsNull, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
 import { CategoryEntity } from '../entities';
@@ -92,6 +92,20 @@ export class CategoryRepository
         error.stack,
       );
 
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  async getCategoriesByIds(ids: number[]): Promise<CategoryEntity[]> {
+    try {
+      const categories = await this.find({ where: { id: In(ids) } });
+      return categories;
+    } catch (error) {
+      this.logger.error(
+        CategoryRepository.name + ' - getCategoriesByIds',
+        error.stack,
+      );
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
   }
