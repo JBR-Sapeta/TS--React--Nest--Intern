@@ -39,6 +39,9 @@ export class OfferEntity {
   @Column()
   public expirationDate: Date;
 
+  @Column()
+  public removalDate: Date;
+
   @CreateDateColumn()
   public createdAt: Date;
 

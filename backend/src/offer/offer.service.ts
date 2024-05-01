@@ -5,8 +5,9 @@ import {
   Injectable,
   Logger,
   LoggerService,
+  NotFoundException,
 } from '@nestjs/common';
-import { isNil, isEmpty } from 'ramda';
+import { isNil, isEmpty, isNotNil } from 'ramda';
 
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
@@ -16,10 +17,11 @@ import {
   OfferRepository,
   OperatingModeRepository,
 } from '../repositories';
-import { DAY_IN_MS } from '../common/constants';
+import { DAY_IN_MS, TIME_OF_REMOVAL } from '../common/constants';
 import { SuccessMessageDto } from '../common/classes';
+import { calculateDate } from '../common/functions';
 
-import { CreateOfferDto } from './dto/request';
+import { CreateOfferDto, UpdateOfferDto } from './dto/request';
 
 @Injectable()
 export class OfferService {
@@ -33,7 +35,6 @@ export class OfferService {
   ) {}
 
   // ----------------------------------------------------------------------- \\
-
   public async createOffer(
     companyId: string,
     userId: string,
@@ -51,7 +52,7 @@ export class OfferService {
     const company = await this.companyRepository.getCompanyDataById(companyId);
 
     if (isNil(company)) {
-      throw new BadRequestException(PL_ERRORS.NOT_FUOND_COMPANY);
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
     if (userId !== company.userId) {
@@ -94,13 +95,15 @@ export class OfferService {
       throw new BadRequestException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
     }
 
-    const expirationDate = new Date(
-      new Date().getTime() + expirationTimeDto * DAY_IN_MS,
+    const expirationDate = calculateDate(expirationTimeDto * DAY_IN_MS);
+    const removalDate = calculateDate(
+      (expirationTimeDto + TIME_OF_REMOVAL) * DAY_IN_MS,
     );
 
     await this.offerRepository.createOffer({
       ...offerData,
       expirationDate,
+      removalDate,
       employmentType,
       operatingMode,
       branches,
@@ -111,6 +114,152 @@ export class OfferService {
     return new SuccessMessageDto({
       statusCode: 201,
       message: PL_MESSAGES.OFFER_CREATED,
+    });
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async updateOffer(
+    companyId: string,
+    offerId: number,
+    userId: string,
+    updateOffetDto: UpdateOfferDto,
+  ): Promise<SuccessMessageDto> {
+    const {
+      branches: branchesDto,
+      categories: categoriesDto,
+      employmentType: employmentTypeDto,
+      operatingMode: operatingModeDto,
+      ...offerData
+    } = updateOffetDto;
+
+    const company = await this.companyRepository.getCompanyDataById(companyId);
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (userId !== company.userId) {
+      this.logger.error(
+        OfferService.name + ' - updateOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const offer = await this.offerRepository.getOfferById(offerId);
+
+    if (isNil(offer)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
+    }
+
+    if (companyId !== offer.companyId) {
+      this.logger.error(
+        OfferService.name + ' - updateOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    if (isNotNil(branchesDto)) {
+      const branches = company.branches.filter((branch) =>
+        branchesDto.includes(branch.id),
+      );
+
+      if (isEmpty(branches)) {
+        throw new BadRequestException(PL_ERRORS.NOT_FUOND_BRANCHES);
+      } else {
+        offer.branches = branches;
+      }
+    }
+
+    if (isNotNil(categoriesDto)) {
+      const categories =
+        await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+
+      if (isEmpty(categoriesDto)) {
+        throw new BadRequestException(PL_ERRORS.NOT_FUOND_CATEGORIES);
+      } else {
+        offer.categories = categories;
+      }
+    }
+
+    if (isNotNil(employmentTypeDto)) {
+      const employmentType =
+        await this.employmentTypeRepository.getEmploymentTypeById(
+          employmentTypeDto,
+        );
+
+      if (isNil(employmentType)) {
+        throw new BadRequestException(PL_ERRORS.NOT_FUOND_EMPLOYMENT_TYPE);
+      } else {
+        offer.employmentType = employmentType;
+      }
+    }
+
+    if (isNotNil(operatingModeDto)) {
+      const operatingMode =
+        await this.operatingModeRepository.getOperatingModeById(
+          operatingModeDto,
+        );
+
+      if (isNil(operatingMode)) {
+        throw new BadRequestException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
+      } else {
+        offer.operatingMode = operatingMode;
+      }
+    }
+
+    Object.assign(offer, offerData);
+
+    await this.offerRepository.updateOffer(offer);
+
+    return new SuccessMessageDto({
+      message: PL_MESSAGES.OFFER_UPDATED,
+    });
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteOffer(
+    companyId: string,
+    offerId: number,
+    userId: string,
+  ): Promise<SuccessMessageDto> {
+    const company = await this.companyRepository.getCompanyDataById(companyId);
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (userId !== company.userId) {
+      this.logger.error(
+        OfferService.name + ' - deleteOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const offer = await this.offerRepository.getOfferById(offerId);
+
+    if (isNil(offer)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
+    }
+
+    if (companyId !== offer.companyId) {
+      this.logger.error(
+        OfferService.name + ' - deleteOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    await this.offerRepository.deleteOffer(offerId);
+
+    return new SuccessMessageDto({
+      message: PL_MESSAGES.OFFER_DELETED,
     });
   }
 }

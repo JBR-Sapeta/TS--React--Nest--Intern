@@ -11,9 +11,22 @@ export type CreateOfferData = {
   isPaid: boolean;
   isActive: boolean;
   expirationDate: Date;
+  removalDate: Date;
   employmentType: EmploymentTypeEntity;
   operatingMode: OperatingModeEntity;
   branches: BranchEntity[];
   categories: CategoryEntity[];
   company: CompanyEntity;
+};
+
+export type UpdateOfferData = {
+  title?: string;
+  position?: string;
+  description?: string;
+  isPaid?: boolean;
+  isActive?: boolean;
+  employmentType?: EmploymentTypeEntity;
+  operatingMode?: OperatingModeEntity;
+  branches?: BranchEntity[];
+  categories?: CategoryEntity[];
 };

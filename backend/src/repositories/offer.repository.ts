@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { OfferEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { Nullable } from '../common/types';
+
 import { CreateOfferData } from './types';
 
 export class OfferRepository extends Repository<OfferEntity> {
@@ -44,6 +45,29 @@ export class OfferRepository extends Repository<OfferEntity> {
       return offer;
     } catch (error) {
       this.logger.error(OfferRepository.name + ' - getOfferById', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async updateOffer(offer: OfferEntity): Promise<OfferEntity> {
+    try {
+      const updatedOffer = await this.save(offer);
+      return updatedOffer;
+    } catch (error) {
+      this.logger.error(OfferRepository.name + ' - updateOffer', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteOffer(offerId: number): Promise<void> {
+    try {
+      await this.delete({ id: offerId });
+    } catch (error) {
+      this.logger.error(OfferRepository.name + ' - deleteOffer', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

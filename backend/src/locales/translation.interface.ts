@@ -47,6 +47,7 @@ export interface ErrorTranslations {
   NOT_FUOND_CATEGORIES: string;
   NOT_FUOND_COMPANY: string;
   NOT_FUOND_EMPLOYMENT_TYPE: string;
+  NOT_FUOND_OFFER: string;
   NOT_FUOND_OPERATING_MODE: string;
   NOT_FUOND_USER: string;
   CONFLICT_EMAIL_TAKEN: string;

@@ -19,10 +19,10 @@ export const PL_MESSAGES: MessageTranslations = {
   COMPANY_UPDATED: 'Dane firmy zostały zaktualizowane.',
   COMPANY_DELETED: 'Dane firmy zostały usunięte',
   OFFER_CREATED: 'Ogłoszenie zostało utworzone.',
-  OFFER_UPDATED: 'Ogłoszenie zostało utworzonae.',
-  OFFER_DELETED: 'Ogłoszenie zostało zaktualizowane.',
+  OFFER_UPDATED: 'Ogłoszenie zostało zaktualizowane.',
+  OFFER_DELETED: 'Ogłoszenie zostało usunięte.',
   USER_ACCOUNT_UPDATE: 'Twoje dane zostały zmienione.',
   USER_EMAIL_UPDATE: 'Twój adres E-mail zostało zmieniony.',
   USER_DELETE_ACCOUNT: 'Twoje konto zostało usunięte.',
-  USER_PASSWORD_UPDATE: '.',
+  USER_PASSWORD_UPDATE: 'Twoje hasło zostało zmienione.',
 };

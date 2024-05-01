@@ -74,6 +74,7 @@ export const PL_ERRORS: ErrorTranslations = {
   NOT_FUOND_CATEGORIES: 'Nie znaleziono kategorii.',
   NOT_FUOND_COMPANY: 'Nie znaleziono firmy.',
   NOT_FUOND_EMPLOYMENT_TYPE: 'Nie znaleziono typu zatrudnienia',
+  NOT_FUOND_OFFER: 'Nie znaleziono ogłoszenia.',
   NOT_FUOND_OPERATING_MODE: 'Nie znaleziono trybu pracy.',
   NOT_FUOND_USER: 'Nie znaleziono użytkownika.',
   CONFLICT_EMAIL_TAKEN: 'Podany adres E-mail jest już używany.',

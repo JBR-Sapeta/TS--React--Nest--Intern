@@ -16,7 +16,7 @@ import { UserRepository, RoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
 import { SuccessMessageDto } from '../common/classes';
-import { calculateExpirationDate } from '../common/functions';
+import { calculateDate } from '../common/functions';
 
 import { MailService } from '../mail/mail.service';
 
@@ -129,7 +129,7 @@ export class AuthService {
     const expirationTime = +this.configService.get<string>(
       ENV_KEYS.RESET_TOKEN_EXPIRATION_TIME,
     );
-    const resetTokenExpirationDate = calculateExpirationDate(expirationTime);
+    const resetTokenExpirationDate = calculateDate(expirationTime);
 
     const { firstName } = await this.userRepository.setResetToken(
       email,

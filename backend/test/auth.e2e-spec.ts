@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { v4 as uuid } from 'uuid';
 
 import { Roles } from './../src/common/enums';
-import { calculateExpirationDate } from './../src/common/functions';
+import { calculateDate } from './../src/common/functions';
 import { AppModule } from './../src/app.module';
 import { UserRepository } from './../src/repositories';
 import { CacheService } from './../src/cache/cache.service';
@@ -93,7 +93,7 @@ describe('AuthController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     user.resetToken = uuid();
-    user.resetTokenExpirationDate = calculateExpirationDate(expirationTime);
+    user.resetTokenExpirationDate = calculateDate(expirationTime);
 
     const updatedUser = await userRepository.save(user);
     return updatedUser;

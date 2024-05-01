@@ -62,8 +62,8 @@ export class CompanyController {
   }
 
   @Post('/create')
-  @HttpCode(HttpStatus.CREATED)
   @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation(OPERATION.CREATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -81,8 +81,8 @@ export class CompanyController {
   }
 
   @Put('/:companyId/update')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -107,8 +107,8 @@ export class CompanyController {
   }
 
   @Delete('/:companyId/delete')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)

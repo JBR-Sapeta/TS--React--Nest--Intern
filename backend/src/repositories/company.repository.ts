@@ -80,7 +80,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
       await this.delete({ id: companyId });
     } catch (error) {
       this.logger.error(
-        CompanyRepository.name + ' - updateCompany',
+        CompanyRepository.name + ' - deleteCompany',
         error.stack,
       );
 
