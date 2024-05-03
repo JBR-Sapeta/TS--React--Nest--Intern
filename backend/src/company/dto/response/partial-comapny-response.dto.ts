@@ -5,18 +5,18 @@ import { CompanyEntity } from '../../../entities';
 import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 
-import { CompanyPreviewDto } from './company-preview.dto';
+import { PartialCompanyDto } from './partial-comapny.dto';
 
-export class CompanyDto
+export class PartialCompanyResponseDto
   extends SuccessMessageDto
-  implements ResponseWithPayload<CompanyPreviewDto>
+  implements ResponseWithPayload<PartialCompanyDto>
 {
   @ApiProperty()
   @Expose()
-  data: CompanyPreviewDto;
+  data: PartialCompanyDto;
 
   constructor(args: SuccessMessageArgs, data: CompanyEntity) {
     super(args);
-    this.data = new CompanyPreviewDto(data);
+    this.data = new PartialCompanyDto(data);
   }
 }

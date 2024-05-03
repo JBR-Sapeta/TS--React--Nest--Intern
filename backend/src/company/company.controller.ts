@@ -27,12 +27,13 @@ import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
 } from '../auth/decorators';
-import { PaginationParams, SuccessMessageDto } from '../common/classes';
+import { SuccessMessageDto } from '../common/classes';
+import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
 
 import { CompanyService } from './company.service';
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
-import { CompaniesDto, CompanyDto } from './dto/response';
+import { CompaniesDto, PartialCompanyResponseDto } from './dto/response';
 import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Company')
@@ -57,7 +58,9 @@ export class CompanyController {
   @ApiResponse(RES.GET_COMPANY_BY_SLUG.OK)
   @ApiResponse(RES.GET_COMPANY_BY_SLUG.NOT_FOUND)
   @ApiResponse(RES.GET_COMPANY_BY_SLUG.INTERNAL_SERVER_ERROR)
-  getCompanyBySlug(@Param('slug') slug: string): Promise<CompanyDto> {
+  getCompanyBySlug(
+    @Param('slug') slug: string,
+  ): Promise<PartialCompanyResponseDto> {
     return this.companyService.getCompanyBySlug(slug);
   }
 

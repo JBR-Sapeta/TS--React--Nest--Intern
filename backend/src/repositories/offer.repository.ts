@@ -9,6 +9,16 @@ import { Repository } from 'typeorm';
 
 import { OfferEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
+import {
+  AddressParams,
+  CategoriesParams,
+  OfferParams,
+  PaginationParams,
+  addAddressParamsToQueryBuilder,
+  addCategoriesParamsToQueryBuilder,
+  addOfferParamsToQueryBuilder,
+  addPaginationParamsToQueryBuilder,
+} from '../common/classes/params';
 import { Nullable } from '../common/types';
 
 import { CreateOfferData } from './types';
@@ -37,10 +47,41 @@ export class OfferRepository extends Repository<OfferEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async getOffers(
+    offerParams: OfferParams,
+    categoreis: CategoriesParams,
+    locationParams: AddressParams,
+    paginationParams: PaginationParams,
+  ): Promise<[OfferEntity[], number]> {
+    try {
+      const query = await this.createQueryBuilder('offer')
+        .leftJoinAndSelect('offer.categories', 'category')
+        .leftJoinAndSelect('offer.company', 'company')
+        .leftJoinAndSelect('offer.branches', 'branch')
+        .leftJoinAndSelect('branch.address', 'address')
+        .where('offer.is_active = :isActive', { isActive: true });
+
+      addOfferParamsToQueryBuilder(query, offerParams);
+      addCategoriesParamsToQueryBuilder(query, categoreis);
+      addAddressParamsToQueryBuilder(query, locationParams);
+      addPaginationParamsToQueryBuilder(query, paginationParams);
+
+      const offers = await query.getManyAndCount();
+
+      return offers;
+    } catch (error) {
+      this.logger.error(OfferRepository.name + ' - getOfferById', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async getOfferById(offerId: number): Promise<Nullable<OfferEntity>> {
     try {
       const offer = await this.findOne({
         where: { id: offerId },
+        relations: { company: true },
       });
       return offer;
     } catch (error) {

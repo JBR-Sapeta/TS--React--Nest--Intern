@@ -7,7 +7,7 @@ import {
   FORBIDDEN,
 } from '../../common/docs';
 
-import { CompaniesDto, CompanyDto } from '../dto/response';
+import { CompaniesDto, PartialCompanyDto } from '../dto/response';
 import {
   ConflictExceptionResponseDto,
   CreateCompanyBadRequestResponseDto,
@@ -27,7 +27,7 @@ export const RES = {
     OK: {
       status: 200,
       description: 'Success',
-      type: CompanyDto,
+      type: PartialCompanyDto,
     },
     NOT_FOUND,
     INTERNAL_SERVER_ERROR,

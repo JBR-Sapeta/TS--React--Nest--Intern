@@ -7,7 +7,7 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { isNil, isEmpty, isNotNil } from 'ramda';
+import { isNil, isEmpty, isNotNil, not } from 'ramda';
 
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
@@ -19,14 +19,29 @@ import {
 } from '../repositories';
 import { DAY_IN_MS, TIME_OF_REMOVAL } from '../common/constants';
 import { SuccessMessageDto } from '../common/classes';
+import {
+  AddressParams,
+  CategoriesParams,
+  OfferParams,
+  PaginationParams,
+} from '../common/classes/params';
 import { calculateDate } from '../common/functions';
+import { Nullish } from '../common/types';
+import { CacheService } from '../cache/cache.service';
 
+import {
+  FullOfferResponseDto,
+  OfferPreviewsResponseDto,
+  PartialOfferResponseDto,
+} from './dto/response';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
+import { OfferEntity } from 'src/entities';
 
 @Injectable()
 export class OfferService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly cacheService: CacheService,
     private readonly categoriesRepository: CategoryRepository,
     private readonly companyRepository: CompanyRepository,
     private readonly employmentTypeRepository: EmploymentTypeRepository,
@@ -53,6 +68,10 @@ export class OfferService {
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (not(company.isVerfied)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     if (userId !== company.userId) {
@@ -115,6 +134,87 @@ export class OfferService {
       statusCode: 201,
       message: PL_MESSAGES.OFFER_CREATED,
     });
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getOffers(
+    paginationParams: PaginationParams,
+    offerParams: OfferParams,
+    locationParams: AddressParams,
+    categoreis: CategoriesParams,
+  ) {
+    const [offers, count] = await this.offerRepository.getOffers(
+      offerParams,
+      categoreis,
+      locationParams,
+      paginationParams,
+    );
+
+    return new OfferPreviewsResponseDto({ ...paginationParams, count }, offers);
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getPartialOffer(
+    companyId: string,
+    offerId: number,
+  ): Promise<PartialOfferResponseDto> {
+    const key = this.cacheService.composeKey(companyId, offerId);
+
+    const cachedOffer =
+      await this.cacheService.getData<Nullish<OfferEntity>>(key);
+
+    if (isNotNil(cachedOffer)) {
+      return new PartialOfferResponseDto({}, cachedOffer);
+    }
+
+    const offer = await this.offerRepository.getOfferById(offerId);
+
+    if (isNil(offer) || not(offer.isActive) || offer.companyId !== companyId) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
+    }
+
+    this.cacheService.setData(key, offer);
+
+    return new PartialOfferResponseDto({}, offer);
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getFullOffer(
+    companyId: string,
+    offerId: number,
+    userId: string,
+  ): Promise<FullOfferResponseDto> {
+    const company = await this.companyRepository.getCompanyDataById(companyId);
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (userId !== company.userId) {
+      this.logger.error(
+        OfferService.name + ' - updateOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const offer = await this.offerRepository.getOfferById(offerId);
+
+    if (isNil(offer)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
+    }
+
+    if (companyId !== offer.companyId) {
+      this.logger.error(
+        OfferService.name + ' - updateOffer',
+        `ForbiddenException - ${userId}`,
+      );
+
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    return new FullOfferResponseDto({}, offer);
   }
 
   // ----------------------------------------------------------------------- \\

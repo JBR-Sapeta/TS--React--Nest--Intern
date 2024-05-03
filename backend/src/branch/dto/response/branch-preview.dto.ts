@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 import { BranchEntity } from '../../../entities';
+import { transformDate } from '../../../common/functions';
 
 import { AddressPreviewDto } from './address-preview.dto';
 
@@ -14,7 +15,7 @@ export class BranchPreviewDto {
   @Expose()
   public name: string;
 
-  @ApiProperty({ example: 'New Company Boston' })
+  @ApiProperty({ example: '2024-05-02T19:21:48.626Z' })
   @Expose()
   public createdAt: string;
 
@@ -25,7 +26,7 @@ export class BranchPreviewDto {
   constructor({ id, name, createdAt, address }: BranchEntity) {
     this.id = id;
     this.name = name;
-    this.createdAt = createdAt.toISOString();
+    this.createdAt = transformDate(createdAt);
     this.address = new AddressPreviewDto(address);
   }
 }

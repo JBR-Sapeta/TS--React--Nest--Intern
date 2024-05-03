@@ -1,8 +1,10 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   OneToOne,
+  Point,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BranchEntity } from './branch.entity';
@@ -31,10 +33,19 @@ export class AddressEntity {
   public houseNumber: string;
 
   @Column({ type: 'double precision' })
-  public latitude: number;
+  public lat: number;
 
   @Column({ type: 'double precision' })
-  public longitude: number;
+  public long: number;
+
+  @Index({ spatial: true })
+  @Column({
+    type: 'geography',
+    spatialFeatureType: 'Point',
+    srid: 4326,
+    nullable: true,
+  })
+  location: Point;
 
   @OneToOne(() => BranchEntity, (branch: BranchEntity) => branch.address, {
     onDelete: 'CASCADE',

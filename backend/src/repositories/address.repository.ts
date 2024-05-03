@@ -5,7 +5,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { Point, QueryRunner, Repository } from 'typeorm';
 
 import { AddressEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
@@ -26,10 +26,15 @@ export class AddressRepository extends Repository<AddressEntity> {
     queryRunner: QueryRunner,
   ): Promise<AddressEntity> {
     try {
-      const createdAddress = await queryRunner.manager.save(
-        AddressEntity,
-        address,
-      );
+      const location: Point = {
+        type: 'Point',
+        coordinates: [address.long, address.lat],
+      };
+
+      const createdAddress = await queryRunner.manager.save(AddressEntity, {
+        ...address,
+        location,
+      });
       return createdAddress;
     } catch (error) {
       this.logger.error(

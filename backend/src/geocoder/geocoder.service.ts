@@ -28,8 +28,8 @@ export class GeocoderService extends GeocoderServiceAbstractClass {
     city,
     streetName,
     houseNumber,
-    latitude,
-    longitude,
+    lat,
+    long,
   }: GeocoderAddress): Promise<boolean> {
     const apiUrl = this.configService.get<string>(ENV_KEYS.GEOCODER_URL);
     const token = this.configService.get<string>(ENV_KEYS.GEOCODER_TOKEN);
@@ -62,8 +62,8 @@ export class GeocoderService extends GeocoderServiceAbstractClass {
         const cityPattern = new RegExp(city);
         const streetNamePattern = new RegExp(streetName);
         const houseNumberPattern = new RegExp(houseNumber);
-        const long = location.geometry.coordinates[0];
-        const lat = location.geometry.coordinates[1];
+        const longitude = location.geometry.coordinates[0];
+        const latitude = location.geometry.coordinates[1];
 
         if (
           countryPattern.test(location.place_name_pl) &&
@@ -72,8 +72,8 @@ export class GeocoderService extends GeocoderServiceAbstractClass {
           cityPattern.test(location.place_name_pl) &&
           streetNamePattern.test(location.place_name_pl) &&
           houseNumberPattern.test(location.place_name_pl) &&
-          latitude === lat &&
-          longitude === long
+          long === longitude &&
+          lat === latitude
         ) {
           hasMatch = true;
           break;

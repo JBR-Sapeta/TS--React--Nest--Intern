@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { CompanyEntity } from '../../../entities';
 
-export class CompanyPreviewDto {
+export class PartialCompanyDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
   @Expose()
   public id: string;
@@ -16,13 +16,33 @@ export class CompanyPreviewDto {
   @Expose()
   public slug: string;
 
+  @ApiProperty({ example: 'companyname@mail.com' })
+  @Expose()
+  public email: string;
+
+  @ApiProperty({ example: '48 733 546 854' })
+  @Expose()
+  public phoneNumber: string | null;
+
   @ApiProperty({ example: 'company-logo.wep' })
   @Expose()
   public logoUrl: string;
 
+  @ApiProperty({ example: 'company.wep' })
+  @Expose()
+  public mainPhotoUrl: string;
+
+  @ApiProperty({ example: 'Comppany name description.' })
+  @Expose()
+  public description: string;
+
   @ApiProperty({ example: 100 })
   @Expose()
   public size: number;
+
+  @ApiProperty({ example: true })
+  @Expose()
+  public isVerfied: boolean;
 
   constructor(company: CompanyEntity) {
     Object.assign(this, company);

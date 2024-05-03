@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -9,6 +10,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,9 +18,16 @@ import { ApiTags } from '@nestjs/swagger';
 import { AccessTokenGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
 import { SuccessMessageDto } from '../common/classes';
+import {
+  AddressParams,
+  CategoriesParams,
+  OfferParams,
+  PaginationParams,
+} from '../common/classes/params';
 
 import { OfferService } from './offer.service';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
+import { FullOfferResponseDto, PartialOfferResponseDto } from './dto/response';
 
 @ApiTags('Offers')
 @Controller('offers')
@@ -34,6 +43,42 @@ export class OfferController {
     @Body() createOffetDto: CreateOfferDto,
   ): Promise<SuccessMessageDto> {
     return this.offerService.createOffer(companyId, userId, createOffetDto);
+  }
+
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  getOffers(
+    @Query() paginationParams: PaginationParams,
+    @Query() offerParams: OfferParams,
+    @Query() locationParams: AddressParams,
+    @Query() categoreisParams: CategoriesParams,
+  ) {
+    return this.offerService.getOffers(
+      paginationParams,
+      offerParams,
+      locationParams,
+      categoreisParams,
+    );
+  }
+
+  @Get('/:companyId/:offerId/partial')
+  @HttpCode(HttpStatus.OK)
+  getPartialOffer(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @Param('offerId', ParseIntPipe) offerId: number,
+  ): Promise<PartialOfferResponseDto> {
+    return this.offerService.getPartialOffer(companyId, offerId);
+  }
+
+  @Get('/:companyId/:offerId/full')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  getFullOffer(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @Param('offerId', ParseIntPipe) offerId: number,
+    @GetAccessTokenPayload() userId: string,
+  ): Promise<FullOfferResponseDto> {
+    return this.offerService.getFullOffer(companyId, offerId, userId);
   }
 
   @Put('/:companyId/:offerId/update')

@@ -1,6 +1,6 @@
 import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
 import { CategoryRepository } from '../repositories';
-import { CategoriesDto } from './dto/response';
+import { FullCategoriesResponseDto } from './dto/response';
 
 @Injectable()
 export class CategoryService {
@@ -10,9 +10,9 @@ export class CategoryService {
   ) {}
 
   // ----------------------------------------------------------------------- \\
-  public async getCategories(): Promise<CategoriesDto> {
+  public async getCategories(): Promise<FullCategoriesResponseDto> {
     const categories = await this.categoryRepository.getCategoriesTree();
 
-    return new CategoriesDto({}, categories);
+    return new FullCategoriesResponseDto({}, categories);
   }
 }

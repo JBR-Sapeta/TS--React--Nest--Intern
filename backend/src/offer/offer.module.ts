@@ -19,6 +19,7 @@ import {
 } from '../repositories';
 
 import { AuthModule } from '../auth/auth.module';
+import { CacheService } from '../cache/cache.service';
 
 import { OfferService } from './offer.service';
 import { OfferController } from './offer.controller';
@@ -39,6 +40,7 @@ import { OfferController } from './offer.controller';
   providers: [
     Logger,
     OfferService,
+    CacheService,
     CategoryRepository,
     CompanyRepository,
     BranchRepository,

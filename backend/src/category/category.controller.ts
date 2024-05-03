@@ -1,7 +1,7 @@
 import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CategoriesDto } from './dto/response';
+import { FullCategoriesResponseDto } from './dto/response';
 
 import { CategoryService } from './category.service';
 import { OPERATION, RES } from './docs';
@@ -16,7 +16,7 @@ export class CategoryController {
   @ApiOperation(OPERATION.GET_CATEGORIES_TREE)
   @ApiResponse(RES.GET_CATEGORIES_TREE.OK)
   @ApiResponse(RES.GET_CATEGORIES_TREE.INTERNAL_SERVER_ERROR)
-  getCategories(): Promise<CategoriesDto> {
+  getCategories(): Promise<FullCategoriesResponseDto> {
     return this.categoryService.getCategories();
   }
 }

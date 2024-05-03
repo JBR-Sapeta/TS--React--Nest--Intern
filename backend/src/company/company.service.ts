@@ -11,7 +11,7 @@ import { CompanyRepository } from '../repositories';
 
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
 import { SuccessMessageDto } from '../common/classes';
-import { CompaniesDto, CompanyDto } from './dto/response';
+import { CompaniesDto, PartialCompanyResponseDto } from './dto/response';
 
 @Injectable()
 export class CompanyService {
@@ -87,14 +87,16 @@ export class CompanyService {
   }
 
   // ----------------------------------------------------------------------- \\\
-  public async getCompanyBySlug(slug: string): Promise<CompanyDto> {
+  public async getCompanyBySlug(
+    slug: string,
+  ): Promise<PartialCompanyResponseDto> {
     const company = await this.companyRepository.getCompanyBySlug(slug);
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
-    return new CompanyDto({}, company);
+    return new PartialCompanyResponseDto({}, company);
   }
 
   // ----------------------------------------------------------------------- \\\

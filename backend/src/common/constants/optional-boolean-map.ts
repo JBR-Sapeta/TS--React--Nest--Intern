@@ -1,0 +1,18 @@
+export const REGION_MAP = new Map([
+  ['dolnoslaskie', 'województwo dolnośląskie'],
+  ['kujawsko-pomorskie', 'województwo kujawsko-pomorskie'],
+  ['lubelskie', 'województwo lubelskie'],
+  ['lubuskie', 'województwo lubuskie'],
+  ['lodzkie', 'województwo łódzkie'],
+  ['malopolskie', 'województwo małopolskie'],
+  ['mazowieckie', 'województwo mazowieckie'],
+  ['opolskie', 'województwo opolskie'],
+  ['podkarpackie', 'województwo podkarpackie'],
+  ['podlaskie', 'undefined'],
+  ['pomorskie', 'województwo pomorskie'],
+  ['slaskie', 'województwo śląskie'],
+  ['swietokrzyskie', 'województwo świętokrzyskie'],
+  ['warminsko-mazurskie', 'województwo warmińsko-mazurskie'],
+  ['wielkopolskie', 'województwo wielkopolskie'],
+  ['zachodniopomorskie', 'województwo zachodniopomorskie'],
+]);

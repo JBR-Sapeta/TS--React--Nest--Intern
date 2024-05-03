@@ -5,6 +5,6 @@ export type GeocoderAddress = {
   city: string;
   streetName: string;
   houseNumber: string;
-  latitude: number;
-  longitude: number;
+  lat: number;
+  long: number;
 };

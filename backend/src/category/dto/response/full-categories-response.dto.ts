@@ -5,18 +5,18 @@ import { CategoryEntity } from '../../../entities';
 import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 
-import { CategoryPreviewDto } from './category-preview.dto';
+import { FullCategoryDto } from './full-category.dto';
 
-export class CategoriesDto
+export class FullCategoriesResponseDto
   extends SuccessMessageDto
-  implements ResponseWithPayload<CategoryPreviewDto[]>
+  implements ResponseWithPayload<FullCategoryDto[]>
 {
-  @ApiProperty({ isArray: true, type: CategoryPreviewDto })
+  @ApiProperty({ isArray: true, type: FullCategoryDto })
   @Expose()
-  data: CategoryPreviewDto[];
+  data: FullCategoryDto[];
 
   constructor(args: SuccessMessageArgs, data: CategoryEntity[]) {
     super(args);
-    this.data = data.map((category) => new CategoryPreviewDto(category));
+    this.data = data.map((category) => new FullCategoryDto(category));
   }
 }
