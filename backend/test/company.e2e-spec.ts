@@ -268,7 +268,7 @@ describe('CompanyController', () => {
         'mainPhotoUrl',
         'description',
         'size',
-        'isVerfied',
+        'isVerified',
       ]);
     });
   });

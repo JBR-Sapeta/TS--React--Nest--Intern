@@ -42,7 +42,7 @@ export class PartialCompanyDto {
 
   @ApiProperty({ example: true })
   @Expose()
-  public isVerfied: boolean;
+  public isVerified: boolean;
 
   constructor(company: CompanyEntity) {
     Object.assign(this, company);
