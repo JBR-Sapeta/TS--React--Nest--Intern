@@ -8,7 +8,7 @@ export class CategoriesParams {
   @ApiProperty({
     minimum: 0,
     title: 'Categories',
-    description: 'categories.',
+    description: 'Categories list.',
     format: 'string',
     example: '1,2,4,5',
     required: false,

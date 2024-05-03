@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Min, Max, IsOptional, IsInt, IsBoolean } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { OPTIONAL_BOOLEAN_MAP } from '../../constants';
 import { SelectQueryBuilder } from 'typeorm';
+
+import { OPTIONAL_BOOLEAN_MAP } from '../../constants';
+import { PL_ERRORS } from '../../../locales';
 
 export class OfferParams {
   @ApiProperty({
@@ -10,13 +12,14 @@ export class OfferParams {
     title: 'employmentType',
     description: 'Employment type.',
     format: 'int',
+    example: 1,
     required: false,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(5)
+  @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
+  @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
+  @Max(5, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
   employmentType?: number;
 
   @ApiProperty({
@@ -24,13 +27,14 @@ export class OfferParams {
     title: 'operatingMode',
     description: 'Operating mode.',
     format: 'int',
+    example: 1,
     required: false,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(3)
+  @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
+  @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
+  @Max(3, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
   operatingMode?: number;
 
   @ApiProperty({
@@ -38,10 +42,11 @@ export class OfferParams {
     title: 'isPaid',
     description: 'Salary type.',
     format: 'boolean',
+    example: true,
     required: false,
   })
   @IsOptional()
-  @IsBoolean()
+  @IsBoolean({ message: PL_ERRORS.VALIDATION_OFFER_IS_PAID })
   @Transform(({ value }) => OPTIONAL_BOOLEAN_MAP.get(value))
   isPaid?: boolean;
 }

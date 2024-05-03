@@ -47,11 +47,13 @@ export class CreateOfferDto {
   @ApiProperty({ required: true, example: 1 })
   @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
   @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
+  @Max(5, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
   readonly employmentType: number;
 
   @ApiProperty({ required: true, example: 3 })
   @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
   @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
+  @Max(3, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
   readonly operatingMode: number;
 
   @ApiProperty({ required: true, example: [231, 249] })

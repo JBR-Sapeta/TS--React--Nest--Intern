@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Inject,
   Injectable,
@@ -70,7 +69,7 @@ export class OfferService {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
-    if (not(company.isVerfied)) {
+    if (not(company.isVerified)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
@@ -88,14 +87,14 @@ export class OfferService {
     );
 
     if (isEmpty(branches)) {
-      throw new BadRequestException(PL_ERRORS.NOT_FUOND_BRANCHES);
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCHES);
     }
 
     const categories =
       await this.categoriesRepository.getCategoriesByIds(categoriesDto);
 
     if (isEmpty(categories)) {
-      throw new BadRequestException(PL_ERRORS.NOT_FUOND_CATEGORIES);
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
     }
 
     const employmentType =
@@ -104,14 +103,14 @@ export class OfferService {
       );
 
     if (isNil(employmentType)) {
-      throw new BadRequestException(PL_ERRORS.NOT_FUOND_EMPLOYMENT_TYPE);
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_EMPLOYMENT_TYPE);
     }
 
     const operatingMode =
       await this.operatingModeRepository.getOperatingModeById(operatingModeDto);
 
     if (isNil(operatingMode)) {
-      throw new BadRequestException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
     }
 
     const expirationDate = calculateDate(expirationTimeDto * DAY_IN_MS);
@@ -142,7 +141,7 @@ export class OfferService {
     offerParams: OfferParams,
     locationParams: AddressParams,
     categoreis: CategoriesParams,
-  ) {
+  ): Promise<OfferPreviewsResponseDto> {
     const [offers, count] = await this.offerRepository.getOffers(
       offerParams,
       categoreis,
@@ -268,7 +267,7 @@ export class OfferService {
       );
 
       if (isEmpty(branches)) {
-        throw new BadRequestException(PL_ERRORS.NOT_FUOND_BRANCHES);
+        throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCHES);
       } else {
         offer.branches = branches;
       }
@@ -279,7 +278,7 @@ export class OfferService {
         await this.categoriesRepository.getCategoriesByIds(categoriesDto);
 
       if (isEmpty(categoriesDto)) {
-        throw new BadRequestException(PL_ERRORS.NOT_FUOND_CATEGORIES);
+        throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
       } else {
         offer.categories = categories;
       }
@@ -292,7 +291,7 @@ export class OfferService {
         );
 
       if (isNil(employmentType)) {
-        throw new BadRequestException(PL_ERRORS.NOT_FUOND_EMPLOYMENT_TYPE);
+        throw new NotFoundException(PL_ERRORS.NOT_FUOND_EMPLOYMENT_TYPE);
       } else {
         offer.employmentType = employmentType;
       }
@@ -305,7 +304,7 @@ export class OfferService {
         );
 
       if (isNil(operatingMode)) {
-        throw new BadRequestException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
+        throw new NotFoundException(PL_ERRORS.NOT_FUOND_OPERATING_MODE);
       } else {
         offer.operatingMode = operatingMode;
       }

@@ -29,6 +29,9 @@ export const PL_ERRORS: ErrorTranslations = {
     'Nazwa oddziału powinno składać się z 4 do 255 znaków.',
   VALIDATION_COMMON_EMAIL: 'Wprowadź prawidłowy adres E-mail.',
   VALIDATION_COMMON_EMPTY_PASSWORD: 'Hasło jest wymagane.',
+  VALIDATION_COMMON_LIMIT: 'Wprowadź liczbę całkowitą z przedziałuod 1 do 100.',
+  VALIDATION_COMMON_PAGE_NUMBER: 'Wprowadź dodatnią liczbę całkowitą.',
+  VALIDATION_COMMON_RANGE: 'Wprowadź liczbę całkowitą z przedziałuod 1 do 100.',
   VALIDATION_COMMON_IS_NUMBER: 'Wprowadzona wartość nie jest cyfrą.',
   VALIDATION_COMMON_NO_BODY: 'Nie żądanie nie zaiwera żadnych danych.',
   VALIDATION_COMPANY_DESCRIPTION:
@@ -46,7 +49,7 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_OFFER_DESCRIPTION:
     'Opis ogłoszenia powinien składać się z 24 do 3072 znaków.',
   VALIDATION_OFFER_EMPLOYMENT_TYPE:
-    'Nieprawidłowa wartość. Wprowadź dodatnią liczbę całkowitą.',
+    'Nieprawidłowa wartość. Wprowadź liczbę całkowitą z przedziałuod 1 do 5.',
   VALIDATION_OFFER_EXPIRATION_TIME:
     'Wartość pola powinna być liczbą całkowitą z przedziału od 7 do 42.',
   VALIDATION_OFFER_IS_PAID:
@@ -56,7 +59,7 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_OFFER_POSITION:
     'Nazwa stanowiska powinna składać się z 2 do 64 znaków.',
   VALIDATION_OFFER_OPERATING_MODE:
-    'Nieprawidłowa wartość. Wprowadź dodatnią liczbę całkowitą.',
+    'Nieprawidłowa wartość. Wprowadź liczbę całkowitą z przedziałuod 1 do 3.',
   VALIDATION_OFFER_TITLE:
     'Tytuł ogłoszenia powinien składać się z 4 do 64 znaków.',
   UNAUTHORIZED_INVALID_CREDENTIALS: 'Nieprawidłowe hasło lub adres E-mail.',

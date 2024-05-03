@@ -42,7 +42,7 @@ export class CompanyEntity {
   public size: number;
 
   @Column({ type: 'boolean', default: false })
-  public isVerfied: boolean;
+  public isVerified: boolean;
 
   @CreateDateColumn({ type: 'timestamptz' })
   public createdAt: Date;

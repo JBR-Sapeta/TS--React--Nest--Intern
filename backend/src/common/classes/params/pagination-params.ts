@@ -4,6 +4,8 @@ import { Min, Max, IsOptional, IsInt } from 'class-validator';
 import { isNotNil } from 'ramda';
 import type { SelectQueryBuilder } from 'typeorm';
 
+import { PL_ERRORS } from '../../../locales';
+
 export class PaginationParams {
   @ApiProperty({
     minimum: 0,
@@ -14,8 +16,8 @@ export class PaginationParams {
   })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(0)
+  @IsInt({ message: PL_ERRORS.VALIDATION_COMMON_PAGE_NUMBER })
+  @Min(0, { message: PL_ERRORS.VALIDATION_COMMON_PAGE_NUMBER })
   pageNumber: number = 0;
 
   @ApiProperty({
@@ -27,9 +29,9 @@ export class PaginationParams {
   })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
+  @IsInt({ message: PL_ERRORS.VALIDATION_COMMON_LIMIT })
+  @Min(1, { message: PL_ERRORS.VALIDATION_COMMON_LIMIT })
+  @Max(100, { message: PL_ERRORS.VALIDATION_COMMON_LIMIT })
   limit: number = 20;
 }
 

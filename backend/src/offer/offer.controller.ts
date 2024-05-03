@@ -13,7 +13,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { AccessTokenGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
@@ -24,35 +31,34 @@ import {
   OfferParams,
   PaginationParams,
 } from '../common/classes/params';
+import { HEADER } from '../common/docs';
 
 import { OfferService } from './offer.service';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
-import { FullOfferResponseDto, PartialOfferResponseDto } from './dto/response';
+import {
+  FullOfferResponseDto,
+  OfferPreviewsResponseDto,
+  PartialOfferResponseDto,
+} from './dto/response';
+import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Offers')
 @Controller('offers')
 export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
-  @Post('/:companyId/create')
-  @UseGuards(AccessTokenGuard)
-  @HttpCode(HttpStatus.CREATED)
-  createOffer(
-    @Param('companyId', ParseUUIDPipe) companyId: string,
-    @GetAccessTokenPayload() userId: string,
-    @Body() createOffetDto: CreateOfferDto,
-  ): Promise<SuccessMessageDto> {
-    return this.offerService.createOffer(companyId, userId, createOffetDto);
-  }
-
   @Get('/')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_OFFERS)
+  @ApiResponse(RES.GET_OFFERS.OK)
+  @ApiResponse(RES.GET_OFFERS.BAD_REQUEST)
+  @ApiResponse(RES.GET_OFFERS.INTERNAL_SERVER_ERROR)
   getOffers(
     @Query() paginationParams: PaginationParams,
     @Query() offerParams: OfferParams,
     @Query() locationParams: AddressParams,
     @Query() categoreisParams: CategoriesParams,
-  ) {
+  ): Promise<OfferPreviewsResponseDto> {
     return this.offerService.getOffers(
       paginationParams,
       offerParams,
@@ -61,8 +67,36 @@ export class OfferController {
     );
   }
 
+  @Post('/:companyId/create')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation(OPERATION.CREATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiResponse(RES.CREATE.OK)
+  @ApiResponse(RES.CREATE.BAD_REQUEST)
+  @ApiResponse(RES.CREATE.UNAUTHORIZED)
+  @ApiResponse(RES.CREATE.FORBIDDEN)
+  @ApiResponse(RES.CREATE.NOT_FOUND)
+  @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
+  createOffer(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @GetAccessTokenPayload() userId: string,
+    @Body() createOffetDto: CreateOfferDto,
+  ): Promise<SuccessMessageDto> {
+    return this.offerService.createOffer(companyId, userId, createOffetDto);
+  }
+
   @Get('/:companyId/:offerId/partial')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_PARTIAL_OFFER)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.OFFER_ID)
+  @ApiResponse(RES.GET_PARTIAL_OFFER.OK)
+  @ApiResponse(RES.GET_PARTIAL_OFFER.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.GET_PARTIAL_OFFER.NOT_FOUND)
+  @ApiResponse(RES.GET_PARTIAL_OFFER.INTERNAL_SERVER_ERROR)
   getPartialOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
@@ -73,6 +107,17 @@ export class OfferController {
   @Get('/:companyId/:offerId/full')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_FULL_OFFER)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.OFFER_ID)
+  @ApiResponse(RES.GET_FULL_OFFER.OK)
+  @ApiResponse(RES.GET_FULL_OFFER.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.GET_FULL_OFFER.UNAUTHORIZED)
+  @ApiResponse(RES.GET_FULL_OFFER.FORBIDDEN)
+  @ApiResponse(RES.GET_FULL_OFFER.NOT_FOUND)
+  @ApiResponse(RES.GET_FULL_OFFER.INTERNAL_SERVER_ERROR)
   getFullOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
@@ -84,6 +129,17 @@ export class OfferController {
   @Put('/:companyId/:offerId/update')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.UPDATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.OFFER_ID)
+  @ApiResponse(RES.UPDATE.OK)
+  @ApiResponse(RES.UPDATE.BAD_REQUEST)
+  @ApiResponse(RES.UPDATE.UNAUTHORIZED)
+  @ApiResponse(RES.UPDATE.FORBIDDEN)
+  @ApiResponse(RES.UPDATE.NOT_FOUND)
+  @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
   updateOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
@@ -101,6 +157,17 @@ export class OfferController {
   @Delete('/:companyId/:offerId/delete')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.DELETE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiParam(PARAM.OFFER_ID)
+  @ApiResponse(RES.DELETE.OK)
+  @ApiResponse(RES.DELETE.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.DELETE.UNAUTHORIZED)
+  @ApiResponse(RES.DELETE.FORBIDDEN)
+  @ApiResponse(RES.DELETE.NOT_FOUND)
+  @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   deleteOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
