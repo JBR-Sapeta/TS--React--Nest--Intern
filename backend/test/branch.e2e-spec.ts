@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadGatewayException, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 import {
   BranchRepository,
@@ -34,6 +35,7 @@ import {
 
 describe('BranchController', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
   let cacheService: CacheService;
   let userRepository: UserRepository;
   let companyRepository: CompanyRepository;
@@ -53,6 +55,7 @@ describe('BranchController', () => {
 
     app = moduleFixture.createNestApplication();
 
+    dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
@@ -64,7 +67,8 @@ describe('BranchController', () => {
   });
 
   afterEach(async () => {
-    await cacheService.onApplicationShutdown();
+    await dataSource.destroy();
+    await cacheService.shutdownConnection();
   });
 
   afterAll(async () => {
@@ -171,6 +175,7 @@ describe('BranchController', () => {
         companyId,
         BRANCH_ONE,
       );
+      console.log(response.body.message);
       expect(response.status).toBe(201);
     });
 
@@ -266,8 +271,8 @@ describe('BranchController', () => {
       ${'city'}
       ${'streetName'}
       ${'houseNumber'}
-      ${'latitude'}
-      ${'longitude'}
+      ${'lat'}
+      ${'long'}
     `(
       'returns proper error message when $invalidField is invalid',
       async ({ invalidField }) => {
@@ -441,8 +446,8 @@ describe('BranchController', () => {
         'city',
         'streetName',
         'houseNumber',
-        'latitude',
-        'longitude',
+        'lat',
+        'long',
       ]);
     });
 
@@ -632,8 +637,8 @@ describe('BranchController', () => {
       ${'city'}
       ${'streetName'}
       ${'houseNumber'}
-      ${'latitude'}
-      ${'longitude'}
+      ${'lat'}
+      ${'long'}
     `(
       'returns proper error message when $invalidField is invalid',
       async ({ invalidField }) => {

@@ -44,10 +44,10 @@ export class CompanyEntity {
   @Column({ type: 'boolean', default: false })
   public isVerfied: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   public createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   public updatedAt: Date;
 
   @OneToOne(() => UserEntity, { onDelete: 'CASCADE' })

@@ -21,10 +21,10 @@ export class BranchEntity {
   @Column({ type: 'varchar', length: 255 })
   public name: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   public createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   public updatedAt: Date;
 
   @OneToOne(() => AddressEntity, (address: AddressEntity) => address.branch, {

@@ -33,7 +33,10 @@ import { HEADER } from '../common/docs';
 
 import { CompanyService } from './company.service';
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
-import { CompaniesDto, PartialCompanyResponseDto } from './dto/response';
+import {
+  CompaniesPreviewResponseDto,
+  PartialCompanyResponseDto,
+} from './dto/response';
 import { OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Company')
@@ -48,7 +51,7 @@ export class CompanyController {
   @ApiResponse(RES.GET_COMPANIES.INTERNAL_SERVER_ERROR)
   getCompanies(
     @Query() { pageNumber, limit }: PaginationParams,
-  ): Promise<CompaniesDto> {
+  ): Promise<CompaniesPreviewResponseDto> {
     return this.companyService.getCompanies(pageNumber, limit);
   }
 

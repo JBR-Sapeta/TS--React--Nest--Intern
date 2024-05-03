@@ -36,16 +36,16 @@ export class OfferEntity {
   @Column({ type: 'boolean', default: false })
   public isActive: boolean;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   public expirationDate: Date;
 
-  @Column()
+  @Column({ type: 'timestamptz' })
   public removalDate: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamptz' })
   public createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamptz' })
   public updatedAt: Date;
 
   @ManyToOne(() => EmploymentTypeEntity)

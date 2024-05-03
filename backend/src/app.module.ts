@@ -45,11 +45,9 @@ import { OfferModule } from './offer/offer.module';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
+        let testConfig = {};
         if (process.env.NODE_ENV === 'test') {
-          return {
-            type: config.get<DatabaseConfigType>(ENV_KEYS.DB_TYPE),
-            database: config.get<string>(ENV_KEYS.DB_NAME),
-            autoLoadEntities: true,
+          testConfig = {
             synchronize: true,
             dropSchema: true,
             logging: false,
@@ -66,6 +64,7 @@ import { OfferModule } from './offer/offer.module';
           namingStrategy: new SnakeNamingStrategy(),
           synchronize: process.env.NODE_ENV !== 'prod',
           autoLoadEntities: true,
+          ...testConfig,
         };
       },
       dataSourceFactory: async (options) => {

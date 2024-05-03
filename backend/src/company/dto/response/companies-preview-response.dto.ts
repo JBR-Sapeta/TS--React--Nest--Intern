@@ -7,7 +7,7 @@ import { ResponseWithPayload } from '../../../common/interfaces';
 
 import { CompanyPreviewDto } from './company-preview.dto';
 
-export class CompaniesDto
+export class CompaniesPreviewResponseDto
   extends PaginationDto
   implements ResponseWithPayload<CompanyPreviewDto[]>
 {

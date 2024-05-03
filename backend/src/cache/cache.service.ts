@@ -4,7 +4,6 @@ import {
   InternalServerErrorException,
   Logger,
   LoggerService,
-  OnApplicationShutdown,
 } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
@@ -14,7 +13,7 @@ import { PL_ERRORS } from '../locales';
 import type { Nullable } from '../common/types';
 
 @Injectable()
-export class CacheService implements OnApplicationShutdown {
+export class CacheService {
   constructor(
     @InjectRedis() private readonly redis: Redis,
     @Inject(Logger) private readonly logger: LoggerService,
@@ -56,7 +55,7 @@ export class CacheService implements OnApplicationShutdown {
     return args.join('_');
   }
 
-  public async onApplicationShutdown() {
+  public async shutdownConnection() {
     if (this.redis.status === 'ready') {
       await this.redis.quit();
     }

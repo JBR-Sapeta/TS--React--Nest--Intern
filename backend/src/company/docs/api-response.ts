@@ -7,7 +7,10 @@ import {
   FORBIDDEN,
 } from '../../common/docs';
 
-import { CompaniesDto, PartialCompanyDto } from '../dto/response';
+import {
+  CompaniesPreviewResponseDto,
+  PartialCompanyDto,
+} from '../dto/response';
 import {
   ConflictExceptionResponseDto,
   CreateCompanyBadRequestResponseDto,
@@ -19,7 +22,7 @@ export const RES = {
     OK: {
       status: 200,
       description: 'Success',
-      type: CompaniesDto,
+      type: CompaniesPreviewResponseDto,
     },
     INTERNAL_SERVER_ERROR,
   },

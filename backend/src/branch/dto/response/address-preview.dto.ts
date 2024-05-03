@@ -34,11 +34,11 @@ export class AddressPreviewDto {
 
   @ApiProperty({ example: 42.3393541 })
   @Expose()
-  latitude: number;
+  lat: number;
 
   @ApiProperty({ example: -71.04881 })
   @Expose()
-  longitude: number;
+  long: number;
 
   constructor(address: AddressEntity) {
     Object.assign(this, address);

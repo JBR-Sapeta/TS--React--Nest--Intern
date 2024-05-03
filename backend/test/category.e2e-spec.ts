@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 import { AppModule } from './../src/app.module';
 import { CacheService } from './../src/cache/cache.service';
@@ -12,6 +13,7 @@ import { geocoderService } from './mocks/geocoder-service';
 
 describe('CategoryController (e2e)', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
   let cacheService: CacheService;
 
   beforeEach(async () => {
@@ -26,13 +28,15 @@ describe('CategoryController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
+    dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
 
     await app.init();
   });
 
   afterEach(async () => {
-    await cacheService.onApplicationShutdown();
+    await dataSource.destroy();
+    await cacheService.shutdownConnection();
   });
 
   afterAll(async () => {

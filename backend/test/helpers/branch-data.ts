@@ -7,8 +7,8 @@ export const BRANCH_ONE = {
     city: 'Kraków',
     streetName: 'Teofila Lenartowicza',
     houseNumber: '13',
-    latitude: 50.070053,
-    longitude: 19.927943,
+    lat: 50.070053,
+    long: 19.927943,
   },
 };
 
@@ -21,8 +21,8 @@ export const BRANCH_TWO = {
     city: 'Gdańsk',
     streetName: 'Teofila Lenartowicza',
     houseNumber: '24',
-    latitude: 54.35738,
-    longitude: 18.68489,
+    lat: 54.35738,
+    long: 18.68489,
   },
 };
 
@@ -35,8 +35,8 @@ export const INVALID_BRANCH = {
     city: 'G',
     streetName: 'T',
     houseNumber: '',
-    latitude: 154.35738,
-    longitude: 195.68489,
+    lat: 154.35738,
+    long: 195.68489,
   },
 };
 

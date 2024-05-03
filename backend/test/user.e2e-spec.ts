@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 import { AppModule } from './../src/app.module';
 import { UserRepository } from './../src/repositories';
@@ -25,6 +26,7 @@ import { geocoderService } from './mocks/geocoder-service';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
   let userRepository: UserRepository;
   let authService: AuthService;
   let cacheService: CacheService;
@@ -41,6 +43,7 @@ describe('UserController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
+    dataSource = moduleFixture.get(DataSource);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     authService = moduleFixture.get<AuthService>(AuthService);
@@ -49,7 +52,8 @@ describe('UserController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await cacheService.onApplicationShutdown();
+    await dataSource.destroy();
+    await cacheService.shutdownConnection();
   });
 
   afterAll(async () => {

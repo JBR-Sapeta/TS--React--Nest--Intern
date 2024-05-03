@@ -11,7 +11,10 @@ import { CompanyRepository } from '../repositories';
 
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
 import { SuccessMessageDto } from '../common/classes';
-import { CompaniesDto, PartialCompanyResponseDto } from './dto/response';
+import {
+  CompaniesPreviewResponseDto,
+  PartialCompanyResponseDto,
+} from './dto/response';
 
 @Injectable()
 export class CompanyService {
@@ -103,12 +106,12 @@ export class CompanyService {
   public async getCompanies(
     pageNumber: number,
     limit: number,
-  ): Promise<CompaniesDto> {
+  ): Promise<CompaniesPreviewResponseDto> {
     const [data, count] = await this.companyRepository.getCompanies(
       pageNumber,
       limit,
     );
 
-    return new CompaniesDto({ limit, pageNumber, count }, data);
+    return new CompaniesPreviewResponseDto({ limit, pageNumber, count }, data);
   }
 }

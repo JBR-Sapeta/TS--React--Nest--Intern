@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 import { CompanyRepository, UserRepository } from './../src/repositories';
 
@@ -24,6 +25,7 @@ import { geocoderService } from './mocks/geocoder-service';
 
 describe('CompanyController', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
   let cacheService: CacheService;
   let userRepository: UserRepository;
   let companyRepository: CompanyRepository;
@@ -41,6 +43,7 @@ describe('CompanyController', () => {
 
     app = moduleFixture.createNestApplication();
 
+    dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
@@ -50,7 +53,8 @@ describe('CompanyController', () => {
   });
 
   afterEach(async () => {
-    await cacheService.onApplicationShutdown();
+    await dataSource.destroy();
+    await cacheService.shutdownConnection();
   });
 
   afterAll(async () => {
@@ -320,13 +324,8 @@ describe('CompanyController', () => {
         'id',
         'name',
         'slug',
-        'email',
-        'phoneNumber',
         'logoUrl',
-        'mainPhotoUrl',
-        'description',
         'size',
-        'isVerfied',
       ]);
     });
 

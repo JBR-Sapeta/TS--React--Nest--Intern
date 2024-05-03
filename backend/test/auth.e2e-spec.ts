@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadGatewayException, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
 import { v4 as uuid } from 'uuid';
+import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 import { Roles } from './../src/common/enums';
 import { calculateDate } from './../src/common/functions';
@@ -28,6 +29,7 @@ import { geocoderService } from './mocks/geocoder-service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
+  let dataSource: DataSource;
   let userRepository: UserRepository;
   let authService: AuthService;
   let cacheService: CacheService;
@@ -45,6 +47,7 @@ describe('AuthController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
 
+    dataSource = moduleFixture.get(DataSource);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     authService = moduleFixture.get<AuthService>(AuthService);
@@ -53,7 +56,8 @@ describe('AuthController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await cacheService.onApplicationShutdown();
+    await dataSource.destroy();
+    await cacheService.shutdownConnection();
   });
 
   afterAll(async () => {
