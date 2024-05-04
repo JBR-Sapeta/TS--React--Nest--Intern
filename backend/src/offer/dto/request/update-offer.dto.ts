@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsInt,
   IsOptional,
+  Max,
   MaxLength,
   Min,
   MinLength,
@@ -47,12 +48,14 @@ export class UpdateOfferDto {
   @ApiProperty({ required: false, example: 1 })
   @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
   @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
+  @Max(5, { message: PL_ERRORS.VALIDATION_OFFER_EMPLOYMENT_TYPE })
   readonly employmentType?: number;
 
   @IsOptional()
   @ApiProperty({ required: false, example: 3 })
   @IsInt({ message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
   @Min(1, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
+  @Max(3, { message: PL_ERRORS.VALIDATION_OFFER_OPERATING_MODE })
   readonly operatingMode?: number;
 
   @IsOptional()

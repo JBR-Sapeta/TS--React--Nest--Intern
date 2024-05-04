@@ -27,9 +27,9 @@ import { geocoderService } from './mocks/geocoder-service';
 describe('UserController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let cacheService: CacheService;
   let userRepository: UserRepository;
   let authService: AuthService;
-  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -164,7 +164,7 @@ describe('UserController (e2e)', () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       const response = await sendMeRequest(accessToken);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -239,7 +239,7 @@ describe('UserController (e2e)', () => {
         VALID_UPDATE_PROFILE_DATA,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -370,7 +370,7 @@ describe('UserController (e2e)', () => {
         password: USER_ONE.password,
       });
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -508,7 +508,7 @@ describe('UserController (e2e)', () => {
         },
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -608,7 +608,7 @@ describe('UserController (e2e)', () => {
         { password: USER_ONE.password },
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);

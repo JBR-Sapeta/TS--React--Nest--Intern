@@ -30,9 +30,9 @@ import { geocoderService } from './mocks/geocoder-service';
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let cacheService: CacheService;
   let userRepository: UserRepository;
   let authService: AuthService;
-  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -189,7 +189,7 @@ describe('AuthController (e2e)', () => {
     it('returns proper success response object', async () => {
       const response = await sendSignUpRequest(VALID_SIGN_UP_DATA);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -298,7 +298,7 @@ describe('AuthController (e2e)', () => {
       const user = await createInactiveUser(USER_ONE);
       const response = await sendActivationRequest(user.activationToken);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -402,7 +402,7 @@ describe('AuthController (e2e)', () => {
       await createActiveUser(USER_ONE);
       const response = await sendLoginRequest(USER_ONE_CREDENTIALS);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -489,7 +489,7 @@ describe('AuthController (e2e)', () => {
       } = await sendLoginRequest(USER_ONE_CREDENTIALS);
       const response = await sendRefreshTokenRequest(data.refreshToken.token);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -544,7 +544,7 @@ describe('AuthController (e2e)', () => {
       } = await sendLoginRequest(USER_ONE_CREDENTIALS);
       const response = await sendLogoutRequest(data.accessToken);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -591,7 +591,7 @@ describe('AuthController (e2e)', () => {
       await createActiveUser(USER_ONE);
       const response = await sendAccountRecoveryRequest(USER_ONE.email);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -677,7 +677,7 @@ describe('AuthController (e2e)', () => {
         USER_TWO.password,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -757,7 +757,7 @@ describe('AuthController (e2e)', () => {
       await createInactiveUser(USER_ONE);
       const response = await sendRresendActivationEmailRequest(USER_ONE.email);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);

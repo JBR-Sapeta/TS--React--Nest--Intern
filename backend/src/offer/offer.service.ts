@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Inject,
   Injectable,
@@ -35,6 +36,7 @@ import {
 } from './dto/response';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
 import { OfferEntity } from 'src/entities';
+import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class OfferService {
@@ -231,6 +233,10 @@ export class OfferService {
       ...offerData
     } = updateOffetDto;
 
+    if (!isNotEmptyObject(updateOffetDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
     const company = await this.companyRepository.getCompanyDataById(companyId);
 
     if (isNil(company)) {
@@ -277,7 +283,7 @@ export class OfferService {
       const categories =
         await this.categoriesRepository.getCategoriesByIds(categoriesDto);
 
-      if (isEmpty(categoriesDto)) {
+      if (isEmpty(categories)) {
         throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
       } else {
         offer.categories = categories;
@@ -325,11 +331,15 @@ export class OfferService {
     offerId: number,
     userId: string,
   ): Promise<SuccessMessageDto> {
-    const company = await this.companyRepository.getCompanyDataById(companyId);
+    const offer = await this.offerRepository.getOfferById(offerId);
 
-    if (isNil(company)) {
-      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    if (isNil(offer)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
     }
+
+    const company = await this.companyRepository.getCompanyDataById(
+      offer.companyId,
+    );
 
     if (userId !== company.userId) {
       this.logger.error(
@@ -338,12 +348,6 @@ export class OfferService {
       );
 
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
-    }
-
-    const offer = await this.offerRepository.getOfferById(offerId);
-
-    if (isNil(offer)) {
-      throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
     }
 
     if (companyId !== offer.companyId) {

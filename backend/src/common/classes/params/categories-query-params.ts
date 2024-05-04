@@ -29,7 +29,6 @@ export function addCategoriesParamsToQueryBuilder<T>(
   { categories }: CategoriesParams,
 ) {
   if (isNotNil(categories) && !isEmpty(categories)) {
-    console.log(categories);
     queryBuilder.andWhere('category.id IN (:...categories)', { categories });
   }
 }

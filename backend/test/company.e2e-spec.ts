@@ -23,7 +23,7 @@ import {
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
 
-describe('CompanyController', () => {
+describe('CompanyController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let cacheService: CacheService;
@@ -150,7 +150,7 @@ describe('CompanyController', () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       const response = await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -247,7 +247,7 @@ describe('CompanyController', () => {
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const response = await sendGetCompanyBySlugRequest(COMPANY_ONE.slug);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -305,7 +305,7 @@ describe('CompanyController', () => {
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const response = await sendGetCompaniesRequest(0, 12);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'limit',
@@ -385,7 +385,7 @@ describe('CompanyController', () => {
         COMPANY_TWO,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -522,7 +522,7 @@ describe('CompanyController', () => {
       const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
       const response = await sendDeleteCompanyRequest(accessToken, company.id);
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);

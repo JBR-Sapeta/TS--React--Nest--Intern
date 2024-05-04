@@ -1,5 +1,5 @@
 export interface ResponseWithPayload<T> {
-  stausCode: number;
+  statusCode: number;
   message: string;
   error: null;
   data: T;

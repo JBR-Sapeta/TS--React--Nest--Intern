@@ -33,7 +33,7 @@ import {
   INVALID_BRANCH_ID,
 } from './helpers/branch-data';
 
-describe('BranchController', () => {
+describe('BranchController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let cacheService: CacheService;
@@ -165,7 +165,7 @@ describe('BranchController', () => {
   // ------------------------------- CREATE - Valid Request ------------------------------ \\
 
   describe('/branches/:companyId/create (POST) - Valid Request', () => {
-    it('returns 200 status code', async () => {
+    it('returns 201 status code', async () => {
       const { accessToken, companyId } = await createActiveUserAndCompany(
         USER_ONE,
         COMPANY_ONE,
@@ -175,7 +175,7 @@ describe('BranchController', () => {
         companyId,
         BRANCH_ONE,
       );
-      console.log(response.body.message);
+
       expect(response.status).toBe(201);
     });
 
@@ -203,7 +203,7 @@ describe('BranchController', () => {
         BRANCH_ONE,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -414,7 +414,7 @@ describe('BranchController', () => {
         companyId,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',
@@ -530,7 +530,7 @@ describe('BranchController', () => {
         BRANCH_TWO,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);
@@ -813,7 +813,7 @@ describe('BranchController', () => {
         branches[0].id,
       );
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
       ]);

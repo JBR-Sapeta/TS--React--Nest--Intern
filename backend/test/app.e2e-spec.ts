@@ -13,8 +13,8 @@ import { geocoderService } from './mocks/geocoder-service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let cacheService: CacheService;
   let dataSource: DataSource;
+  let cacheService: CacheService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

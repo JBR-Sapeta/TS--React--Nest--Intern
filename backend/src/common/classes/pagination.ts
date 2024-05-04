@@ -12,7 +12,7 @@ export type PaginationArgs = {
 export class PaginationDto {
   @ApiProperty({ example: 200 })
   @Expose()
-  stausCode: number;
+  statusCode: number;
 
   @ApiProperty({ example: 'Success' })
   @Expose()
@@ -46,7 +46,7 @@ export class PaginationDto {
     statusCode = 200,
   }: PaginationArgs) {
     this.message = message;
-    this.stausCode = statusCode;
+    this.statusCode = statusCode;
     this.error = null;
     this.limit = limit;
     this.pageNumber = pageNumber;

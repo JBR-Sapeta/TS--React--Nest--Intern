@@ -59,7 +59,9 @@ export class OfferPreviewDto {
     ...offerData
   }: OfferEntity) {
     this.createdAt = createdAt.toISOString();
-    this.locations = branches.map((branch) => branch.address.city);
+    this.locations = [
+      ...new Set(branches.map((branch) => branch.address.city)),
+    ];
     this.company = new CompanyPreviewDto(company);
     this.categories = categories.map(
       (category) => new CategoryPreviewDto(category),

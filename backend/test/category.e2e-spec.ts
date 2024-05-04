@@ -70,7 +70,7 @@ describe('CategoryController (e2e)', () => {
     it('returns proper success response object with payload', async () => {
       const response = await sendGetCategoriesRequest();
       expect(Object.keys(response.body)).toEqual([
-        'stausCode',
+        'statusCode',
         'message',
         'error',
         'data',

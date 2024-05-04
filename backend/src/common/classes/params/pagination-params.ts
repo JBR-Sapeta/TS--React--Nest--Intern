@@ -21,7 +21,7 @@ export class PaginationParams {
   pageNumber: number = 0;
 
   @ApiProperty({
-    minimum: 0,
+    minimum: 1,
     default: 20,
     title: 'limit',
     format: 'int',

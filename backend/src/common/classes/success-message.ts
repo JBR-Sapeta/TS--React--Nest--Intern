@@ -9,7 +9,7 @@ export type SuccessMessageArgs = {
 export class SuccessMessageDto {
   @ApiProperty({ example: 200 })
   @Expose()
-  stausCode: number;
+  statusCode: number;
 
   @ApiProperty({ example: 'Success' })
   @Expose()
@@ -21,7 +21,7 @@ export class SuccessMessageDto {
 
   constructor({ message = 'Succes', statusCode = 200 }: SuccessMessageArgs) {
     this.message = message;
-    this.stausCode = statusCode;
+    this.statusCode = statusCode;
     this.error = null;
   }
 }
