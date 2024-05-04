@@ -5,6 +5,7 @@ import {
   Logger,
   LoggerService,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import { isNil } from 'ramda';
@@ -17,12 +18,17 @@ export class CacheService {
   constructor(
     @InjectRedis() private readonly redis: Redis,
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly configService: ConfigService,
   ) {}
 
-  public async setData<T>(key: string, value: T): Promise<void> {
+  public async setData<T>(
+    key: string,
+    value: T,
+    expirationTime = 600,
+  ): Promise<void> {
     const data = JSON.stringify(value);
     try {
-      await this.redis.set(key, data);
+      await this.redis.set(key, data, 'EX', expirationTime);
     } catch (error) {
       this.logger.error(CacheService.name + ' - setData', error.stack);
 
