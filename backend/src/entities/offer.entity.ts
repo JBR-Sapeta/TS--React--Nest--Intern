@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +16,7 @@ import { CategoryEntity } from './category.entity';
 import { EmploymentTypeEntity } from './employment-type.entity';
 import { OperatingModeEntity } from './operating-mode.entity';
 import { CompanyEntity } from './company.entity';
+import { ApplicationEntity } from './application.entity';
 
 @Entity({ name: 'offers' })
 export class OfferEntity {
@@ -52,14 +54,14 @@ export class OfferEntity {
   @JoinColumn({ name: 'employment_type_id' })
   public employmentType: EmploymentTypeEntity;
 
-  @Column({ name: 'employment_type_id', nullable: false })
+  @Column({ name: 'employment_type_id' })
   public employmentTypeId: number;
 
   @ManyToOne(() => OperatingModeEntity)
   @JoinColumn({ name: 'operating_mode_id' })
   public operatingMode: OperatingModeEntity;
 
-  @Column({ name: 'operating_mode_id', nullable: false })
+  @Column({ name: 'operating_mode_id' })
   public operatingModeId: number;
 
   @ManyToMany(() => BranchEntity, { eager: true })
@@ -76,6 +78,12 @@ export class OfferEntity {
   @JoinColumn({ name: 'company_id' })
   public company: CompanyEntity;
 
-  @Column({ name: 'company_id', nullable: false })
+  @Column({ name: 'company_id' })
   public companyId: string;
+
+  @OneToMany(
+    () => ApplicationEntity,
+    (application: ApplicationEntity) => application.offer,
+  )
+  public applications: ApplicationEntity[];
 }

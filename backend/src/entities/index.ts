@@ -3,6 +3,7 @@ export { BranchEntity } from './branch.entity';
 export { CategoryEntity } from './category.entity';
 export { CompanyEntity } from './company.entity';
 export { EmploymentTypeEntity } from './employment-type.entity';
+export { ApplicationEntity } from './application.entity';
 export { OfferEntity } from './offer.entity';
 export { OperatingModeEntity } from './operating-mode.entity';
 export { UserEntity } from './user.entity';

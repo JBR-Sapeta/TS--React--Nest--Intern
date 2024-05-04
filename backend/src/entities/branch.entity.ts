@@ -43,7 +43,7 @@ export class BranchEntity {
   @JoinColumn({ name: 'company_id' })
   public company: CompanyEntity;
 
-  @Column({ name: 'company_id', nullable: false })
+  @Column({ name: 'company_id' })
   public companyId: string;
 
   @ManyToMany(() => OfferEntity, (offer: OfferEntity) => offer.branches)

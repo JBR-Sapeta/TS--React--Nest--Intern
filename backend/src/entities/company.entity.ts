@@ -54,7 +54,7 @@ export class CompanyEntity {
   @JoinColumn({ name: 'user_id' })
   public user: UserEntity;
 
-  @Column({ name: 'user_id', nullable: false })
+  @Column({ name: 'user_id' })
   public userId: string;
 
   @OneToMany(() => BranchEntity, (branch: BranchEntity) => branch.company)

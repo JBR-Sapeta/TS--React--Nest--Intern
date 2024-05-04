@@ -6,9 +6,11 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  OneToMany,
 } from 'typeorm';
 
 import { RoleEntity } from './role.entity';
+import { ApplicationEntity } from './application.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -54,4 +56,10 @@ export class UserEntity {
   @ManyToMany(() => RoleEntity, { eager: true, onDelete: 'CASCADE' })
   @JoinTable({ name: 'users_roles' })
   public roles: RoleEntity[];
+
+  @OneToMany(
+    () => ApplicationEntity,
+    (application: ApplicationEntity) => application.user,
+  )
+  public applications: ApplicationEntity[];
 }
