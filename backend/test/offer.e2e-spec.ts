@@ -19,9 +19,11 @@ import { AuthService } from './../src/auth/auth.service';
 import { CompanyService } from './../src/company/company.service';
 import { BranchService } from './../src/branch/branch.service';
 import { OfferService } from './../src/offer/offer.service';
+import { S3Service } from './../src/s3/s3.service';
 
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
+import { s3Service } from './mocks/s3-service';
 
 import {
   COMPANY_ONE,
@@ -64,6 +66,8 @@ describe('OfferController (e2e)', () => {
       .useValue(mailService)
       .overrideProvider(GeocoderService)
       .useValue(geocoderService)
+      .overrideProvider(S3Service)
+      .useValue(s3Service)
       .compile();
 
     app = moduleFixture.createNestApplication();

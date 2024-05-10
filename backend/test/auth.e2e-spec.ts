@@ -12,6 +12,7 @@ import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
 import { AuthService } from './../src/auth/auth.service';
+import { S3Service } from './../src/s3/s3.service';
 
 import {
   RANDOM_UUID,
@@ -26,6 +27,7 @@ import type { User, Credentials } from './helpers/auth-data';
 
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
+import { s3Service } from './mocks/s3-service';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -43,6 +45,8 @@ describe('AuthController (e2e)', () => {
       .useValue(mailService)
       .overrideProvider(GeocoderService)
       .useValue(geocoderService)
+      .overrideProvider(S3Service)
+      .useValue(s3Service)
       .compile();
 
     app = moduleFixture.createNestApplication();
