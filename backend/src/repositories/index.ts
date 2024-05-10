@@ -1,4 +1,5 @@
 export { AddressRepository } from './address.repository';
+export { ApplicationRepository } from './application.repository';
 export { BranchRepository } from './branch.repository';
 export { CategoryRepository } from './category.repository';
 export { CompanyRepository } from './company.repository';

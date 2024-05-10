@@ -14,17 +14,17 @@ export class ApplicationEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column({ type: 'varchar', length: 512 })
+  @Column({ type: 'varchar', length: 512, nullable: true })
   public message: string;
 
-  @CreateDateColumn({ type: 'timestamptz' })
-  public createdAt: Date;
-
-  @Column({ type: 'text' })
-  public fileUrl: string;
+  @Column({ type: 'varchar', length: 512 })
+  public fileKey: string;
 
   @Column({ type: 'boolean', default: false })
   public isDownloaded: boolean;
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  public createdAt: Date;
 
   @ManyToOne(() => OfferEntity, (offer: OfferEntity) => offer.applications, {
     onDelete: 'CASCADE',

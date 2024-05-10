@@ -13,6 +13,7 @@ export interface ErrorTranslations {
   VALIDATION_AUTH_LAST_NAME: string;
   VALIDATION_AUTH_PASSWORD: string;
   VALIDATION_AUTH_RESET_TOKEN: string;
+  VALIDATION_APPLICATION_MESSAGE: string;
   VALIDATION_BRANCH_NAME: string;
   VALIDATION_COMPANY_NAME: string;
   VALIDATION_COMPANY_PHONE: string;
@@ -41,10 +42,12 @@ export interface ErrorTranslations {
   UNAUTHORIZED_INVALID_PASSWORD: string;
   FORBIDDEN: string;
   FORBIDDEN_ACCOUNT_ACTIVATION: string;
+  FORBIDDEN_APPLICATION_DUPLICATION: string;
   FORBIDDEN_INACTIVE_ACCOUNT: string;
   FORBIDDEN_RESET_TOKEN: string;
   FORBIDDEN_ONE_COMPANY_PER_USER: string;
   NOT_FUOND: string;
+  NOT_FUOND_APPLICATION: string;
   NOT_FUOND_BRANCH: string;
   NOT_FUOND_BRANCHES: string;
   NOT_FUOND_CATEGORIES: string;
@@ -55,9 +58,10 @@ export interface ErrorTranslations {
   NOT_FUOND_USER: string;
   CONFLICT_EMAIL_TAKEN: string;
   INTERNAL_SERVER_ERROR: string;
+  BAD_GATEWAY_ADDRESS_VALIDATION: string;
   BAD_GATEWAY_BASE_MESSAGE: string;
   BAD_GATEWAY_EMAIL_DELIVERY: string;
-  BAD_GATEWAY_ADDRESS_VALIDATION: string;
+  BAD_GATEWAY_FILE_UPLOAD: string;
 }
 
 export interface MessageTranslations {
@@ -68,6 +72,8 @@ export interface MessageTranslations {
   AUTH_LOGGED_OUT: string;
   AUTH_PASSWORD_RESET: string;
   AUTH_RESEND_ACTIVATION_EMAIL: string;
+  APPLICATION_CREATED: string;
+  APPLICATION_DELETED: string;
   BASE_SUCCESS: string;
   BRANCH_CREATED: string;
   BRANCH_UPDATED: string;

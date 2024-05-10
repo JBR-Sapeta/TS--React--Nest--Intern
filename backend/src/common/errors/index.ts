@@ -1,0 +1,1 @@
+export { AwsError } from './AwsError';

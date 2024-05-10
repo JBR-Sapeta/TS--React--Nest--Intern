@@ -25,6 +25,8 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_AUTH_PASSWORD:
     'Hasło musi składać się minimum z 8 znaków i zawierać małe i duże litery a także cyfrę i znak specjalny.',
   VALIDATION_AUTH_RESET_TOKEN: 'Token jest wymagany.',
+  VALIDATION_APPLICATION_MESSAGE:
+    'Wiadomość nie może być dłuższa niż 512 znaków.',
   VALIDATION_BRANCH_NAME:
     'Nazwa oddziału powinno składać się z 4 do 255 znaków.',
   VALIDATION_COMMON_EMAIL: 'Wprowadź prawidłowy adres E-mail.',
@@ -67,11 +69,13 @@ export const PL_ERRORS: ErrorTranslations = {
   FORBIDDEN: 'Odmowa dostępu.',
   FORBIDDEN_ACCOUNT_ACTIVATION:
     'Konto zostało już aktywowane lub przesłany token jest nieprawidłowy.',
+  FORBIDDEN_APPLICATION_DUPLICATION: 'Już aplikowałeś na to stanowisko.',
   FORBIDDEN_INACTIVE_ACCOUNT:
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
   FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',
   FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
+  NOT_FUOND_APPLICATION: 'Nie znaleziono aplikacji.',
   NOT_FUOND_BRANCH: 'Nie znaleziono oddziału firmy.',
   NOT_FUOND_BRANCHES: 'Nie znaleziono oddziałów firmy.',
   NOT_FUOND_CATEGORIES: 'Nie znaleziono kategorii.',
@@ -82,8 +86,9 @@ export const PL_ERRORS: ErrorTranslations = {
   NOT_FUOND_USER: 'Nie znaleziono użytkownika.',
   CONFLICT_EMAIL_TAKEN: 'Podany adres E-mail jest już używany.',
   INTERNAL_SERVER_ERROR: 'Coś poszło nie tak. Spróbuj ponownie później.',
+  BAD_GATEWAY_ADDRESS_VALIDATION: 'Błąd podczas walidacji adresu.',
   BAD_GATEWAY_BASE_MESSAGE: '502 Bad Gateway',
   BAD_GATEWAY_EMAIL_DELIVERY:
     'Wysyłanie wiadomości E-mail nie powiodło się.  Spróbuj ponownie później.',
-  BAD_GATEWAY_ADDRESS_VALIDATION: 'Błąd podczas walidacji adresu.',
+  BAD_GATEWAY_FILE_UPLOAD: 'Błąd podczas przesyłania pliku.',
 };

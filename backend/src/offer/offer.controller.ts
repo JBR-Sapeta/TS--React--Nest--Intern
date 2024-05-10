@@ -47,26 +47,6 @@ import { OPERATION, PARAM, RES } from './docs';
 export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
-  @Get('/')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation(OPERATION.GET_OFFERS)
-  @ApiResponse(RES.GET_OFFERS.OK)
-  @ApiResponse(RES.GET_OFFERS.BAD_REQUEST)
-  @ApiResponse(RES.GET_OFFERS.INTERNAL_SERVER_ERROR)
-  getOffers(
-    @Query() paginationParams: PaginationParams,
-    @Query() offerParams: OfferParams,
-    @Query() locationParams: AddressParams,
-    @Query() categoreisParams: CategoriesParams,
-  ): Promise<OfferPreviewsResponseDto> {
-    return this.offerService.getOffers(
-      paginationParams,
-      offerParams,
-      locationParams,
-      categoreisParams,
-    );
-  }
-
   @Post('/:companyId/create')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.CREATED)
@@ -86,6 +66,26 @@ export class OfferController {
     @Body() createOffetDto: CreateOfferDto,
   ): Promise<SuccessMessageDto> {
     return this.offerService.createOffer(companyId, userId, createOffetDto);
+  }
+
+  @Get('/')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_OFFERS)
+  @ApiResponse(RES.GET_OFFERS.OK)
+  @ApiResponse(RES.GET_OFFERS.BAD_REQUEST)
+  @ApiResponse(RES.GET_OFFERS.INTERNAL_SERVER_ERROR)
+  getOffers(
+    @Query() paginationParams: PaginationParams,
+    @Query() offerParams: OfferParams,
+    @Query() locationParams: AddressParams,
+    @Query() categoreisParams: CategoriesParams,
+  ): Promise<OfferPreviewsResponseDto> {
+    return this.offerService.getOffers(
+      paginationParams,
+      offerParams,
+      locationParams,
+      categoreisParams,
+    );
   }
 
   @Get('/:companyId/:offerId/partial')

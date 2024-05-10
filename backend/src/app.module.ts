@@ -25,14 +25,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CategoryModule } from './category/category.module';
 import { OfferModule } from './offer/offer.module';
+import { ApplicationModule } from './application/application.module';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
     AuthModule,
+    ApplicationModule,
     CacheModule,
     CategoryModule,
     CompanyModule,
-
     ConfigModule.forRoot({
       envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
@@ -42,6 +44,7 @@ import { OfferModule } from './offer/offer.module';
     MailModule,
     OfferModule,
     UserModule,
+    S3Module,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {

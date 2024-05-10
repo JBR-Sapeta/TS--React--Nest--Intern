@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { MessageTranslations } from '../translation.interface';
 
 export const PL_MESSAGES: MessageTranslations = {
@@ -11,6 +10,8 @@ export const PL_MESSAGES: MessageTranslations = {
   AUTH_PASSWORD_RESET: 'Twoje hasło zostało zresetowane.',
   AUTH_RESEND_ACTIVATION_EMAIL:
     'Wiadomośc z linkiem aktywacyjnym została ponownie przesłana.',
+  APPLICATION_CREATED: 'Twoja aplikacja została przesłana.',
+  APPLICATION_DELETED: 'Twoja aplikacja została usunięta.',
   BASE_SUCCESS: 'Sukces.',
   BRANCH_CREATED: 'Odział firmy został utworzony.',
   BRANCH_UPDATED: 'Odział firmy został zaktualizowane',

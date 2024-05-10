@@ -39,11 +39,11 @@ import { OfferController } from './offer.controller';
   controllers: [OfferController],
   providers: [
     Logger,
-    OfferService,
     CacheService,
+    OfferService,
+    BranchRepository,
     CategoryRepository,
     CompanyRepository,
-    BranchRepository,
     EmploymentTypeRepository,
     OfferRepository,
     OperatingModeRepository,
