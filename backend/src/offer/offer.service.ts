@@ -8,9 +8,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { isNil, isEmpty, isNotNil, not } from 'ramda';
+import { isNotEmptyObject } from 'class-validator';
 
+import { OfferEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
+  ApplicationRepository,
   CategoryRepository,
   CompanyRepository,
   EmploymentTypeRepository,
@@ -27,7 +30,9 @@ import {
 } from '../common/classes/params';
 import { calculateDate } from '../common/functions';
 import { Nullish } from '../common/types';
+
 import { CacheService } from '../cache/cache.service';
+import { S3Service } from '../s3/s3.service';
 
 import {
   FullOfferResponseDto,
@@ -35,16 +40,16 @@ import {
   PartialOfferResponseDto,
 } from './dto/response';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
-import { OfferEntity } from 'src/entities';
-import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class OfferService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly cacheService: CacheService,
+    private readonly s3Service: S3Service,
     private readonly categoriesRepository: CategoryRepository,
     private readonly companyRepository: CompanyRepository,
+    private readonly applicationRepository: ApplicationRepository,
     private readonly employmentTypeRepository: EmploymentTypeRepository,
     private readonly offerRepository: OfferRepository,
     private readonly operatingModeRepository: OperatingModeRepository,
@@ -357,6 +362,13 @@ export class OfferService {
       );
 
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const [applications] =
+      await this.applicationRepository.getOfferApplicationsById(offerId);
+
+    for (const application of applications) {
+      await this.s3Service.deleteApplicationFile(application.fileKey);
     }
 
     await this.offerRepository.deleteOffer(offerId);

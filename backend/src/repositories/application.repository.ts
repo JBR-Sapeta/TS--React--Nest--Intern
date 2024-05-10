@@ -66,6 +66,25 @@ export class ApplicationRepository extends Repository<ApplicationEntity> {
   // ----------------------------------------------------------------------- \\
   public async getOfferApplicationsById(
     offerId: number,
+  ): Promise<[ApplicationEntity[], number]> {
+    try {
+      const applications = await this.findAndCount({
+        where: { offerId },
+      });
+      return applications;
+    } catch (error) {
+      this.logger.error(
+        ApplicationRepository.name + ' - getUserApplicationsById',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getOfferApplicationsWithUsersById(
+    offerId: number,
     { pageNumber, limit }: PaginationParams,
   ): Promise<[ApplicationEntity[], number]> {
     try {
@@ -92,7 +111,7 @@ export class ApplicationRepository extends Repository<ApplicationEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getApplicationWithRelationsById(
+  public async getApplicationWithCompanyById(
     applicationId: number,
   ): Promise<Nullable<ApplicationEntity>> {
     try {

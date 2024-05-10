@@ -94,7 +94,7 @@ export class ApplicationService {
     applicationId: number,
   ): Promise<{ buffer: Buffer; contentType: string }> {
     const application =
-      await this.applicationRepository.getApplicationWithRelationsById(
+      await this.applicationRepository.getApplicationWithCompanyById(
         applicationId,
       );
 
@@ -145,7 +145,7 @@ export class ApplicationService {
     }
 
     const [applications, count] =
-      await this.applicationRepository.getOfferApplicationsById(
+      await this.applicationRepository.getOfferApplicationsWithUsersById(
         offerId,
         paginationParams,
       );
