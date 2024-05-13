@@ -104,6 +104,7 @@ export class ApplicationController {
       await this.applicationService.getApplicationFile(userId, applicationId);
 
     res.setHeader('Content-Type', contentType);
+    //@ TODO - add filename
     res.setHeader('Content-Disposition', 'attachment; filename="download.pdf"');
     res.send(buffer);
   }
@@ -157,7 +158,7 @@ export class ApplicationController {
     );
   }
 
-  @Delete('/:offerId/delete')
+  @Delete('/:applicationId/delete')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)
@@ -172,9 +173,9 @@ export class ApplicationController {
   @ApiResponse(RES.DELET.INTERNAL_SERVER_ERROR)
   @ApiResponse(RES.DELET.BAD_GATEWAY)
   deleteApplications(
-    @Param('offerId', ParseIntPipe) offerId: number,
+    @Param('applicationId', ParseIntPipe) applicationId: number,
     @GetAccessTokenPayload() userId: string,
   ): Promise<SuccessMessageDto> {
-    return this.applicationService.deleteApplication(userId, offerId);
+    return this.applicationService.deleteApplication(userId, applicationId);
   }
 }

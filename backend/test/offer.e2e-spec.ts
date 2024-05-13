@@ -663,7 +663,7 @@ describe('OfferController (e2e)', () => {
       ]);
     });
 
-    it('returns 1 element when limit is set to 1', async () => {
+    it('returns one element when limit is set to 1', async () => {
       await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,

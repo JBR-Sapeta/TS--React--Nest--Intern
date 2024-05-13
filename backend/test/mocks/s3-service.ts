@@ -1,10 +1,12 @@
 export const s3Service = {
-  uploadApplicationFile: async () => 'john_doe_12453253252',
+  uploadApplicationFile: async (_file, key: string) => key,
   getApplicationFile: async () => {
-    return { data: [23, 43, 51], contentType: 'application/pdf' };
+    const data = new Uint8Array([21, 31, 23, 43, 51, 47, 13, 29, 44, 34, 17]);
+
+    return { data, contentType: 'application/pdf' };
   },
-  deleteApplicationFileL: async () => {},
+  deleteApplicationFile: async () => {},
   uploadImageFile: async () =>
-    'https://${this.imageBucket}.s3.${this.region}.amazonaws.com/${key}',
+    'https://intern-applications-development.s3.eu-north-1.amazonaws.com/Tom_Smith_fff60921-806f-4939-9d67-ce3c75232d82',
   deleteImageFile: async () => {},
 };

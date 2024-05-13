@@ -45,6 +45,13 @@ export const USER_TWO: User = {
   password: 'Password123$',
 };
 
+export const USER_THREE = {
+  firstName: 'Bob',
+  lastName: 'Johnson',
+  email: 'user2@mail.com',
+  password: 'Password123%',
+};
+
 export const USER_ONE_CREDENTIALS: Credentials = {
   email: 'user@mail.com',
   password: 'Password123#',
@@ -53,4 +60,9 @@ export const USER_ONE_CREDENTIALS: Credentials = {
 export const USER_TWO_CREDENTIALS: Credentials = {
   email: 'user1@mail.com',
   password: 'Password123$',
+};
+
+export const USER_THREE_CREDENTIALS: Credentials = {
+  email: 'user2@mail.com',
+  password: 'Password123%',
 };
