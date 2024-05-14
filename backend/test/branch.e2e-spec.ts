@@ -597,7 +597,7 @@ describe('BranchController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
-    it('returns 400 status code when empty o bject is provided as body', async () => {
+    it('returns 400 status code when empty object is provided as body', async () => {
       const { accessToken, companyId } = await createActiveUserAndCompany(
         USER_ONE,
         COMPANY_ONE,

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -15,6 +16,7 @@ import {
   CompaniesPreviewResponseDto,
   PartialCompanyResponseDto,
 } from './dto/response';
+import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class CompanyService {
@@ -54,6 +56,10 @@ export class CompanyService {
     companyId: string,
     updateCompanyDto: UpdateCompanyDto,
   ): Promise<SuccessMessageDto> {
+    if (!isNotEmptyObject(updateCompanyDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
     const company = await this.companyRepository.getCompanyById(companyId);
 
     if (isNil(company)) {

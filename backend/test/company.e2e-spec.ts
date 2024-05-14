@@ -420,6 +420,18 @@ describe('CompanyController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
+    it('returns 400 status code when empty object is provided as body', async () => {
+      const { accessToken } = await createActiveUser(USER_ONE);
+      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+      const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
+      const response = await sendUpdateCompanyRequest(
+        accessToken,
+        company.id,
+        {},
+      );
+      expect(response.status).toBe(400);
+    });
+
     it.each`
       invalidField
       ${'name'}

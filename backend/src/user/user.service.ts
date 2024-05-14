@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -17,6 +18,7 @@ import {
   UpdatePasswordDto,
   UpdateUserDto,
 } from './dto/request';
+import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class UserService {
@@ -40,16 +42,18 @@ export class UserService {
   public async updateUserProfile(
     userId: string,
     userIdParam: string,
-    { firstName, lastName, phoneNumber }: UpdateUserDto,
+    updateUserDto: UpdateUserDto,
   ): Promise<ProfileDto> {
     if (userId !== userIdParam) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
+    if (!isNotEmptyObject(updateUserDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
     const user = await this.userRepository.updateUserProfile(userId, {
-      firstName,
-      lastName,
-      phoneNumber,
+      ...updateUserDto,
     });
 
     return new ProfileDto({ message: PL_MESSAGES.USER_ACCOUNT_UPDATE }, user);

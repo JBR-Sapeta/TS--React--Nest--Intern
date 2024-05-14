@@ -22,6 +22,7 @@ import { GeocoderService } from '../geocoder/geocoder.service';
 
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
+import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class BranchService {
@@ -108,13 +109,17 @@ export class BranchService {
     userId: string,
     updateBranchDto: UpdateBranchDto,
   ): Promise<SuccessMessageDto> {
-    const { name, address } = updateBranchDto;
+    if (!isNotEmptyObject(updateBranchDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
     const company = await this.companyRepository.getCompanyById(companyId);
-    const branch = await this.branchRepository.getBranchById(branchId);
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
+
+    const branch = await this.branchRepository.getBranchById(branchId);
 
     if (isNil(branch)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCH);
@@ -129,9 +134,7 @@ export class BranchService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    if (isNil(name) && isNil(address)) {
-      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
-    }
+    const { address, name } = updateBranchDto;
 
     if (isNotNil(address)) {
       const isValidAddress =

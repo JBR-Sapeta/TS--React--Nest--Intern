@@ -230,6 +230,10 @@ export class OfferService {
     userId: string,
     updateOffetDto: UpdateOfferDto,
   ): Promise<SuccessMessageDto> {
+    if (!isNotEmptyObject(updateOffetDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
     const {
       branches: branchesDto,
       categories: categoriesDto,
@@ -237,10 +241,6 @@ export class OfferService {
       operatingMode: operatingModeDto,
       ...offerData
     } = updateOffetDto;
-
-    if (!isNotEmptyObject(updateOffetDto)) {
-      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
-    }
 
     const company = await this.companyRepository.getCompanyDataById(companyId);
 

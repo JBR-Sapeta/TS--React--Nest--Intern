@@ -315,6 +315,16 @@ describe('UserController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
+    it('returns 400 status code when empty object is provided as body', async () => {
+      const { user, accessToken } = await createActiveUser(USER_ONE);
+      const response = await sendUpdateUserProfileRequest(
+        accessToken,
+        user.id,
+        {},
+      );
+      expect(response.status).toBe(400);
+    });
+
     it.each`
       invalidField
       ${'firstName'}
@@ -583,7 +593,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Delete Account - Valid Request ------------------------------ \\
 
-  describe('/users/:userId/delete (PUT) - Valid Request', () => {
+  describe('/users/:userId/delete (DELETE) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken, user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
@@ -628,9 +638,9 @@ describe('UserController (e2e)', () => {
     });
   });
 
-  // ------------------------------ Update - Invalid Request ------------------------------ \\
+  // ------------------------------ Delete Account - Invalid Request ------------------------------ \\
 
-  describe('/users/:userId/delete (PUT) - Invalid Request', () => {
+  describe('/users/:userId/delete (DELETE) - Invalid Request', () => {
     it('returns 400 status code when current password is not provided', async () => {
       const { accessToken, user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
