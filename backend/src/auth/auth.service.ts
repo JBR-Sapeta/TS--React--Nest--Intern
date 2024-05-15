@@ -30,13 +30,35 @@ import type {
 
 @Injectable()
 export class AuthService {
+  private accessTokenSecret: string;
+  private accessTokenExpirationTime: string;
+  private refreshTokenSecret: string;
+  private refreshTokenExpirationTime: string;
+  private resetTokenExpiartionTime: number;
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
     private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
-  ) {}
+  ) {
+    this.accessTokenSecret = this.configService.get<string>(
+      ENV_KEYS.JWT_ACCESS_TOKEN_SECRET,
+    );
+    this.accessTokenExpirationTime = this.configService.get<string>(
+      ENV_KEYS.JWT_ACCESS_TOKEN_EXPIRATION_TIME,
+    );
+    this.refreshTokenSecret = this.configService.get<string>(
+      ENV_KEYS.JWT_REFRESH_TOKEN_SECRET,
+    );
+    this.refreshTokenExpirationTime = this.configService.get<string>(
+      ENV_KEYS.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
+    );
+    this.resetTokenExpiartionTime = +this.configService.get<string>(
+      ENV_KEYS.RESET_TOKEN_EXPIRATION_TIME,
+    );
+  }
 
   // ----------------------------------------------------------------------- \\
   public async createUserAccount({
@@ -126,10 +148,10 @@ export class AuthService {
     email,
   }: UserEmailDto): Promise<SuccessMessageDto> {
     const resetToken = uuid();
-    const expirationTime = +this.configService.get<string>(
-      ENV_KEYS.RESET_TOKEN_EXPIRATION_TIME,
+
+    const resetTokenExpirationDate = calculateDate(
+      this.resetTokenExpiartionTime,
     );
-    const resetTokenExpirationDate = calculateDate(expirationTime);
 
     const { firstName } = await this.userRepository.setResetToken(
       email,
@@ -251,12 +273,8 @@ export class AuthService {
     return this.jwtService.signAsync(
       { userId, roles },
       {
-        secret: this.configService.get<string>(
-          ENV_KEYS.JWT_ACCESS_TOKEN_SECRET,
-        ),
-        expiresIn: this.configService.get<string>(
-          ENV_KEYS.JWT_ACCESS_TOKEN_EXPIRATION_TIME,
-        ),
+        secret: this.accessTokenSecret,
+        expiresIn: this.accessTokenExpirationTime,
       },
     );
   }
@@ -269,12 +287,8 @@ export class AuthService {
     const refreshToken = await this.jwtService.signAsync(
       { userId },
       {
-        secret: this.configService.get<string>(
-          ENV_KEYS.JWT_REFRESH_TOKEN_SECRET,
-        ),
-        expiresIn: this.configService.get<string>(
-          ENV_KEYS.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
-        ),
+        secret: this.refreshTokenSecret,
+        expiresIn: this.refreshTokenExpirationTime,
       },
     );
 

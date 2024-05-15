@@ -14,11 +14,16 @@ import { GeocoderAddress } from '../common/types';
 
 @Injectable()
 export class GeocoderService extends GeocoderServiceAbstractClass {
+  private apiUrl: string;
+  private accessToken: string;
+
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly configService: ConfigService,
   ) {
     super();
+    this.apiUrl = this.configService.get<string>(ENV_KEYS.GEOCODER_URL);
+    this.accessToken = this.configService.get<string>(ENV_KEYS.GEOCODER_TOKEN);
   }
 
   public async validateAddress({
@@ -31,12 +36,10 @@ export class GeocoderService extends GeocoderServiceAbstractClass {
     lat,
     long,
   }: GeocoderAddress): Promise<boolean> {
-    const apiUrl = this.configService.get<string>(ENV_KEYS.GEOCODER_URL);
-    const token = this.configService.get<string>(ENV_KEYS.GEOCODER_TOKEN);
     const query = encodeURI(
       `${country}${region}${postcode}${city}${streetName}${houseNumber}`,
     );
-    const url = `${apiUrl}${query}.json?types=address&language=pl&limit=10&access_token=${token}`;
+    const url = `${this.apiUrl}${query}.json?types=address&language=pl&limit=10&access_token=${this.accessToken}`;
 
     let hasMatch = false;
 

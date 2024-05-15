@@ -13,11 +13,19 @@ import { PL_ERRORS } from '../locales';
 
 @Injectable()
 export class MailService {
+  private domainUrl: string;
+  private senderAddrerss: string;
+
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly configService: ConfigService,
     private readonly mailerService: MailerService,
-  ) {}
+  ) {
+    this.domainUrl = this.configService.get<string>(ENV_KEYS.DOMAIN_URL);
+    this.senderAddrerss = this.configService.get<string>(
+      ENV_KEYS.MAIL_SENDER_ADDRESS,
+    );
+  }
 
   public async sendWelcomeEmail(
     email: string,
@@ -27,11 +35,11 @@ export class MailService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        from: this.configService.get<string>(ENV_KEYS.MAIL_FROM),
+        from: this.senderAddrerss,
         subject: `Welcome message`,
         template: 'welcome.ejs',
         context: {
-          domainUrl: this.configService.get<string>(ENV_KEYS.DOMAIN_URL),
+          domainUrl: this.domainUrl,
           activationToken,
           firstName,
         },
@@ -51,7 +59,7 @@ export class MailService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        from: this.configService.get<string>(ENV_KEYS.MAIL_FROM),
+        from: this.senderAddrerss,
         subject: `Welcome message`,
         template: 'recovery.ejs',
         context: {

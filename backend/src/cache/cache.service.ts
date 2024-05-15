@@ -5,7 +5,6 @@ import {
   Logger,
   LoggerService,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import { isNil } from 'ramda';
@@ -18,7 +17,6 @@ export class CacheService {
   constructor(
     @InjectRedis() private readonly redis: Redis,
     @Inject(Logger) private readonly logger: LoggerService,
-    private readonly configService: ConfigService,
   ) {}
 
   public async setData<T>(
