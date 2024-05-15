@@ -5,7 +5,7 @@ import { SuccessMessageDto } from '../../../common/classes';
 import type { SuccessMessageArgs } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 
-export class RefreshToken {
+export class RefreshTokenDto {
   @ApiProperty({
     example:
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2U0MmJhOS0zM2RmLTQyNDQtODJhOS1mZTk3NzI5M2FiMjAiLCJpYXQiOjE3MDg4OTE5NDUsImV4cCI6MTcwODg5MjU0NX0.sYLRIXTnJc3mNaz5lOz80raUeX2UV-mQw3jHThJwiUc',
@@ -33,9 +33,9 @@ class Tokens {
 
   @ApiProperty()
   @Expose()
-  refreshToken: RefreshToken;
+  refreshToken: RefreshTokenDto;
 
-  constructor(accessToken: string, refreshToken: RefreshToken) {
+  constructor(accessToken: string, refreshToken: RefreshTokenDto) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
   }
@@ -52,7 +52,7 @@ export class TokensDto
   constructor(
     args: SuccessMessageArgs,
     accessToken: string,
-    refreshToken: RefreshToken,
+    refreshToken: RefreshTokenDto,
   ) {
     super(args);
 

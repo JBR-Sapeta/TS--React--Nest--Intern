@@ -30,6 +30,7 @@ import {
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
+import { JwtPayload } from '../common/types';
 
 import { CompanyService } from './company.service';
 import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
@@ -103,7 +104,7 @@ export class CompanyController {
   updateCompany(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<SuccessMessageDto> {
     return this.companyService.updateCompany(
       userId,
@@ -126,7 +127,7 @@ export class CompanyController {
   @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   deleteCompany(
     @Param('companyId', ParseUUIDPipe) companyId: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<SuccessMessageDto> {
     return this.companyService.deleteCompany(userId, companyId);
   }

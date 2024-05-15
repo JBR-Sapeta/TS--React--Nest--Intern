@@ -34,6 +34,7 @@ import { BranchService } from './branch.service';
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
 import { OPERATION, PARAM, RES } from './docs';
+import { JwtPayload } from 'src/common/types';
 
 @ApiTags('Branches')
 @Controller('branches')
@@ -95,7 +96,7 @@ export class BranchController {
   updateCompanyBranch(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('branchId', ParseIntPipe) branchId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateBranchDto: UpdateBranchDto,
   ): Promise<SuccessMessageDto> {
     return this.branchService.updateBranch(
@@ -123,7 +124,7 @@ export class BranchController {
   deleteCompanyBranch(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('branchId', ParseIntPipe) branchId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<SuccessMessageDto> {
     return this.branchService.deleteBranch(companyId, branchId, userId);
   }

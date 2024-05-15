@@ -1,3 +1,3 @@
 export * from './utils';
 export type { GeocoderAddress } from './geocoder-address';
-export type { JWTPayload, RefreshTokenPayload } from './jwt';
+export type { JwtPayload, RTPayload } from './jwt';

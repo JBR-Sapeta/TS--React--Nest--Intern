@@ -6,7 +6,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from '../../repositories';
 
 import { ENV_KEYS } from '../../common/constants';
-import type { JWTPayload } from '../../common/types';
+import type { JwtPayload } from '../../common/types';
 
 @Injectable()
 export class ExtendedAccessTokenStrategy extends PassportStrategy(
@@ -23,7 +23,7 @@ export class ExtendedAccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: JWTPayload) {
+  async validate(payload: JwtPayload) {
     const { userId } = payload;
     const user = await this.userRepository.getUserById(userId);
 

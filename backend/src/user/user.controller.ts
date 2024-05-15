@@ -34,6 +34,7 @@ import {
   UpdateUserDto,
 } from './dto/request';
 import { OPERATION, PARAM, RES } from './docs';
+import { JwtPayload } from 'src/common/types';
 
 @ApiTags('User')
 @Controller('users')
@@ -50,7 +51,9 @@ export class UserController {
   @ApiResponse(RES.ME.UNAUTHORIZED)
   @ApiResponse(RES.ME.NOT_FOUND)
   @ApiResponse(RES.ME.INTERNAL_SERVER_ERROR)
-  getUserProfile(@GetAccessTokenPayload() userId: string): Promise<ProfileDto> {
+  getUserProfile(
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ): Promise<ProfileDto> {
     return this.userService.getUserProfile(userId);
   }
 
@@ -68,7 +71,7 @@ export class UserController {
   @ApiResponse(RES.UPDATE.INTERNAL_SERVER_ERROR)
   updateUserProfile(
     @Param('userId', ParseUUIDPipe) userIdParam: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<ProfileDto> {
     return this.userService.updateUserProfile(
@@ -93,7 +96,7 @@ export class UserController {
   @ApiResponse(RES.EMAIL.INTERNAL_SERVER_ERROR)
   updateUserEmail(
     @Param('userId', ParseUUIDPipe) userIdParam: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateEmailDto: UpdateEmailDto,
   ): Promise<ProfileDto> {
     return this.userService.updateEmail(userId, userIdParam, updateEmailDto);
@@ -112,7 +115,7 @@ export class UserController {
   @ApiResponse(RES.PASSWORD.INTERNAL_SERVER_ERROR)
   updateUserPassword(
     @Param('userId', ParseUUIDPipe) userIdParam: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<SuccessMessageDto> {
     return this.userService.updatePassword(
@@ -135,7 +138,7 @@ export class UserController {
   @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   delteUserAccount(
     @Param('userId', ParseUUIDPipe) userIdParam: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() deleteUserDto: DeleteUserDto,
   ): Promise<SuccessMessageDto> {
     return this.userService.deleteUserProfile(

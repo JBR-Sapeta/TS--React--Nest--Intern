@@ -1,8 +1,11 @@
-export type JWTPayload = {
+import { RoleEntity } from '../../entities';
+
+export type JwtPayload = {
   userId: string;
+  roles: RoleEntity[];
 };
 
-export type RefreshTokenPayload = {
+export type RTPayload = {
   userId: string;
   refreshToken: string;
 };

@@ -64,6 +64,7 @@ export const PL_ERRORS: ErrorTranslations = {
     'Nieprawidłowa wartość. Wprowadź liczbę całkowitą z przedziałuod 1 do 3.',
   VALIDATION_OFFER_TITLE:
     'Tytuł ogłoszenia powinien składać się z 4 do 64 znaków.',
+  UNAUTHORIZED: 'Nieprawidłowe dane uwierzytelniające.',
   UNAUTHORIZED_INVALID_CREDENTIALS: 'Nieprawidłowe hasło lub adres E-mail.',
   UNAUTHORIZED_INVALID_PASSWORD: 'Podano nieprawidłowe hasło.',
   FORBIDDEN: 'Odmowa dostępu.',
@@ -74,6 +75,7 @@ export const PL_ERRORS: ErrorTranslations = {
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
   FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',
   FORBIDDEN_RESET_TOKEN: 'Token resetowania hasła wygasł.',
+  FORBIDDEN_INCORRECT_ROLE: 'Nie masz uprawnień do wykonania tej operacji.',
   NOT_FUOND: 'Nie znaleziono zasobu.',
   NOT_FUOND_APPLICATION: 'Nie znaleziono aplikacji.',
   NOT_FUOND_BRANCH: 'Nie znaleziono oddziału firmy.',

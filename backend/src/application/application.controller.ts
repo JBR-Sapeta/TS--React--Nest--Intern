@@ -31,6 +31,7 @@ import { applicationFileFilter } from '../common/functions';
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
+import { JwtPayload } from '../common/types';
 
 import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
 import {
@@ -97,7 +98,7 @@ export class ApplicationController {
   @ApiResponse(RES.GET_APPLICATION_FILE.BAD_GATEWAY)
   async getApplicationFile(
     @Param('applicationId', ParseIntPipe) applicationId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Res() res: ExpressResponse,
   ) {
     const { buffer, contentType } =
@@ -125,7 +126,7 @@ export class ApplicationController {
   getOfferApplications(
     @Query() paginationParams: PaginationParams,
     @Param('offerId', ParseIntPipe) offerId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<OfferApplicationsResponseDto> {
     return this.applicationService.getOfferApplications(
       paginationParams,
@@ -148,13 +149,13 @@ export class ApplicationController {
   @ApiResponse(RES.GET_USER_APPLICATIONS.INTERNAL_SERVER_ERROR)
   getUserApplications(
     @Query() paginationParams: PaginationParams,
-    @Param('userId', ParseUUIDPipe) userId: string,
-    @GetAccessTokenPayload() tokenUserId: string,
+    @Param('userId', ParseUUIDPipe) userIdParam: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<UserApplicationsResponseDto> {
     return this.applicationService.getUserApplications(
       paginationParams,
+      userIdParam,
       userId,
-      tokenUserId,
     );
   }
 
@@ -174,7 +175,7 @@ export class ApplicationController {
   @ApiResponse(RES.DELET.BAD_GATEWAY)
   deleteApplications(
     @Param('applicationId', ParseIntPipe) applicationId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<SuccessMessageDto> {
     return this.applicationService.deleteApplication(userId, applicationId);
   }

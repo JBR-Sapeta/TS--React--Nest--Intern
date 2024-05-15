@@ -4,7 +4,15 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { ENV_KEYS } from '../../common/constants';
-import type { JWTPayload } from '../../common/types';
+import type { JwtPayload } from '../../common/types';
+import { RoleEntity } from '../../entities';
+
+type JsonWebTokenPayload = {
+  userId: string;
+  roles: RoleEntity[];
+  iat: number;
+  exp: number;
+};
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(
@@ -18,7 +26,8 @@ export class AccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(payload: JWTPayload) {
-    return payload;
+  validate(payload: JsonWebTokenPayload): JwtPayload {
+    const { userId, roles } = payload;
+    return { userId, roles };
   }
 }

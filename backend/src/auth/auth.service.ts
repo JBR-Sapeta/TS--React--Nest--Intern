@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { equals, isNil, not } from 'ramda';
 
-import { UserEntity } from '../entities';
+import { RoleEntity, UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { UserRepository, RoleRepository } from '../repositories';
 import { ENV_KEYS } from '../common/constants';
@@ -20,7 +20,7 @@ import { calculateDate } from '../common/functions';
 
 import { MailService } from '../mail/mail.service';
 
-import { AccessTokenDto, RefreshToken, TokensDto } from './dto/response';
+import { AccessTokenDto, RefreshTokenDto, TokensDto } from './dto/response';
 import type {
   UserEmailDto,
   CreateUserDto,
@@ -71,7 +71,7 @@ export class AuthService {
     const user = await this.validateUserCredentials(email, password);
     const refreshToken = await this.createRefreshToken(user.id);
     await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
-    const accessToken = await this.createAccessToken(user.id);
+    const accessToken = await this.createAccessToken(user.id, user.roles);
 
     return new TokensDto(
       { message: PL_MESSAGES.AUTH_LOGGED_IN },
@@ -104,7 +104,7 @@ export class AuthService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const accessToken = await this.createAccessToken(user.id);
+    const accessToken = await this.createAccessToken(user.id, user.roles);
 
     return new AccessTokenDto(
       { message: PL_MESSAGES.BASE_SUCCESS },
@@ -244,9 +244,12 @@ export class AuthService {
   }
 
   // ------------------------------ Helper ------------------------------- \\
-  private async createAccessToken(userId: string): Promise<string> {
+  private async createAccessToken(
+    userId: string,
+    roles: RoleEntity[],
+  ): Promise<string> {
     return this.jwtService.signAsync(
-      { userId },
+      { userId, roles },
       {
         secret: this.configService.get<string>(
           ENV_KEYS.JWT_ACCESS_TOKEN_SECRET,
@@ -259,7 +262,7 @@ export class AuthService {
   }
 
   // ------------------------------ Helper ------------------------------- \\
-  private async createRefreshToken(userId: string): Promise<RefreshToken> {
+  private async createRefreshToken(userId: string): Promise<RefreshTokenDto> {
     const now = new Date().getTime();
     const expirationTime = 24 * 60 * 60 * 1000;
     const expirationDate = new Date(now + expirationTime).toISOString();
@@ -275,6 +278,6 @@ export class AuthService {
       },
     );
 
-    return new RefreshToken(refreshToken, expirationDate);
+    return new RefreshTokenDto(refreshToken, expirationDate);
   }
 }

@@ -159,13 +159,13 @@ export class ApplicationService {
   // ----------------------------------------------------------------------- \\
   public async getUserApplications(
     paginationParams: PaginationParams,
+    userIdParam: string,
     userId: string,
-    tokenUserId: string,
   ): Promise<UserApplicationsResponseDto> {
-    if (userId !== tokenUserId) {
+    if (userIdParam !== userId) {
       this.logger.error(
         ApplicationService.name + ' - getUserApplications',
-        `ForbiddenException - ${userId}`,
+        `ForbiddenException - ${userIdParam}`,
       );
 
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
@@ -173,7 +173,7 @@ export class ApplicationService {
 
     const [applications, count] =
       await this.applicationRepository.getUserApplicationsById(
-        userId,
+        userIdParam,
         paginationParams,
       );
 

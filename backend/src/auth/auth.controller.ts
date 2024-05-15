@@ -20,7 +20,7 @@ import {
 } from '@nestjs/swagger';
 
 import type { SuccessMessageDto } from '../common/classes';
-import type { RefreshTokenPayload } from '../common/types';
+import type { JwtPayload, RTPayload } from '../common/types';
 import { HEADER } from '../common/docs';
 
 import { AuthService } from './auth.service';
@@ -75,7 +75,9 @@ export class AuthController {
   @ApiResponse(RES.LOGOUT.UNAUTHORIZED)
   @ApiResponse(RES.LOGOUT.FORBIDDEN)
   @ApiResponse(RES.LOGOUT.INTERNAL_SERVER_ERROR)
-  logout(@GetAccessTokenPayload() userId: string): Promise<SuccessMessageDto> {
+  logout(
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ): Promise<SuccessMessageDto> {
     return this.authService.logout(userId);
   }
 
@@ -89,7 +91,7 @@ export class AuthController {
   @ApiResponse(RES.REFRESH_TOKEN.FORBIDDEN)
   @ApiResponse(RES.REFRESH_TOKEN.INTERNAL_SERVER_ERROR)
   refreshToken(
-    @GetRefreshTokenPayload() { userId, refreshToken }: RefreshTokenPayload,
+    @GetRefreshTokenPayload() { userId, refreshToken }: RTPayload,
   ): Promise<AccessTokenDto> {
     return this.authService.refreshToken(userId, refreshToken);
   }

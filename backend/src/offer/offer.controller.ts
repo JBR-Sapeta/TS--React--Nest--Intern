@@ -32,6 +32,7 @@ import {
   PaginationParams,
 } from '../common/classes/params';
 import { HEADER } from '../common/docs';
+import { JwtPayload } from '../common/types';
 
 import { OfferService } from './offer.service';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
@@ -62,7 +63,7 @@ export class OfferController {
   @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
   createOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() createOffetDto: CreateOfferDto,
   ): Promise<SuccessMessageDto> {
     return this.offerService.createOffer(companyId, userId, createOffetDto);
@@ -121,7 +122,7 @@ export class OfferController {
   getFullOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<FullOfferResponseDto> {
     return this.offerService.getFullOffer(companyId, offerId, userId);
   }
@@ -143,7 +144,7 @@ export class OfferController {
   updateOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateOffetDto: UpdateOfferDto,
   ): Promise<SuccessMessageDto> {
     return this.offerService.updateOffer(
@@ -171,7 +172,7 @@ export class OfferController {
   deleteOffer(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Param('offerId', ParseIntPipe) offerId: number,
-    @GetAccessTokenPayload() userId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<SuccessMessageDto> {
     return this.offerService.deleteOffer(companyId, offerId, userId);
   }

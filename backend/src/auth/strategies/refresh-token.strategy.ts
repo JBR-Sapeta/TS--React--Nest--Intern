@@ -5,7 +5,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 
 import { ENV_KEYS } from '../../common/constants';
-import type { JWTPayload, RefreshTokenPayload } from '../../common/types';
+import type { RTPayload } from '../../common/types';
+
+type RefreshTokenPayload = {
+  userId: string;
+  iat: number;
+  exp: number;
+};
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -20,7 +26,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: Request, payload: JWTPayload): RefreshTokenPayload {
+  validate(req: Request, payload: RefreshTokenPayload): RTPayload {
     const refreshToken = req.get('authorization').split(' ')[1];
     const { userId } = payload;
 
