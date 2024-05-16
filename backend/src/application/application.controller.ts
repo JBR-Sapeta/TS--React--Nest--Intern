@@ -23,6 +23,8 @@ import {
   ApiHeader,
   ApiParam,
   ApiResponse,
+  ApiConsumes,
+  ApiBody,
 } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
 
@@ -45,7 +47,7 @@ import {
   OfferApplicationsResponseDto,
   UserApplicationsResponseDto,
 } from './dto/response';
-import { OPERATION, PARAM, RES } from './docs';
+import { API_BODY, OPERATION, PARAM, RES } from './docs';
 
 @ApiTags('Applications')
 @Controller('applications')
@@ -59,9 +61,11 @@ export class ApplicationController {
   )
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation(OPERATION.CREATE)
+  @ApiConsumes('multipart/form-data')
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
   @ApiParam(PARAM.OFFER_ID)
+  @ApiBody(API_BODY.CREATE)
   @ApiResponse(RES.CREATE.OK)
   @ApiResponse(RES.CREATE.BAD_REQUEST)
   @ApiResponse(RES.CREATE.UNAUTHORIZED)
@@ -101,12 +105,14 @@ export class ApplicationController {
     @GetAccessTokenPayload() { userId }: JwtPayload,
     @Res() res: ExpressResponse,
   ) {
-    const { buffer, contentType } =
+    const { buffer, contentType, fileName } =
       await this.applicationService.getApplicationFile(userId, applicationId);
 
     res.setHeader('Content-Type', contentType);
-    //@ TODO - add filename
-    res.setHeader('Content-Disposition', 'attachment; filename="download.pdf"');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${fileName}.pdf"`,
+    );
     res.send(buffer);
   }
 

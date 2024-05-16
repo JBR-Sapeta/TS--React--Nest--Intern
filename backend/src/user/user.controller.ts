@@ -21,6 +21,7 @@ import {
 
 import { SuccessMessageDto } from '../common/classes';
 import { HEADER } from '../common/docs';
+import { JwtPayload } from '../common/types';
 
 import { AccessTokenGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
@@ -34,7 +35,6 @@ import {
   UpdateUserDto,
 } from './dto/request';
 import { OPERATION, PARAM, RES } from './docs';
-import { JwtPayload } from 'src/common/types';
 
 @ApiTags('User')
 @Controller('users')

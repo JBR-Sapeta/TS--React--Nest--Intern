@@ -92,7 +92,7 @@ export class ApplicationService {
   public async getApplicationFile(
     userId: string,
     applicationId: number,
-  ): Promise<{ buffer: Buffer; contentType: string }> {
+  ): Promise<{ buffer: Buffer; contentType: string; fileName: string }> {
     const application =
       await this.applicationRepository.getApplicationWithCompanyById(
         applicationId,
@@ -115,12 +115,13 @@ export class ApplicationService {
       await this.applicationRepository.setIsDownloadedFlag(application);
     }
 
-    const { data, contentType } = await this.s3Service.getApplicationFile(
-      application.fileKey,
-    );
+    const { fileKey } = application;
+
+    const { data, contentType } =
+      await this.s3Service.getApplicationFile(fileKey);
     const buffer = Buffer.from(data);
 
-    return { buffer, contentType };
+    return { buffer, contentType, fileName: fileKey };
   }
 
   // ----------------------------------------------------------------------- \\

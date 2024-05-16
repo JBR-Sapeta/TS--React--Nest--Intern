@@ -23,18 +23,19 @@ import {
 
 import { UserEntity } from '../entities';
 import { SuccessMessageDto } from '../common/classes';
+import { HEADER } from '../common/docs';
+import { JwtPayload } from '../common/types';
+
 import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
 } from '../auth/decorators';
-import { HEADER } from '../common/docs';
 import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
 
 import { BranchService } from './branch.service';
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
 import { OPERATION, PARAM, RES } from './docs';
-import { JwtPayload } from 'src/common/types';
 
 @ApiTags('Branches')
 @Controller('branches')

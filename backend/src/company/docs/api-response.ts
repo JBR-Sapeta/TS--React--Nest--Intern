@@ -15,6 +15,7 @@ import {
   ConflictExceptionResponseDto,
   CreateCompanyBadRequestResponseDto,
   UpdateCompanyBadRequestResponseDto,
+  UploadImageBadGatewayExceptionResponseDto,
 } from './dto';
 
 export const RES = {
@@ -65,6 +66,27 @@ export const RES = {
       description: 'Conflict',
       type: ConflictExceptionResponseDto,
     },
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+  },
+  UPLOAD_IMAGES: {
+    OK,
+    UNAUTHORIZED,
+    BAD_REQUEST_PARAMS,
+    FORBIDDEN,
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+    BAD_GATEWAY: {
+      status: 502,
+      description: 'Bad gateway',
+      type: UploadImageBadGatewayExceptionResponseDto,
+    },
+  },
+  RESET_IMAGES: {
+    OK,
+    UNAUTHORIZED,
+    BAD_REQUEST_PARAMS,
+    FORBIDDEN,
     NOT_FOUND,
     INTERNAL_SERVER_ERROR,
   },

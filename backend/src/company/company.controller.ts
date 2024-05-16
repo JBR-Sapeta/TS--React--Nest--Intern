@@ -16,6 +16,8 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiHeader,
   ApiOperation,
   ApiParam,
@@ -46,7 +48,7 @@ import {
   CompaniesPreviewResponseDto,
   PartialCompanyResponseDto,
 } from './dto/response';
-import { OPERATION, PARAM, RES } from './docs';
+import { OPERATION, PARAM, RES, API_BODY } from './docs';
 
 @ApiTags('Company')
 @Controller('companies')
@@ -133,6 +135,19 @@ export class CompanyController {
     ),
   )
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.UPLOAD_IMAGES)
+  @ApiConsumes('multipart/form-data')
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiBody(API_BODY.UPLOAD_IMAGES)
+  @ApiResponse(RES.UPLOAD_IMAGES.OK)
+  @ApiResponse(RES.UPLOAD_IMAGES.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.UPLOAD_IMAGES.UNAUTHORIZED)
+  @ApiResponse(RES.UPLOAD_IMAGES.FORBIDDEN)
+  @ApiResponse(RES.UPLOAD_IMAGES.NOT_FOUND)
+  @ApiResponse(RES.UPLOAD_IMAGES.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.UPLOAD_IMAGES.BAD_GATEWAY)
   uploadCompanyImages(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @UploadedFiles()
@@ -141,18 +156,28 @@ export class CompanyController {
       mainPhotoFile?: Express.Multer.File[];
     }>,
     @GetAccessTokenPayload() { userId }: JwtPayload,
-  ) {
+  ): Promise<SuccessMessageDto> {
     return this.companyService.uploadCompanyImages(companyId, userId, files);
   }
 
   @Put('/:companyId/reset-images')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.RESET_IMAGES)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiResponse(RES.RESET_IMAGES.OK)
+  @ApiResponse(RES.RESET_IMAGES.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.RESET_IMAGES.UNAUTHORIZED)
+  @ApiResponse(RES.RESET_IMAGES.FORBIDDEN)
+  @ApiResponse(RES.RESET_IMAGES.NOT_FOUND)
+  @ApiResponse(RES.RESET_IMAGES.INTERNAL_SERVER_ERROR)
   resetCompanyImages(
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @Body() resetCompanyImagesDto: ResetCompanyImagesDto,
     @GetAccessTokenPayload() { userId }: JwtPayload,
-  ) {
+  ): Promise<SuccessMessageDto> {
     return this.companyService.resetCompanyImages(
       companyId,
       userId,
