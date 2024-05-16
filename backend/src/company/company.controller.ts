@@ -10,7 +10,9 @@ import {
   Post,
   Put,
   Query,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -20,6 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { UserEntity } from '../entities';
 import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
@@ -30,10 +33,15 @@ import {
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
-import { JwtPayload } from '../common/types';
+import { imageFileFilter } from '../common/functions';
+import { JwtPayload, Optional } from '../common/types';
 
 import { CompanyService } from './company.service';
-import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
+import {
+  CreateCompanyDto,
+  ResetCompanyImagesDto,
+  UpdateCompanyDto,
+} from './dto/request';
 import {
   CompaniesPreviewResponseDto,
   PartialCompanyResponseDto,
@@ -81,8 +89,8 @@ export class CompanyController {
   @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
   @ApiResponse(RES.CREATE.CONFLICT)
   createCompany(
-    @GetAccessTokentExtendedPayload() user: UserEntity,
     @Body() createCompanyDto: CreateCompanyDto,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
   ): Promise<SuccessMessageDto> {
     return this.companyService.createCompany(user, createCompanyDto);
   }
@@ -110,6 +118,45 @@ export class CompanyController {
       userId,
       companyId,
       updateCompanyDto,
+    );
+  }
+
+  @Put('/:companyId/upload-images')
+  @UseGuards(AccessTokenGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'logoFile', maxCount: 1 },
+        { name: 'mainPhotoFile', maxCount: 1 },
+      ],
+      { fileFilter: imageFileFilter },
+    ),
+  )
+  @HttpCode(HttpStatus.OK)
+  uploadCompanyImages(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @UploadedFiles()
+    files: Optional<{
+      logoFile?: Express.Multer.File[];
+      mainPhotoFile?: Express.Multer.File[];
+    }>,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ) {
+    return this.companyService.uploadCompanyImages(companyId, userId, files);
+  }
+
+  @Put('/:companyId/reset-images')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  resetCompanyImages(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @Body() resetCompanyImagesDto: ResetCompanyImagesDto,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ) {
+    return this.companyService.resetCompanyImages(
+      companyId,
+      userId,
+      resetCompanyImagesDto,
     );
   }
 

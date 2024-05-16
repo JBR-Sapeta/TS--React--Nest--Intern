@@ -10,6 +10,8 @@ import {
 import { CompanyRepository, UserRepository } from '../repositories';
 
 import { AuthModule } from '../auth/auth.module';
+import { S3Service } from '../s3/s3.service';
+
 import { CompanyController } from './company.controller';
 import { CompanyService } from './company.service';
 
@@ -24,6 +26,12 @@ import { CompanyService } from './company.service';
     ]),
   ],
   controllers: [CompanyController],
-  providers: [Logger, CompanyService, UserRepository, CompanyRepository],
+  providers: [
+    Logger,
+    CompanyService,
+    S3Service,
+    CompanyRepository,
+    UserRepository,
+  ],
 })
 export class CompanyModule {}

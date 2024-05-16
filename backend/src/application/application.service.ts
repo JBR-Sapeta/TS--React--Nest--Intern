@@ -15,7 +15,7 @@ import { ApplicationRepository, OfferRepository } from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { FILE_SIZE_LIMIT } from '../common/config';
-import { fileValidator } from '../common/functions';
+import { applicationFileValidator } from '../common/functions';
 
 import { CacheService } from '../cache/cache.service';
 import { S3Service } from '../s3/s3.service';
@@ -43,7 +43,7 @@ export class ApplicationService {
     { message }: CreateApplicationDto,
     file: Express.Multer.File,
   ): Promise<SuccessMessageDto> {
-    fileValidator(file, FILE_SIZE_LIMIT.APLLICATION);
+    applicationFileValidator(file, FILE_SIZE_LIMIT.APLLICATION);
 
     const application =
       await this.applicationRepository.getUserApplicationByIds(

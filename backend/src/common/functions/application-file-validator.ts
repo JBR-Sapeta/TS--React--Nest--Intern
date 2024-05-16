@@ -1,13 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
 import { isNil } from 'ramda';
 
-export function fileValidator(file: Express.Multer.File, fileSize: number) {
+import { PL_ERRORS } from '../../locales';
+
+export function applicationFileValidator(
+  file: Express.Multer.File,
+  fileSize: number,
+) {
   if (isNil(file)) {
-    throw new BadRequestException({
-      statusCode: 400,
-      message: { file: 'Nie przesłano żadnego pliku.' },
-      error: 'Bad Request',
-    });
+    throw new BadRequestException(PL_ERRORS.VALIDATION_FILE_NOT_PROVIDED);
   }
 
   if (file.size > fileSize) {

@@ -7,7 +7,7 @@ export function imageFileFilter(
 ): string {
   const [type, subType] = file.mimetype.split('/');
 
-  if (type !== 'image' || !subType.match(/\.(jpg|jpeg|png|webp)/)) {
+  if (type !== 'image' || !subType.match(/(jpg|jpeg|png|webp)/)) {
     return callback(
       new BadRequestException({
         statusCode: 400,

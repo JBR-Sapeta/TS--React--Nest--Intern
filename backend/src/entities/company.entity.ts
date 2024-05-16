@@ -29,10 +29,10 @@ export class CompanyEntity {
   @Column({ type: 'varchar', length: 15, nullable: true, default: null })
   public phoneNumber: string | null;
 
-  @Column({ type: 'varchar', length: 511, default: 'company-logo.wep' })
+  @Column({ type: 'varchar', length: 512, nullable: true, default: null })
   public logoUrl: string;
 
-  @Column({ type: 'varchar', length: 511, default: 'company.wep' })
+  @Column({ type: 'varchar', length: 512, nullable: true, default: null })
   public mainPhotoUrl: string;
 
   @Column({ type: 'text' })

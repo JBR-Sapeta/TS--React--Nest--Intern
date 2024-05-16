@@ -154,7 +154,7 @@ export class S3Service {
 
   // ----------------------------------------------------------------------- \\
   public async deleteImageFile(imageUrl: string): Promise<void> {
-    const [, key] = imageUrl.split('.amazonaws.com/');
+    const key = this.getKeyFromUrl(imageUrl);
     try {
       const response = await this.s3.send(
         new DeleteObjectCommand({ Bucket: this.imageBucket, Key: key }),
@@ -168,5 +168,11 @@ export class S3Service {
 
       throw new BadGatewayException(PL_ERRORS.BAD_GATEWAY_FILE_UPLOAD);
     }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public getKeyFromUrl(imageUrl: string): string {
+    const [, key] = imageUrl.split('.amazonaws.com/');
+    return key;
   }
 }

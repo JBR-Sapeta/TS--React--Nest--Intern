@@ -29,6 +29,7 @@ export const PL_ERRORS: ErrorTranslations = {
     'Wiadomość nie może być dłuższa niż 512 znaków.',
   VALIDATION_BRANCH_NAME:
     'Nazwa oddziału powinno składać się z 4 do 255 znaków.',
+  VALIDATION_COMMON_BOOLEAN: 'Wprowadź wartość typu boolean.',
   VALIDATION_COMMON_EMAIL: 'Wprowadź prawidłowy adres E-mail.',
   VALIDATION_COMMON_EMPTY_PASSWORD: 'Hasło jest wymagane.',
   VALIDATION_COMMON_LIMIT: 'Wprowadź liczbę całkowitą z przedziałuod 1 do 100.',
@@ -44,6 +45,7 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_COMPANY_SLUG:
     "Pole slug powinno składać się z liter i cyfer oddzielonych za pomocą myślników '-'.",
   VALIDATION_COMPANY_SLUG_SIZE: 'Slug powinno składać się z 2 do 255 znaków.',
+  VALIDATION_FILE_NOT_PROVIDED: 'Nie przesłano żadnego pliku.',
   VALIDATION_OFFER_BRANCHES:
     'Nieprawidłowa wartość. Wymagana tablica liczb całkowitych.',
   VALIDATION_OFFER_CATEGORIES:

@@ -1,26 +1,44 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
+  InternalServerErrorException,
+  Logger,
+  LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { isNil, isNotNil } from 'ramda';
+import { isNotEmptyObject } from 'class-validator';
+import { isNil, isNotNil, not } from 'ramda';
+import { v4 as uuidv4 } from 'uuid';
 
 import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { CompanyRepository } from '../repositories';
-
-import { CreateCompanyDto, UpdateCompanyDto } from './dto/request';
 import { SuccessMessageDto } from '../common/classes';
+import { imageFileValidator } from '../common/functions';
+import { FILE_SIZE_LIMIT } from '../common/config';
+import { Nullable, Optional } from '../common/types';
+
+import { S3Service } from '../s3/s3.service';
+
 import {
   CompaniesPreviewResponseDto,
   PartialCompanyResponseDto,
 } from './dto/response';
-import { isNotEmptyObject } from 'class-validator';
+import {
+  CreateCompanyDto,
+  ResetCompanyImagesDto,
+  UpdateCompanyDto,
+} from './dto/request';
 
 @Injectable()
 export class CompanyService {
-  constructor(private readonly companyRepository: CompanyRepository) {}
+  constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
+    private readonly companyRepository: CompanyRepository,
+    private readonly s3Service: S3Service,
+  ) {}
 
   // ----------------------------------------------------------------------- \\
   public async createCompany(
@@ -76,6 +94,177 @@ export class CompanyService {
   }
 
   // ----------------------------------------------------------------------- \\\
+  public async uploadCompanyImages(
+    companyId: string,
+    userId: string,
+    files: Optional<{
+      logoFile?: Express.Multer.File[];
+      mainPhotoFile?: Express.Multer.File[];
+    }>,
+  ): Promise<SuccessMessageDto> {
+    if (isNil(files)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_FILE_NOT_PROVIDED);
+    }
+
+    const { logoFile, mainPhotoFile } = files;
+
+    if (isNil(logoFile) && isNil(mainPhotoFile)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_FILE_NOT_PROVIDED);
+    }
+
+    const logo = logoFile ? logoFile[0] : null;
+    const mainPhoto = mainPhotoFile ? mainPhotoFile[0] : null;
+
+    imageFileValidator(logo, FILE_SIZE_LIMIT.COMPANY_LOGO);
+    imageFileValidator(mainPhoto, FILE_SIZE_LIMIT.COMPANY_MAIN_PHOT);
+
+    const company = await this.companyRepository.getCompanyById({ companyId });
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (company.userId !== userId) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const oldLogoUrl = company.logoUrl;
+    const oldMainPhotoUrl = company.logoUrl;
+    const logoKey = `${company.slug}_logo_${uuidv4()}`;
+    const mainPhotoKey = `${company.slug}_mainPhoto_${uuidv4()}`;
+    let newLogUrl: Nullable<string> = null;
+    let newMainPhotoUrl: Nullable<string> = null;
+
+    try {
+      if (isNotNil(logo)) {
+        newLogUrl = await this.s3Service.uploadImageFile(logo, logoKey);
+        company.logoUrl = newLogUrl;
+      }
+    } catch (error) {
+      throw error;
+    }
+
+    try {
+      if (isNotNil(mainPhoto)) {
+        newMainPhotoUrl = await this.s3Service.uploadImageFile(
+          mainPhoto,
+          mainPhotoKey,
+        );
+        company.mainPhotoUrl = newMainPhotoUrl;
+      }
+    } catch (error) {
+      if (isNotNil(newLogUrl)) {
+        this.logger.error(`S3 - uploadImageFile - fileKey:$${logoKey}`);
+      }
+
+      throw error;
+    }
+
+    try {
+      await this.companyRepository.save(company);
+    } catch (error) {
+      if (isNotNil(newLogUrl)) {
+        this.logger.error(`S3 - uploadImageFile - fileKey:$${logoKey}`);
+      }
+      if (isNotNil(newMainPhotoUrl)) {
+        this.logger.error(`S3 - uploadImageFile - fileKey:$${mainPhotoKey}`);
+      }
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+
+    try {
+      if (isNotNil(logo) && isNotNil(oldLogoUrl)) {
+        await this.s3Service.deleteImageFile(oldLogoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(oldLogoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    try {
+      if (isNotNil(mainPhoto) && isNotNil(oldMainPhotoUrl)) {
+        await this.s3Service.deleteImageFile(oldMainPhotoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(oldMainPhotoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async resetCompanyImages(
+    companyId: string,
+    userId: string,
+    resetCompanyImagesDto: ResetCompanyImagesDto,
+  ): Promise<SuccessMessageDto> {
+    if (!isNotEmptyObject(resetCompanyImagesDto)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
+    const { logoUrl, mainPhotoUrl } = resetCompanyImagesDto;
+
+    if (not(logoUrl) && not(mainPhotoUrl)) {
+      throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
+    }
+
+    const company = await this.companyRepository.getCompanyById({ companyId });
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (company.userId !== userId) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const oldLogoUrl = company.logoUrl;
+    const oldMainPhotoUrl = company.mainPhotoUrl;
+
+    if (
+      (not(logoUrl) && not(mainPhotoUrl)) ||
+      (logoUrl && isNil(oldLogoUrl) && mainPhotoUrl && isNil(oldMainPhotoUrl))
+    ) {
+      return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
+    }
+
+    if (logoUrl) {
+      company.logoUrl = null;
+    }
+
+    if (mainPhotoUrl) {
+      company.mainPhotoUrl = null;
+    }
+
+    try {
+      await this.companyRepository.save(company);
+    } catch (error) {
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+
+    try {
+      if (logoUrl && oldLogoUrl) {
+        await this.s3Service.deleteImageFile(oldLogoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(oldLogoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    try {
+      if (mainPhotoUrl && oldMainPhotoUrl) {
+        await this.s3Service.deleteImageFile(oldMainPhotoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(oldMainPhotoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
+  }
+
+  // ----------------------------------------------------------------------- \\\
   public async deleteCompany(
     userId: string,
     companyId: string,
@@ -91,6 +280,26 @@ export class CompanyService {
     }
 
     await this.companyRepository.deleteCompany(companyId);
+
+    const { logoUrl, mainPhotoUrl } = company;
+
+    try {
+      if (logoUrl) {
+        await this.s3Service.deleteImageFile(logoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(logoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    try {
+      if (mainPhotoUrl) {
+        await this.s3Service.deleteImageFile(mainPhotoUrl);
+      }
+    } catch {
+      const fileKey = this.s3Service.getKeyFromUrl(mainPhotoUrl);
+      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_DELETED });
   }
