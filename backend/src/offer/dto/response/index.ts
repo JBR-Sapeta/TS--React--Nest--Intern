@@ -4,5 +4,5 @@ export { FullOfferResponseDto } from './full-offer-response.dto';
 
 export { OfferPreviewDto } from './offer-preview.dto';
 export { OfferPreviewsResponseDto } from './offer-previews-response.dto';
-export { PardialOfferDto } from './partial-offer.dto';
+export { PartialOfferDto } from './partial-offer.dto';
 export { PartialOfferResponseDto } from './partial-offer-response.dto';

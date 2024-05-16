@@ -5,18 +5,18 @@ import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 import { OfferEntity } from '../../../entities';
 
-import { PardialOfferDto } from './partial-offer.dto';
+import { PartialOfferDto } from './partial-offer.dto';
 
 export class PartialOfferResponseDto
   extends SuccessMessageDto
-  implements ResponseWithPayload<PardialOfferDto>
+  implements ResponseWithPayload<PartialOfferDto>
 {
-  @ApiProperty({ type: PardialOfferDto })
+  @ApiProperty({ type: PartialOfferDto })
   @Expose()
-  data: PardialOfferDto;
+  data: PartialOfferDto;
 
   constructor(args: SuccessMessageArgs, data: OfferEntity) {
     super(args);
-    this.data = new PardialOfferDto(data);
+    this.data = new PartialOfferDto(data);
   }
 }

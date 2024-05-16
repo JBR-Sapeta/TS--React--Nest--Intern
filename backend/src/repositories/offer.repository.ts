@@ -77,11 +77,21 @@ export class OfferRepository extends Repository<OfferEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getOfferById(offerId: number): Promise<Nullable<OfferEntity>> {
+  public async getOfferById({
+    offerId,
+    company = false,
+    branches = false,
+    categories = false,
+  }: {
+    offerId: number;
+    company?: boolean;
+    branches?: boolean;
+    categories?: boolean;
+  }): Promise<Nullable<OfferEntity>> {
     try {
       const offer = await this.findOne({
         where: { id: offerId },
-        relations: { company: true },
+        relations: { company, branches, categories },
       });
       return offer;
     } catch (error) {

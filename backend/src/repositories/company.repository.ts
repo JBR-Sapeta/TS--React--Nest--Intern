@@ -89,33 +89,19 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getCompanyById(
-    companyId: string,
-  ): Promise<Nullable<CompanyEntity>> {
+  public async getCompanyById({
+    companyId,
+    user = false,
+    branches = false,
+  }: {
+    companyId: string;
+    user?: boolean;
+    branches?: boolean;
+  }): Promise<Nullable<CompanyEntity>> {
     try {
       const company = await this.findOne({
         where: { id: companyId },
-        relations: { user: true },
-      });
-      return company;
-    } catch (error) {
-      this.logger.error(
-        CompanyRepository.name + ' - getCompanyById',
-        error.stack,
-      );
-
-      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  // ----------------------------------------------------------------------- \\
-  public async getCompanyDataById(
-    companyId: string,
-  ): Promise<Nullable<CompanyEntity>> {
-    try {
-      const company = await this.findOne({
-        where: { id: companyId },
-        relations: { user: true, branches: true },
+        relations: { user, branches },
       });
       return company;
     } catch (error) {

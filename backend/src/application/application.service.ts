@@ -60,7 +60,7 @@ export class ApplicationService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_APPLICATION_DUPLICATION);
     }
 
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({ offerId });
 
     if (isNil(offer) || not(offer.isActive)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
@@ -129,7 +129,10 @@ export class ApplicationService {
     offerId: number,
     userId: string,
   ): Promise<OfferApplicationsResponseDto> {
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({
+      offerId,
+      company: true,
+    });
 
     if (isNil(offer)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);

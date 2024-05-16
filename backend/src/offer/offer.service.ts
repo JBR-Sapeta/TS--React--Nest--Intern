@@ -70,7 +70,11 @@ export class OfferService {
       ...offerData
     } = createOffetDto;
 
-    const company = await this.companyRepository.getCompanyDataById(companyId);
+    const company = await this.companyRepository.getCompanyById({
+      companyId,
+      user: true,
+      branches: true,
+    });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
@@ -173,7 +177,12 @@ export class OfferService {
       return new PartialOfferResponseDto({}, cachedOffer);
     }
 
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({
+      offerId,
+      company: true,
+      branches: true,
+      categories: true,
+    });
 
     if (isNil(offer) || not(offer.isActive) || offer.companyId !== companyId) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
@@ -190,7 +199,11 @@ export class OfferService {
     offerId: number,
     userId: string,
   ): Promise<FullOfferResponseDto> {
-    const company = await this.companyRepository.getCompanyDataById(companyId);
+    const company = await this.companyRepository.getCompanyById({
+      companyId,
+      user: true,
+      branches: true,
+    });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
@@ -205,7 +218,11 @@ export class OfferService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({
+      offerId,
+      branches: true,
+      categories: true,
+    });
 
     if (isNil(offer)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
@@ -242,7 +259,11 @@ export class OfferService {
       ...offerData
     } = updateOffetDto;
 
-    const company = await this.companyRepository.getCompanyDataById(companyId);
+    const company = await this.companyRepository.getCompanyById({
+      companyId,
+      user: true,
+      branches: true,
+    });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
@@ -257,7 +278,7 @@ export class OfferService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({ offerId });
 
     if (isNil(offer)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
@@ -336,17 +357,16 @@ export class OfferService {
     offerId: number,
     userId: string,
   ): Promise<SuccessMessageDto> {
-    const offer = await this.offerRepository.getOfferById(offerId);
+    const offer = await this.offerRepository.getOfferById({
+      offerId,
+      company: true,
+    });
 
     if (isNil(offer)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_OFFER);
     }
 
-    const company = await this.companyRepository.getCompanyDataById(
-      offer.companyId,
-    );
-
-    if (userId !== company.userId) {
+    if (userId !== offer.company.userId) {
       this.logger.error(
         OfferService.name + ' - deleteOffer',
         `ForbiddenException - ${userId}`,

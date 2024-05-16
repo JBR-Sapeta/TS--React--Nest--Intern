@@ -7,7 +7,7 @@ import { CategoryPreviewDto } from '../../../category/dto/response';
 import { CompanyPreviewDto } from '../../../company/dto/response';
 import { BranchPreviewDto } from '../../../branch/dto/response';
 
-export class PardialOfferDto {
+export class PartialOfferDto {
   @ApiProperty({ example: 356 })
   @Expose()
   public id: string;

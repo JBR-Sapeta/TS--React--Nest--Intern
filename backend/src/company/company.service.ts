@@ -60,7 +60,7 @@ export class CompanyService {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
-    const company = await this.companyRepository.getCompanyById(companyId);
+    const company = await this.companyRepository.getCompanyById({ companyId });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
@@ -80,7 +80,7 @@ export class CompanyService {
     userId: string,
     companyId: string,
   ): Promise<SuccessMessageDto> {
-    const company = await this.companyRepository.getCompanyById(companyId);
+    const company = await this.companyRepository.getCompanyById({ companyId });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);

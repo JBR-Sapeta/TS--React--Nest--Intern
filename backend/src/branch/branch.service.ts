@@ -42,7 +42,7 @@ export class BranchService {
     createBranchDto: CreateBranchDto,
   ): Promise<SuccessMessageDto> {
     const { name, address } = createBranchDto;
-    const company = await this.companyRepository.getCompanyById(companyId);
+    const company = await this.companyRepository.getCompanyById({ companyId });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
@@ -113,16 +113,10 @@ export class BranchService {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
-    const company = await this.companyRepository.getCompanyById(companyId);
+    const company = await this.companyRepository.getCompanyById({ companyId });
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
-    }
-
-    const branch = await this.branchRepository.getBranchById(branchId);
-
-    if (isNil(branch)) {
-      throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCH);
     }
 
     if (company.userId !== userId) {
@@ -132,6 +126,12 @@ export class BranchService {
       );
 
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const branch = await this.branchRepository.getBranchById(branchId);
+
+    if (isNil(branch)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCH);
     }
 
     const { address, name } = updateBranchDto;
@@ -162,7 +162,7 @@ export class BranchService {
     branchId: number,
     userId: string,
   ): Promise<SuccessMessageDto> {
-    const company = await this.companyRepository.getCompanyById(companyId);
+    const company = await this.companyRepository.getCompanyById({ companyId });
     const branch = await this.branchRepository.getBranchById(branchId);
 
     if (isNil(company) || isNil(branch)) {
