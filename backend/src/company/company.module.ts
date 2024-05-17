@@ -3,11 +3,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
   AddressEntity,
+  ApplicationEntity,
   BranchEntity,
   CompanyEntity,
+  RoleEntity,
   UserEntity,
 } from '../entities';
-import { CompanyRepository, UserRepository } from '../repositories';
+import {
+  ApplicationRepository,
+  CompanyRepository,
+  RoleRepository,
+  UserRepository,
+} from '../repositories';
 
 import { AuthModule } from '../auth/auth.module';
 import { S3Service } from '../s3/s3.service';
@@ -19,10 +26,12 @@ import { CompanyService } from './company.service';
   imports: [
     AuthModule,
     TypeOrmModule.forFeature([
-      UserEntity,
-      CompanyEntity,
-      BranchEntity,
       AddressEntity,
+      ApplicationEntity,
+      BranchEntity,
+      CompanyEntity,
+      UserEntity,
+      RoleEntity,
     ]),
   ],
   controllers: [CompanyController],
@@ -30,8 +39,10 @@ import { CompanyService } from './company.service';
     Logger,
     CompanyService,
     S3Service,
+    ApplicationRepository,
     CompanyRepository,
     UserRepository,
+    RoleRepository,
   ],
 })
 export class CompanyModule {}

@@ -27,7 +27,11 @@ import {
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 import { UserEntity } from '../entities';
-import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
+import {
+  AccessTokenGuard,
+  ExtendedAccessTokenGuard,
+  RolesGuard,
+} from '../auth/guards';
 import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
@@ -35,6 +39,7 @@ import {
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
+import { Roles } from '../common/enums';
 import { imageFileFilter } from '../common/functions';
 import { JwtPayload, Optional } from '../common/types';
 
@@ -79,6 +84,7 @@ export class CompanyController {
   }
 
   @Post('/create')
+  @UseGuards(RolesGuard(Roles.USER))
   @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation(OPERATION.CREATE)

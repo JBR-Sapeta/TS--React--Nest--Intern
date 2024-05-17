@@ -5,7 +5,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { ApplicationEntity, OfferEntity, UserEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
@@ -179,6 +179,25 @@ export class ApplicationRepository extends Repository<ApplicationEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async getAllUserApplications(
+    userId: string,
+  ): Promise<[ApplicationEntity[], number]> {
+    try {
+      const applications = await this.findAndCount({
+        where: { userId },
+      });
+      return applications;
+    } catch (error) {
+      this.logger.error(
+        ApplicationRepository.name + ' - getAllUserApplications',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async setIsDownloadedFlag(
     application: ApplicationEntity,
   ): Promise<Nullable<ApplicationEntity>> {
@@ -201,6 +220,23 @@ export class ApplicationRepository extends Repository<ApplicationEntity> {
   public async deleteApplication(applicationId: number): Promise<void> {
     try {
       await this.delete({ id: applicationId });
+    } catch (error) {
+      this.logger.error(
+        ApplicationRepository.name + ' - deleteApplication',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteApplicationsTransaction(
+    applications: ApplicationEntity[],
+    queryRunner: QueryRunner,
+  ): Promise<void> {
+    try {
+      await queryRunner.manager.delete(ApplicationEntity, applications);
     } catch (error) {
       this.logger.error(
         ApplicationRepository.name + ' - deleteApplication',

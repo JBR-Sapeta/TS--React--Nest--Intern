@@ -6,7 +6,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 import { CompanyEntity, UserEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
@@ -23,27 +23,33 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async createCompany(
-    name: string,
-    slug: string,
-    email: string,
-    description: string,
-    size: number,
+  public async createCompanyTransaction(
     user: UserEntity,
+    companyData: {
+      name: string;
+      slug: string;
+      email: string;
+      description: string;
+      size: number;
+    },
+    queryRunner: QueryRunner,
   ): Promise<CompanyEntity> {
-    const company = this.create({ name, slug, email, description, size, user });
+    const company = this.create({ user, ...companyData });
 
     try {
-      const createdUser = await this.save(company);
-      return createdUser;
+      const createdCompany = await queryRunner.manager.save(
+        CompanyEntity,
+        company,
+      );
+      return createdCompany;
     } catch (error) {
       this.logger.error(
-        CompanyRepository.name + ' - createCompany',
+        CompanyRepository.name + ' - createCompanyTransaction',
         error.stack,
       );
 
       if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
-        throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
+        throw new ConflictException(PL_ERRORS.CONFLICT_SLUG_OR_NAME_TAKEN);
       }
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);

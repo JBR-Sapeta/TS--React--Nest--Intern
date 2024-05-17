@@ -8,16 +8,21 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { isNotEmptyObject } from 'class-validator';
-import { isNil, isNotNil, not } from 'ramda';
+import { isEmpty, isNil, isNotNil, not } from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
 
 import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { CompanyRepository } from '../repositories';
+import {
+  ApplicationRepository,
+  CompanyRepository,
+  RoleRepository,
+  UserRepository,
+} from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
-import { imageFileValidator } from '../common/functions';
 import { FILE_SIZE_LIMIT } from '../common/config';
+import { Roles } from '../common/enums';
+import { imageFileValidator } from '../common/functions';
 import { Nullable, Optional } from '../common/types';
 
 import { S3Service } from '../s3/s3.service';
@@ -31,36 +36,76 @@ import {
   ResetCompanyImagesDto,
   UpdateCompanyDto,
 } from './dto/request';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CompanyService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
-    private readonly companyRepository: CompanyRepository,
     private readonly s3Service: S3Service,
+    private readonly applicationRepository: ApplicationRepository,
+    private readonly companyRepository: CompanyRepository,
+    private readonly userRepository: UserRepository,
+    private readonly roleRepository: RoleRepository,
+    private dataSource: DataSource,
   ) {}
 
   // ----------------------------------------------------------------------- \\
   public async createCompany(
     user: UserEntity,
-    { name, slug, email, description, size }: CreateCompanyDto,
+    createCompanyDto: CreateCompanyDto,
   ): Promise<SuccessMessageDto> {
-    const userCompany = await this.companyRepository.findOneBy({
-      userId: user.id,
-    });
+    const userRoles = user.roles.map((role) => role.id);
 
-    if (isNotNil(userCompany)) {
+    if (userRoles.includes(Roles.COMPANY)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ONE_COMPANY_PER_USER);
     }
 
-    await this.companyRepository.createCompany(
-      name,
-      slug,
-      email,
-      description,
-      size,
-      user,
-    );
+    const roles = await this.roleRepository.getRolesByIds([Roles.COMPANY]);
+    const [userApplications] =
+      await this.applicationRepository.getAllUserApplications(user.id);
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      if (!isEmpty(userApplications)) {
+        await this.applicationRepository.deleteApplicationsTransaction(
+          userApplications,
+          queryRunner,
+        );
+
+        for (const { fileKey } of userApplications) {
+          try {
+            await this.s3Service.deleteApplicationFile(fileKey);
+          } catch {
+            this.logger.error(
+              `S3 - deleteApplicationFile - fileKey:$${fileKey}`,
+            );
+          }
+        }
+      }
+
+      const updatedUser = await this.userRepository.updateUserTransaction(
+        user,
+        { roles },
+        queryRunner,
+      );
+
+      await this.companyRepository.createCompanyTransaction(
+        updatedUser,
+        createCompanyDto,
+        queryRunner,
+      );
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
 
     return new SuccessMessageDto({
       statusCode: 201,
@@ -74,7 +119,7 @@ export class CompanyService {
     companyId: string,
     updateCompanyDto: UpdateCompanyDto,
   ): Promise<SuccessMessageDto> {
-    if (!isNotEmptyObject(updateCompanyDto)) {
+    if (isEmpty(updateCompanyDto)) {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
@@ -199,7 +244,7 @@ export class CompanyService {
     userId: string,
     resetCompanyImagesDto: ResetCompanyImagesDto,
   ): Promise<SuccessMessageDto> {
-    if (!isNotEmptyObject(resetCompanyImagesDto)) {
+    if (isEmpty(resetCompanyImagesDto)) {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 

@@ -8,7 +8,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
 import { UserEntity, RoleEntity } from '../entities';
@@ -94,6 +94,30 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async updateUserTransaction(
+    user: UserEntity,
+    fieldsToUpdate: Partial<UserEntity>,
+    queryRunner: QueryRunner,
+  ): Promise<UserEntity> {
+    try {
+      Object.assign(user, fieldsToUpdate);
+      const updatedUser = await queryRunner.manager.save(UserEntity, user);
+      return updatedUser;
+    } catch (error) {
+      this.logger.error(
+        UserRepository.name + ' - updateUserTransaction',
+        error.stack,
+      );
+
+      if (error?.code === PostgresqlErrorCode.UNIQUE_VIOLATION) {
+        throw new ConflictException(PL_ERRORS.CONFLICT_EMAIL_TAKEN);
+      }
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  // @ TO DO - Refactor
   public async updateUserEmail(
     user: UserEntity,
     email: string,
@@ -116,6 +140,7 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  // @ TO DO - Refactor
   public async updateUserPassword(
     user: UserEntity,
     password: string,
@@ -134,6 +159,7 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  // @ TO DO - Refactor
   public async updateRefreshToken(
     userId: string,
     refreshToken: Nullable<string>,

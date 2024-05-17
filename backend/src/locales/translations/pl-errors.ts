@@ -89,6 +89,7 @@ export const PL_ERRORS: ErrorTranslations = {
   NOT_FUOND_OPERATING_MODE: 'Nie znaleziono trybu pracy.',
   NOT_FUOND_USER: 'Nie znaleziono użytkownika.',
   CONFLICT_EMAIL_TAKEN: 'Podany adres E-mail jest już używany.',
+  CONFLICT_SLUG_OR_NAME_TAKEN: 'Podana nazwa firmy lub slug jest już w użyciu.',
   INTERNAL_SERVER_ERROR: 'Coś poszło nie tak. Spróbuj ponownie później.',
   BAD_GATEWAY_ADDRESS_VALIDATION: 'Błąd podczas walidacji adresu.',
   BAD_GATEWAY_BASE_MESSAGE: '502 Bad Gateway',

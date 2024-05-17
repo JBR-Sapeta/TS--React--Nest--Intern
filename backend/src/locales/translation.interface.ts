@@ -61,6 +61,7 @@ export interface ErrorTranslations {
   NOT_FUOND_OPERATING_MODE: string;
   NOT_FUOND_USER: string;
   CONFLICT_EMAIL_TAKEN: string;
+  CONFLICT_SLUG_OR_NAME_TAKEN: string;
   INTERNAL_SERVER_ERROR: string;
   BAD_GATEWAY_ADDRESS_VALIDATION: string;
   BAD_GATEWAY_BASE_MESSAGE: string;
