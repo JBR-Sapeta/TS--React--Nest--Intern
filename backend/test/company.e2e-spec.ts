@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { BadGatewayException, INestApplication } from '@nestjs/common';
+import path = require('path');
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
@@ -10,13 +11,17 @@ import { AppModule } from './../src/app.module';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
 import { CacheService } from './../src/cache/cache.service';
+import { CompanyService } from './../src/company/company.service';
 import { AuthService } from './../src/auth/auth.service';
 import { S3Service } from './../src/s3/s3.service';
 
 import { INVALID_ACCESS_TOKEN, USER_ONE, USER_TWO } from './helpers/auth-data';
 import {
   COMPANY_ONE,
+  COMPANY_ONE_LOGO_URL,
+  COMPANY_ONE_MAIN_PHOTO_URL,
   COMPANY_TWO,
+  FILES,
   INVALID_COMPANY,
   INVALID_COMPANY_ID,
 } from './helpers/company-data';
@@ -29,6 +34,7 @@ describe('CompanyController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let cacheService: CacheService;
+  let companyService: CompanyService;
   let userRepository: UserRepository;
   let companyRepository: CompanyRepository;
   let authService: AuthService;
@@ -48,15 +54,17 @@ describe('CompanyController (e2e)', () => {
     app = moduleFixture.createNestApplication();
 
     dataSource = moduleFixture.get(DataSource);
+    authService = moduleFixture.get<AuthService>(AuthService);
     cacheService = moduleFixture.get<CacheService>(CacheService);
+    companyService = moduleFixture.get<CompanyService>(CompanyService);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
-    authService = moduleFixture.get<AuthService>(AuthService);
 
     await app.init();
   });
 
   afterEach(async () => {
+    jest.clearAllMocks();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });
@@ -82,6 +90,48 @@ describe('CompanyController (e2e)', () => {
       password: userData.password,
     });
     return { user: updatedUser, accessToken: tokens.data.accessToken };
+  };
+
+  const createUserWithCompany = async (
+    userData: any,
+    companyData: any,
+    withLogo: boolean = false,
+    withMainPhoto: boolean = false,
+  ) => {
+    await authService.createUserAccount(userData);
+    const user = await userRepository.findOne({
+      where: { email: userData.email },
+      relations: { roles: true },
+    });
+    user.activationToken = null;
+    user.isActive = true;
+    const updatedUser = await userRepository.save(user);
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    await companyService.createCompany(updatedUser, companyData);
+    const company = await companyRepository.getCompanyBySlug(companyData.slug);
+
+    company.isVerified = true;
+
+    if (withLogo) {
+      company.logoUrl = COMPANY_ONE_LOGO_URL;
+    }
+
+    if (withMainPhoto) {
+      company.mainPhotoUrl = COMPANY_ONE_MAIN_PHOTO_URL;
+    }
+
+    await companyRepository.save(company);
+
+    return {
+      user: updatedUser,
+      accessToken: tokens.data.accessToken,
+      companyId: company.id,
+      company,
+    };
   };
 
   const getCompanyByNameFromDB = async (name: string) => {
@@ -122,6 +172,56 @@ describe('CompanyController (e2e)', () => {
   ) => {
     const response = await request(app.getHttpServer())
       .put(`/companies/${comapnyId}/update`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(data);
+    return response;
+  };
+
+  const sendUploadCompanyImagesRequest = async (
+    token: string,
+    comapnyId: string,
+    logoFile: string,
+    mainPhoto: string,
+  ) => {
+    const response = await request(app.getHttpServer())
+      .put(`/companies/${comapnyId}/upload-images`)
+      .set('Authorization', `Bearer ${token}`)
+      .attach('logoFile', path.join('.', 'test', 'resources', logoFile))
+      .attach('mainPhotoFile', path.join('.', 'test', 'resources', mainPhoto));
+
+    return response;
+  };
+
+  const sendUploadCompanyImageRequest = async (
+    token: string,
+    comapnyId: string,
+    fileKey?: string,
+    fileName?: string,
+  ) => {
+    if (fileKey && fileName) {
+      const response = await request(app.getHttpServer())
+        .put(`/companies/${comapnyId}/upload-images`)
+        .set('Authorization', `Bearer ${token}`)
+        .attach(fileKey, path.join('.', 'test', 'resources', fileName));
+
+      return response;
+    }
+
+    const response = await request(app.getHttpServer())
+      .put(`/companies/${comapnyId}/upload-images`)
+      .set('Authorization', `Bearer ${token}`)
+      .send();
+
+    return response;
+  };
+
+  const sendResetCompanyImagesRequest = async (
+    token: string,
+    comapnyId: string,
+    data: any,
+  ) => {
+    const response = await request(app.getHttpServer())
+      .put(`/companies/${comapnyId}/reset-images`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;
@@ -513,6 +613,565 @@ describe('CompanyController (e2e)', () => {
     });
   });
 
+  // --------------------------- UPLOAD IMAGES - Valid Request --------------------------- \\
+
+  describe('/companies/:companyId/upload-images (PUT) - Valid Request', () => {
+    it('returns 200 status code when request contains multiple images', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_JPG,
+        FILES.VALID_LOGO_JPG,
+      );
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns 200 status code when request contains JPG image', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImageRequest(
+        accessToken,
+        companyId,
+        'logoFile',
+        FILES.VALID_LOGO_JPG,
+      );
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns 200 status code when request contains PNG image', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImageRequest(
+        accessToken,
+        companyId,
+        'logoFile',
+        FILES.VALID_LOGO_PNG,
+      );
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns success message', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper success response object', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(Object.keys(response.body)).toEqual([
+        'statusCode',
+        'message',
+        'error',
+      ]);
+    });
+
+    it('saves images url in database', async () => {
+      const { accessToken, companyId, company } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      const updatedCompany = await getCompanyByNameFromDB(company.name);
+
+      expect(updatedCompany.logoUrl).not.toBe(company.logoUrl);
+      expect(updatedCompany.mainPhotoUrl).not.toBe(company.mainPhotoUrl);
+    });
+
+    it('calls s3 service to upload image files', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const uploadImageFile = jest.spyOn(s3Service, 'uploadImageFile');
+
+      await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(uploadImageFile).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  // -------------------------- UPLOAD IMAGES - Invalid Request -------------------------- \\
+
+  describe('/companies/:companyId/upload-images (PUT) - Invalid Request', () => {
+    it('returns 400 status code when query param is invalid', async () => {
+      const { accessToken } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        'companyId',
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when request does not contains images', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImageRequest(
+        accessToken,
+        companyId,
+        undefined,
+        undefined,
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when request contains logo bigger than 0.5MB', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImageRequest(
+        accessToken,
+        companyId,
+        'logoFile',
+        FILES.INVALID_LOGO_JPG,
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when request contains main photo bigger than 1.5MB', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImageRequest(
+        accessToken,
+        companyId,
+        'mainPhotoFile',
+        FILES.INVALID_MAIN_JPG,
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    // it('returns 400 status code when request contains logo with incorrect mime type', async () => {
+    //   const { accessToken, companyId } = await createUserWithCompany(
+    //     USER_ONE,
+    //     COMPANY_ONE,
+    //   );
+
+    //   const response = await sendUploadCompanyImageRequest(
+    //     accessToken,
+    //     companyId,
+    //     'logoFile',
+    //     FILES.INVALID_LOGO_AVIF,
+    //   );
+
+    //   expect(response.status).toBe(400);
+    // });
+
+    // it('returns 400 status code when request contains main photo with incorrect mime type', async () => {
+    //   const { accessToken, companyId } = await createUserWithCompany(
+    //     USER_ONE,
+    //     COMPANY_ONE,
+    //   );
+
+    //   const response = await sendUploadCompanyImageRequest(
+    //     accessToken,
+    //     companyId,
+    //     'mainPhotoFile',
+    //     FILES.INVALID_MAIN_AVIF,
+    //   );
+
+    //   expect(response.status).toBe(400);
+    // });
+
+    it('returns 403 status code when company belongs to other user', async () => {
+      const { companyId } = await createUserWithCompany(USER_ONE, COMPANY_ONE);
+
+      const { accessToken } = await createUserWithCompany(
+        USER_TWO,
+        COMPANY_TWO,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 404 status code when company with provided id does not exist', async () => {
+      const { accessToken } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        INVALID_COMPANY_ID,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(response.status).toBe(404);
+    });
+
+    it('returns 502 status code when file upload fail', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
+      jest
+        .spyOn(s3Service, 'uploadImageFile')
+        .mockImplementationOnce(async () => {
+          throw new BadGatewayException();
+        });
+
+      const response = await sendUploadCompanyImagesRequest(
+        accessToken,
+        companyId,
+        FILES.VALID_LOGO_PNG,
+        FILES.VALID_MAIN_PNG,
+      );
+
+      expect(response.status).toBe(502);
+    });
+  });
+
+  // ---------------------------- RESET IMAGES - Valid Request --------------------------- \\
+
+  describe('/companies/:companyId/reset-images (PUT) - Valid Request', () => {
+    it('returns 200 status code when request contains two image fields', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: true, mainPhotoUrl: false },
+      );
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns 200 status code when request contains one image field', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: true },
+      );
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns success message', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: true, mainPhotoUrl: false },
+      );
+
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper success response object', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: true, mainPhotoUrl: false },
+      );
+
+      expect(Object.keys(response.body)).toEqual([
+        'statusCode',
+        'message',
+        'error',
+      ]);
+    });
+
+    it('sets logoUrl field to null in database when logoUrl is set to true in request body ', async () => {
+      const { accessToken, companyId, company } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      await sendResetCompanyImagesRequest(accessToken, companyId, {
+        logoUrl: true,
+      });
+      const updatedCompany = await getCompanyByNameFromDB(company.name);
+
+      expect(updatedCompany.logoUrl).not.toBe(company.logoUrl);
+      expect(updatedCompany.logoUrl).toBe(null);
+      expect(updatedCompany.mainPhotoUrl).toBe(company.mainPhotoUrl);
+      expect(updatedCompany.mainPhotoUrl).not.toBe(null);
+    });
+
+    it('sets mainPhotoUrl field to null in database when mainPhotoUrl is set to true in request body ', async () => {
+      const { accessToken, companyId, company } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      await sendResetCompanyImagesRequest(accessToken, companyId, {
+        mainPhotoUrl: true,
+      });
+      const updatedCompany = await getCompanyByNameFromDB(company.name);
+
+      expect(updatedCompany.logoUrl).toBe(company.logoUrl);
+      expect(updatedCompany.logoUrl).not.toBe(null);
+      expect(updatedCompany.mainPhotoUrl).not.toBe(company.mainPhotoUrl);
+      expect(updatedCompany.mainPhotoUrl).toBe(null);
+    });
+
+    it('sets image fields to null in database when both fileds are sets to true in request body', async () => {
+      const { accessToken, companyId, company } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      await sendResetCompanyImagesRequest(accessToken, companyId, {
+        logoUrl: true,
+        mainPhotoUrl: true,
+      });
+      const updatedCompany = await getCompanyByNameFromDB(company.name);
+
+      expect(updatedCompany.logoUrl).not.toBe(company.logoUrl);
+      expect(updatedCompany.logoUrl).toBe(null);
+      expect(updatedCompany.mainPhotoUrl).not.toBe(company.mainPhotoUrl);
+      expect(updatedCompany.mainPhotoUrl).toBe(null);
+    });
+
+    it('calls s3 service to delete image files', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+      const deleteImageFile = jest.spyOn(s3Service, 'deleteImageFile');
+
+      await sendResetCompanyImagesRequest(accessToken, companyId, {
+        logoUrl: true,
+        mainPhotoUrl: true,
+      });
+
+      expect(deleteImageFile).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not call s3 service to delete files when images does not exists', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        false,
+        false,
+      );
+      const deleteImageFile = jest.spyOn(s3Service, 'deleteImageFile');
+
+      await sendResetCompanyImagesRequest(accessToken, companyId, {
+        logoUrl: true,
+        mainPhotoUrl: true,
+      });
+
+      expect(deleteImageFile).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  // --------------------------- RESET IMAGES - Invalid Request -------------------------- \\
+
+  describe('/companies/:companyId/reset-images (PUT) - Invalid Request', () => {
+    it('returns 400 status code when query param is invalid', async () => {
+      const { accessToken } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        'companyId',
+        { logoUrl: true, mainPhotoUrl: true },
+      );
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when request contains empty object as request body', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        {},
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 400 status code when request contains both fields set to false', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: false, mainPhotoUrl: false },
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 401 status code when invalid access token is provided', async () => {
+      const { companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        INVALID_ACCESS_TOKEN,
+        companyId,
+        { logoUrl: false, mainPhotoUrl: false },
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('returns 403 status code when company belongs to other user', async () => {
+      const { companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const { accessToken } = await createUserWithCompany(
+        USER_TWO,
+        COMPANY_TWO,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        companyId,
+        { logoUrl: true, mainPhotoUrl: true },
+      );
+
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 404 status code when company with provided id does not exist', async () => {
+      const { accessToken } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+
+      const response = await sendResetCompanyImagesRequest(
+        accessToken,
+        INVALID_COMPANY_ID,
+        { logoUrl: true, mainPhotoUrl: false },
+      );
+
+      expect(response.status).toBe(404);
+    });
+  });
+
   // ------------------------------- DELETE - Valid Request ------------------------------ \\
 
   describe('/companies/:companyId/delete (DELETE) - Valid Request', () => {
@@ -552,6 +1211,20 @@ describe('CompanyController (e2e)', () => {
       const deleteCompany = await getCompanyByNameFromDB(COMPANY_ONE.name);
       expect(deleteCompany).toBe(null);
     });
+
+    it('calls s3 service to delete image files', async () => {
+      const { accessToken, companyId } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+        true,
+        true,
+      );
+      const deleteImageFile = jest.spyOn(s3Service, 'deleteImageFile');
+
+      await sendDeleteCompanyRequest(accessToken, companyId);
+
+      expect(deleteImageFile).toHaveBeenCalledTimes(2);
+    });
   });
 
   // ------------------------------ DELETE - Invalid Request ----------------------------- \\
@@ -588,8 +1261,11 @@ describe('CompanyController (e2e)', () => {
     });
 
     it('returns 404 status code when company does not exist', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+      const { accessToken } = await createUserWithCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+
       const response = await sendDeleteCompanyRequest(
         accessToken,
         INVALID_COMPANY_ID,

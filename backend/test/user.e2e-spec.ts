@@ -56,6 +56,7 @@ describe('UserController (e2e)', () => {
   });
 
   afterEach(async () => {
+    jest.clearAllMocks();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });
