@@ -4,18 +4,31 @@ import path = require('path');
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
-import { CompanyRepository, UserRepository } from './../src/repositories';
+import { OfferEntity } from './../src/entities';
+
+import {
+  ApplicationRepository,
+  BranchRepository,
+  CompanyRepository,
+  OfferRepository,
+  UserRepository,
+} from './../src/repositories';
+
+import { Roles } from './../src/common/enums';
 
 import { AppModule } from './../src/app.module';
 
-import { MailService } from './../src/mail/mail.service';
-import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { AuthService } from './../src/auth/auth.service';
 import { CacheService } from './../src/cache/cache.service';
 import { CompanyService } from './../src/company/company.service';
-import { AuthService } from './../src/auth/auth.service';
+import { BranchService } from './../src/branch/branch.service';
+import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { MailService } from './../src/mail/mail.service';
+import { OfferService } from './../src/offer/offer.service';
 import { S3Service } from './../src/s3/s3.service';
 
 import { INVALID_ACCESS_TOKEN, USER_ONE, USER_TWO } from './helpers/auth-data';
+import { FILE_KEY } from './helpers/application-data';
 import {
   COMPANY_ONE,
   COMPANY_ONE_LOGO_URL,
@@ -25,9 +38,11 @@ import {
   INVALID_COMPANY,
   INVALID_COMPANY_ID,
 } from './helpers/company-data';
+import { COMPANY_ONE_BRANCHES } from './helpers/branch-data';
+import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
 
-import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
+import { mailService } from './mocks/mail-service';
 import { s3Service } from './mocks/s3-service';
 
 describe('CompanyController (e2e)', () => {
@@ -35,9 +50,14 @@ describe('CompanyController (e2e)', () => {
   let dataSource: DataSource;
   let cacheService: CacheService;
   let companyService: CompanyService;
-  let userRepository: UserRepository;
+  let applicationRepository: ApplicationRepository;
   let companyRepository: CompanyRepository;
+  let branchRepository: BranchRepository;
+  let offerRepository: OfferRepository;
+  let userRepository: UserRepository;
   let authService: AuthService;
+  let branchService: BranchService;
+  let offerService: OfferService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -57,8 +77,15 @@ describe('CompanyController (e2e)', () => {
     authService = moduleFixture.get<AuthService>(AuthService);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
-    userRepository = moduleFixture.get<UserRepository>(UserRepository);
+    branchService = moduleFixture.get<BranchService>(BranchService);
+    offerService = moduleFixture.get<OfferService>(OfferService);
+    applicationRepository = moduleFixture.get<ApplicationRepository>(
+      ApplicationRepository,
+    );
+    branchRepository = moduleFixture.get<BranchRepository>(BranchRepository);
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
+    offerRepository = moduleFixture.get<OfferRepository>(OfferRepository);
+    userRepository = moduleFixture.get<UserRepository>(UserRepository);
 
     await app.init();
   });
@@ -134,11 +161,120 @@ describe('CompanyController (e2e)', () => {
     };
   };
 
+  const createUserAndCompanyWithOffers = async (
+    userData: any,
+    companyData: any,
+    companyBranches: any,
+    offersData: any,
+  ) => {
+    await authService.createUserAccount(userData);
+    const user = await userRepository.findOne({
+      where: { email: userData.email },
+      relations: { roles: true },
+    });
+    user.activationToken = null;
+    user.isActive = true;
+    const updatedUser = await userRepository.save(user);
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    await companyService.createCompany(updatedUser, companyData);
+    const company = await companyRepository.getCompanyBySlug(companyData.slug);
+
+    company.isVerified = true;
+    await companyRepository.save(company);
+
+    // Create branches
+    let branches = [];
+
+    for (const branch of companyBranches) {
+      await branchService.createBranch(company.id, updatedUser, branch);
+    }
+
+    const createdBranches = await branchRepository.find({
+      where: { companyId: company.id },
+    });
+    branches = createdBranches;
+
+    // Create offers
+    for (let i = 0; i < offersData.length; i++) {
+      const offer = { ...offersData[i], branches: [branches[i].id] };
+      await offerService.createOffer(company.id, user.id, offer);
+    }
+
+    const offers = await offerRepository.find({
+      where: { companyId: company.id },
+    });
+
+    return {
+      accessToken: tokens.data.accessToken,
+      user: updatedUser,
+      offers,
+    };
+  };
+
+  const createUserWithApplications = async (
+    userData: any,
+    offers: OfferEntity[],
+  ) => {
+    await authService.createUserAccount(userData);
+    const user = await userRepository.findOne({
+      where: { email: userData.email },
+      relations: { roles: true },
+    });
+    user.activationToken = null;
+    user.isActive = true;
+
+    const updatedUser = await userRepository.save(user);
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    const accessToken = tokens.data.accessToken;
+
+    const applications = [];
+
+    for (const offer of offers) {
+      const application = await applicationRepository.create({
+        message: null,
+        fileKey: FILE_KEY,
+        user: updatedUser,
+        offer,
+      });
+
+      const createdApplication = await applicationRepository.save(application);
+      applications.push(createdApplication);
+    }
+
+    return {
+      user: updatedUser,
+      accessToken,
+      applications,
+    };
+  };
+
   const getCompanyByNameFromDB = async (name: string) => {
     const company = await companyRepository.findOne({
       where: { name },
     });
     return company;
+  };
+
+  const getUserFromDB = async (userId: string) => {
+    const user = await userRepository.findOne({
+      where: { id: userId },
+    });
+    return user;
+  };
+
+  const getUserApplicationsFromDB = async (userId: string) => {
+    const applications = await applicationRepository.find({
+      where: { userId },
+    });
+    return applications;
   };
 
   // ------------------------------------  Requests  ------------------------------------- \\
@@ -265,6 +401,63 @@ describe('CompanyController (e2e)', () => {
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
       expect(company).toBeTruthy();
+    });
+
+    it('changes user role into company role', async () => {
+      const { accessToken, user } = await createActiveUser(USER_ONE);
+      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+
+      const { roles } = await getUserFromDB(user.id);
+      const userRoles = roles.map((role) => role.id);
+
+      expect(userRoles.includes(Roles.COMPANY)).toBeTruthy();
+      expect(userRoles.includes(Roles.USER)).toBeFalsy();
+    });
+
+    it('deletes user applications from database', async () => {
+      const { offers } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const { accessToken, user } = await createUserWithApplications(
+        USER_TWO,
+        offers,
+      );
+
+      const applicationsBefore = await getUserApplicationsFromDB(user.id);
+
+      await sendCreateCompanyRequest(accessToken, COMPANY_TWO);
+
+      const applicationsAfter = await getUserApplicationsFromDB(user.id);
+
+      expect(applicationsBefore).not.toEqual([]);
+      expect(applicationsAfter).toEqual([]);
+    });
+
+    it('calls s3 Service to delete applications files', async () => {
+      const { offers } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const { accessToken } = await createUserWithApplications(
+        USER_TWO,
+        offers,
+      );
+
+      const deleteApplicationFile = jest.spyOn(
+        s3Service,
+        'deleteApplicationFile',
+      );
+
+      await sendCreateCompanyRequest(accessToken, COMPANY_TWO);
+
+      expect(deleteApplicationFile).toHaveBeenCalledTimes(2);
     });
   });
 
