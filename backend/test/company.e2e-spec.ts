@@ -48,16 +48,16 @@ import { s3Service } from './mocks/s3-service';
 describe('CompanyController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
+  let branchService: BranchService;
+  let offerService: OfferService;
   let applicationRepository: ApplicationRepository;
   let companyRepository: CompanyRepository;
   let branchRepository: BranchRepository;
   let offerRepository: OfferRepository;
   let userRepository: UserRepository;
-  let authService: AuthService;
-  let branchService: BranchService;
-  let offerService: OfferService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -212,6 +212,7 @@ describe('CompanyController (e2e)', () => {
       accessToken: tokens.data.accessToken,
       user: updatedUser,
       offers,
+      companyId: company.id,
     };
   };
 
@@ -273,6 +274,20 @@ describe('CompanyController (e2e)', () => {
   const getUserApplicationsFromDB = async (userId: string) => {
     const applications = await applicationRepository.find({
       where: { userId },
+    });
+    return applications;
+  };
+
+  const getCompanyBranchesFromDB = async (companyId: string) => {
+    const applications = await branchRepository.find({
+      where: { companyId },
+    });
+    return applications;
+  };
+
+  const getCompanyOffersFromDB = async (companyId: string) => {
+    const applications = await offerRepository.find({
+      where: { companyId },
     });
     return applications;
   };
@@ -1396,13 +1411,90 @@ describe('CompanyController (e2e)', () => {
       ]);
     });
 
-    it('deletes company in database', async () => {
+    it('deletes company from the database', async () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+
       const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
+
       await sendDeleteCompanyRequest(accessToken, company.id);
+
       const deleteCompany = await getCompanyByNameFromDB(COMPANY_ONE.name);
+
       expect(deleteCompany).toBe(null);
+    });
+
+    it('deletes company branches from the database', async () => {
+      const { accessToken, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+      const branchesBefore = await getCompanyBranchesFromDB(companyId);
+
+      await sendDeleteCompanyRequest(accessToken, companyId);
+
+      const branchesAfter = await getCompanyBranchesFromDB(companyId);
+
+      expect(branchesBefore).not.toEqual([]);
+      expect(branchesAfter).toEqual([]);
+    });
+
+    it('deletes company offers from the database', async () => {
+      const { accessToken, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+      const offersBefore = await getCompanyOffersFromDB(companyId);
+
+      await sendDeleteCompanyRequest(accessToken, companyId);
+
+      const offersAfter = await getCompanyOffersFromDB(companyId);
+
+      expect(offersBefore).not.toEqual([]);
+      expect(offersAfter).toEqual([]);
+    });
+
+    it('deletes applications associated with company offers', async () => {
+      const { accessToken, companyId, offers } =
+        await createUserAndCompanyWithOffers(
+          USER_ONE,
+          COMPANY_ONE,
+          COMPANY_ONE_BRANCHES,
+          COMPANY_ONE_OFFERS,
+        );
+
+      const { user } = await createUserWithApplications(USER_TWO, offers);
+
+      const applicationsBefore = await getUserApplicationsFromDB(user.id);
+
+      await sendDeleteCompanyRequest(accessToken, companyId);
+
+      const applicationsAfter = await getUserApplicationsFromDB(user.id);
+
+      expect(applicationsBefore).not.toEqual([]);
+      expect(applicationsAfter).toEqual([]);
+    });
+
+    it('calls s3 service to delete applications files associated with company offers', async () => {
+      const { accessToken, companyId, offers } =
+        await createUserAndCompanyWithOffers(
+          USER_ONE,
+          COMPANY_ONE,
+          COMPANY_ONE_BRANCHES,
+          COMPANY_ONE_OFFERS,
+        );
+
+      await createUserWithApplications(USER_TWO, offers);
+
+      const deleteImageFile = jest.spyOn(s3Service, 'deleteApplicationFile');
+
+      await sendDeleteCompanyRequest(accessToken, companyId);
+
+      expect(deleteImageFile).toHaveBeenCalledTimes(2);
     });
 
     it('calls s3 service to delete image files', async () => {

@@ -54,7 +54,7 @@ export class OfferRepository extends Repository<OfferEntity> {
     paginationParams: PaginationParams,
   ): Promise<[OfferEntity[], number]> {
     try {
-      const query = await this.createQueryBuilder('offer')
+      const query = this.createQueryBuilder('offer')
         .leftJoinAndSelect('offer.categories', 'category')
         .leftJoinAndSelect('offer.company', 'company')
         .leftJoinAndSelect('offer.branches', 'branch')
@@ -96,6 +96,36 @@ export class OfferRepository extends Repository<OfferEntity> {
       return offer;
     } catch (error) {
       this.logger.error(OfferRepository.name + ' - getOfferById', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getCompanyOffers({
+    companyId,
+    applications = false,
+    branches = false,
+    categories = false,
+    company = false,
+  }: {
+    companyId: string;
+    applications?: boolean;
+    branches?: boolean;
+    categories?: boolean;
+    company?: boolean;
+  }): Promise<Nullable<OfferEntity[]>> {
+    try {
+      const offer = await this.find({
+        where: { companyId },
+        relations: { applications, branches, categories, company },
+      });
+      return offer;
+    } catch (error) {
+      this.logger.error(
+        OfferRepository.name + ' - getOffersWithRelations',
+        error.stack,
+      );
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

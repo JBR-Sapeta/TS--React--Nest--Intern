@@ -192,7 +192,8 @@ export class CompanyController {
   }
 
   @Delete('/:companyId/delete')
-  @UseGuards(AccessTokenGuard)
+  @UseGuards(RolesGuard(Roles.COMPANY))
+  @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)
   @ApiBearerAuth()
@@ -205,8 +206,8 @@ export class CompanyController {
   @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   deleteCompany(
     @Param('companyId', ParseUUIDPipe) companyId: string,
-    @GetAccessTokenPayload() { userId }: JwtPayload,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
   ): Promise<SuccessMessageDto> {
-    return this.companyService.deleteCompany(userId, companyId);
+    return this.companyService.deleteCompany(user, companyId);
   }
 }

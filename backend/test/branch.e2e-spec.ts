@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
 import {
+  AddressRepository,
   BranchRepository,
   CompanyRepository,
   UserRepository,
@@ -38,12 +39,13 @@ import {
 describe('BranchController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
-  let cacheService: CacheService;
-  let userRepository: UserRepository;
-  let companyRepository: CompanyRepository;
-  let branchRepository: BranchRepository;
   let authService: AuthService;
+  let cacheService: CacheService;
   let companyService: CompanyService;
+  let addressRepository: AddressRepository;
+  let branchRepository: BranchRepository;
+  let companyRepository: CompanyRepository;
+  let userRepository: UserRepository;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -60,12 +62,13 @@ describe('BranchController (e2e)', () => {
     app = moduleFixture.createNestApplication();
 
     dataSource = moduleFixture.get(DataSource);
-    cacheService = moduleFixture.get<CacheService>(CacheService);
-    userRepository = moduleFixture.get<UserRepository>(UserRepository);
-    companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
-    branchRepository = moduleFixture.get<BranchRepository>(BranchRepository);
     authService = moduleFixture.get<AuthService>(AuthService);
+    cacheService = moduleFixture.get<CacheService>(CacheService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
+    addressRepository = moduleFixture.get<AddressRepository>(AddressRepository);
+    branchRepository = moduleFixture.get<BranchRepository>(BranchRepository);
+    companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
+    userRepository = moduleFixture.get<UserRepository>(UserRepository);
 
     await app.init();
   });
@@ -115,6 +118,13 @@ describe('BranchController (e2e)', () => {
       where: { companyId },
     });
     return { branches, count };
+  };
+
+  const getBranchAddresFromDB = async (branchId: number) => {
+    const address = await addressRepository.findOne({
+      where: { branchId },
+    });
+    return address;
   };
 
   // ------------------------------------  Requests  ------------------------------------- \\
@@ -824,7 +834,7 @@ describe('BranchController (e2e)', () => {
       ]);
     });
 
-    it('deletes branch in database', async () => {
+    it('deletes branch from the database', async () => {
       const { accessToken, companyId } = await createActiveUserAndCompany(
         USER_ONE,
         COMPANY_ONE,
@@ -836,6 +846,22 @@ describe('BranchController (e2e)', () => {
         await getBranchesByCompanyIdFromDB(companyId);
 
       expect(branchesAfterDelete).toEqual([]);
+    });
+
+    it('deletes addresses associated with branch from the database', async () => {
+      const { accessToken, companyId } = await createActiveUserAndCompany(
+        USER_ONE,
+        COMPANY_ONE,
+      );
+      await sendCreateBranchRequest(accessToken, companyId, BRANCH_ONE);
+
+      const { branches } = await getBranchesByCompanyIdFromDB(companyId);
+      const addressBefore = await getBranchAddresFromDB(branches[0].id);
+      await sendDeleteBranchRequest(accessToken, companyId, branches[0].id);
+      const addressAftere = await getBranchAddresFromDB(branches[0].id);
+
+      expect(addressBefore).toBeTruthy();
+      expect(addressAftere).toBeNull();
     });
   });
 

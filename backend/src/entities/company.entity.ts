@@ -30,10 +30,10 @@ export class CompanyEntity {
   public phoneNumber: string | null;
 
   @Column({ type: 'varchar', length: 512, nullable: true, default: null })
-  public logoUrl: string;
+  public logoUrl: string | null;
 
   @Column({ type: 'varchar', length: 512, nullable: true, default: null })
-  public mainPhotoUrl: string;
+  public mainPhotoUrl: string | null;
 
   @Column({ type: 'text' })
   public description: string;

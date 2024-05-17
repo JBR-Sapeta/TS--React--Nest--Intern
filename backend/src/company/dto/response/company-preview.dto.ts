@@ -16,9 +16,11 @@ export class CompanyPreviewDto {
   @Expose()
   public slug: string;
 
-  @ApiProperty({ example: 'company-logo.wep' })
+  @ApiProperty({
+    example: `https://intern-images-development.s3.eu-north-1.amazonaws.com/new-company_logo_f1963095-2166-495c-bd64-954269c3af76`,
+  })
   @Expose()
-  public logoUrl: string;
+  public logoUrl: string | null;
 
   @ApiProperty({ example: 100 })
   @Expose()

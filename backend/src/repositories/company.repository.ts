@@ -81,20 +81,6 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async deleteCompany(companyId: string): Promise<void> {
-    try {
-      await this.delete({ id: companyId });
-    } catch (error) {
-      this.logger.error(
-        CompanyRepository.name + ' - deleteCompany',
-        error.stack,
-      );
-
-      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  // ----------------------------------------------------------------------- \\
   public async getCompanyById({
     companyId,
     user = false,
@@ -154,6 +140,23 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     } catch (error) {
       this.logger.error(
         CompanyRepository.name + ' - getCompanies',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteCompanyTransaction(
+    company: CompanyEntity,
+    queryRunner: QueryRunner,
+  ): Promise<void> {
+    try {
+      await queryRunner.manager.delete(CompanyEntity, [company]);
+    } catch (error) {
+      this.logger.error(
+        CompanyRepository.name + ' - deleteCompanyTransaction',
         error.stack,
       );
 

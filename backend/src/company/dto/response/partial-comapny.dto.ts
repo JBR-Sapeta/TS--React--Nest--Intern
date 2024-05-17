@@ -24,13 +24,16 @@ export class PartialCompanyDto {
   @Expose()
   public phoneNumber: string | null;
 
-  @ApiProperty({ example: 'company-logo.wep' })
+  @ApiProperty({
+    example:
+      'https://intern-images-development.s3.eu-north-1.amazonaws.com/new-company_logo_f1963095-2166-495c-bd64-954269c3af76',
+  })
   @Expose()
-  public logoUrl: string;
+  public logoUrl: string | null;
 
-  @ApiProperty({ example: 'company.wep' })
+  @ApiProperty({ example: null })
   @Expose()
-  public mainPhotoUrl: string;
+  public mainPhotoUrl: string | null;
 
   @ApiProperty({ example: 'Comppany name description.' })
   @Expose()

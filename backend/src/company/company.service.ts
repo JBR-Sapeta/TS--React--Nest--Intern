@@ -8,14 +8,16 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { isEmpty, isNil, isNotNil, not } from 'ramda';
 import { v4 as uuidv4 } from 'uuid';
+import { isEmpty, isNil, isNotNil, not } from 'ramda';
+import { DataSource } from 'typeorm';
 
 import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
   ApplicationRepository,
   CompanyRepository,
+  OfferRepository,
   RoleRepository,
   UserRepository,
 } from '../repositories';
@@ -36,7 +38,6 @@ import {
   ResetCompanyImagesDto,
   UpdateCompanyDto,
 } from './dto/request';
-import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CompanyService {
@@ -45,6 +46,7 @@ export class CompanyService {
     private readonly s3Service: S3Service,
     private readonly applicationRepository: ApplicationRepository,
     private readonly companyRepository: CompanyRepository,
+    private readonly offeryRepository: OfferRepository,
     private readonly userRepository: UserRepository,
     private readonly roleRepository: RoleRepository,
     private dataSource: DataSource,
@@ -75,16 +77,6 @@ export class CompanyService {
           userApplications,
           queryRunner,
         );
-
-        for (const { fileKey } of userApplications) {
-          try {
-            await this.s3Service.deleteApplicationFile(fileKey);
-          } catch {
-            this.logger.error(
-              `S3 - deleteApplicationFile - fileKey:$${fileKey}`,
-            );
-          }
-        }
       }
 
       const updatedUser = await this.userRepository.updateUserTransaction(
@@ -105,6 +97,14 @@ export class CompanyService {
       throw error;
     } finally {
       await queryRunner.release();
+    }
+
+    for (const { fileKey } of userApplications) {
+      try {
+        await this.s3Service.deleteApplicationFile(fileKey);
+      } catch {
+        this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+      }
     }
 
     return new SuccessMessageDto({
@@ -288,22 +288,20 @@ export class CompanyService {
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
-    try {
-      if (logoUrl && oldLogoUrl) {
-        await this.s3Service.deleteImageFile(oldLogoUrl);
-      }
-    } catch {
-      const fileKey = this.s3Service.getKeyFromUrl(oldLogoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
-    }
+    const companyImagess = [
+      { remove: logoUrl, oldUrl: oldLogoUrl },
+      { remove: mainPhotoUrl, oldUrl: oldMainPhotoUrl },
+    ];
 
-    try {
-      if (mainPhotoUrl && oldMainPhotoUrl) {
-        await this.s3Service.deleteImageFile(oldMainPhotoUrl);
+    for (const { remove, oldUrl } of companyImagess) {
+      if (remove && oldUrl) {
+        try {
+          await this.s3Service.deleteImageFile(oldUrl);
+        } catch {
+          const fileKey = this.s3Service.getKeyFromUrl(oldUrl);
+          this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+        }
       }
-    } catch {
-      const fileKey = this.s3Service.getKeyFromUrl(oldMainPhotoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
     }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
@@ -311,7 +309,7 @@ export class CompanyService {
 
   // ----------------------------------------------------------------------- \\\
   public async deleteCompany(
-    userId: string,
+    user: UserEntity,
     companyId: string,
   ): Promise<SuccessMessageDto> {
     const company = await this.companyRepository.getCompanyById({ companyId });
@@ -320,30 +318,61 @@ export class CompanyService {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
     }
 
-    if (company.userId !== userId) {
+    if (company.userId !== user.id) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    await this.companyRepository.deleteCompany(companyId);
+    const roles = await this.roleRepository.getRolesByIds([Roles.USER]);
+    const offers = await this.offeryRepository.getCompanyOffers({
+      companyId,
+      applications: true,
+    });
 
-    const { logoUrl, mainPhotoUrl } = company;
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     try {
-      if (logoUrl) {
-        await this.s3Service.deleteImageFile(logoUrl);
-      }
-    } catch {
-      const fileKey = this.s3Service.getKeyFromUrl(logoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+      await this.companyRepository.deleteCompanyTransaction(
+        company,
+        queryRunner,
+      );
+
+      await this.userRepository.updateUserTransaction(
+        user,
+        { roles },
+        queryRunner,
+      );
+
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
 
-    try {
-      if (mainPhotoUrl) {
-        await this.s3Service.deleteImageFile(mainPhotoUrl);
+    const applications = offers.flatMap((offer) => offer.applications);
+
+    for (const { fileKey } of applications) {
+      try {
+        await this.s3Service.deleteApplicationFile(fileKey);
+      } catch {
+        this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
       }
-    } catch {
-      const fileKey = this.s3Service.getKeyFromUrl(mainPhotoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+    }
+
+    const companyImages = [company.logoUrl, company.mainPhotoUrl];
+
+    for (const image of companyImages) {
+      try {
+        if (image) {
+          await this.s3Service.deleteImageFile(image);
+        }
+      } catch {
+        const fileKey = this.s3Service.getKeyFromUrl(image);
+        this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+      }
     }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_DELETED });
