@@ -36,8 +36,15 @@ import {
   USER_TWO,
 } from './helpers/auth-data';
 import { COMPANY_ONE, COMPANY_TWO } from './helpers/company-data';
-import { COMPANY_ONE_BRANCHES } from './helpers/branch-data';
-import { COMPANY_ONE_OFFERS, INVALID_OFFER_ID } from './helpers/offer-data';
+import {
+  COMPANY_ONE_BRANCHES,
+  COMPANY_TWO_BRANCHES,
+} from './helpers/branch-data';
+import {
+  COMPANY_ONE_OFFERS,
+  COMPANY_TWO_OFFERS,
+  INVALID_OFFER_ID,
+} from './helpers/offer-data';
 import {
   APPLICATION_ONE,
   FILES,
@@ -578,52 +585,48 @@ describe('ApplicationController (e2e)', () => {
     //   expect(response.status).toBe(401);
     // });
 
-    // @TODO - add role based authorization and add to other endpoints
+    it('returns 403 status code when company owner sends application to own offer', async () => {
+      const { accessToken, offers } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
 
-    // fit('returns 403 status code when company owner sends application to own offer', async () => {
-    //   const { accessToken, offers } = await createUserAndCompanyWithOffers(
-    //     USER_ONE,
-    //     COMPANY_ONE,
-    //     COMPANY_ONE_BRANCHES,
-    //     COMPANY_ONE_OFFERS,
-    //   );
+      const response = await sendCreateApplicationRequest(
+        accessToken,
+        offers[0].id,
+        FILES.VALID_PDF,
+        APPLICATION_ONE,
+      );
 
-    //   const response = await sendCreateApplicationRequest(
-    //     accessToken,
-    //     offers[0].id,
-    //     FILES.VALID_PDF,
-    //     APPLICATION_ONE,
-    //   );
+      expect(response.status).toBe(403);
+    });
 
-    //   expect(response.status).toBe(403);
-    // });
+    it('returns 403 status code when a company owner sends application to offer', async () => {
+      const { accessToken } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
 
-    // @TODO - add role based authorization and add to other endpoints
+      const { offers } = await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        COMPANY_TWO_OFFERS,
+      );
 
-    // fit('returns 403 status code when a company owner sends application to offer', async () => {
-    //   const { accessToken } = await createUserAndCompanyWithOffers(
-    //     USER_ONE,
-    //     COMPANY_ONE,
-    //     COMPANY_ONE_BRANCHES,
-    //     COMPANY_ONE_OFFERS,
-    //   );
+      const response = await sendCreateApplicationRequest(
+        accessToken,
+        offers[0].id,
+        FILES.VALID_PDF,
+        APPLICATION_ONE,
+      );
 
-    //   const { offers } = await createUserAndCompanyWithOffers(
-    //     USER_TWO,
-    //     COMPANY_TWO,
-    //     COMPANY_TWO_BRANCHES,
-    //     COMPANY_TWO_OFFERS,
-    //   );
-
-    //   const response = await sendCreateApplicationRequest(
-    //     accessToken,
-    //     offers[0].id,
-    //     FILES.VALID_PDF,
-    //     APPLICATION_ONE,
-    //   );
-
-    //   expect(response.status).toBe(403);
-    // });
+      expect(response.status).toBe(403);
+    });
 
     it('returns 403 status code when user already has application', async () => {
       const { offers } = await createUserAndCompanyWithOffers(

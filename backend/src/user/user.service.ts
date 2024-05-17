@@ -1,15 +1,26 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
+  Logger,
+  LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { isNil } from 'ramda';
+import { isNil, isEmpty } from 'ramda';
 
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { UserRepository } from '../repositories';
+import {
+  ApplicationRepository,
+  CompanyRepository,
+  OfferRepository,
+  UserRepository,
+} from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
+import { Roles } from '../common/enums';
+
 import { AuthService } from '../auth/auth.service';
+import { S3Service } from '../s3/s3.service';
 
 import { ProfileDto } from './dto/response';
 import {
@@ -18,12 +29,16 @@ import {
   UpdatePasswordDto,
   UpdateUserDto,
 } from './dto/request';
-import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
+    private readonly s3Service: S3Service,
     private readonly authService: AuthService,
+    private readonly applicationRepository: ApplicationRepository,
+    private readonly companyRepository: CompanyRepository,
+    private readonly offeryRepository: OfferRepository,
     private readonly userRepository: UserRepository,
   ) {}
 
@@ -48,7 +63,7 @@ export class UserService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    if (!isNotEmptyObject(updateUserDto)) {
+    if (isEmpty(updateUserDto)) {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
@@ -107,9 +122,67 @@ export class UserService {
     if (userId !== userIdParam) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
+    const user = await this.authService.validateUserPassword(userId, password);
 
-    await this.authService.validateUserPassword(userId, password);
-    await this.userRepository.deleteUser(userId);
+    const userRoles = user.roles.map((role) => role.id);
+
+    if (userRoles.includes(Roles.COMPANY)) {
+      const company = await this.companyRepository.getCompanyByUserId({
+        userId,
+      });
+
+      const offers = await this.offeryRepository.getCompanyOffers({
+        companyId: company.id,
+        applications: true,
+      });
+
+      await this.userRepository.deleteUser(userId);
+
+      const applications = offers.flatMap((offer) => offer.applications);
+
+      for (const { fileKey } of applications) {
+        try {
+          await this.s3Service.deleteApplicationFile(fileKey);
+        } catch {
+          this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+        }
+      }
+
+      const companyImages = [company.logoUrl, company.mainPhotoUrl];
+
+      for (const image of companyImages) {
+        try {
+          if (image) {
+            await this.s3Service.deleteImageFile(image);
+          }
+        } catch {
+          const fileKey = this.s3Service.getKeyFromUrl(image);
+          this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+        }
+      }
+    }
+
+    if (userRoles.includes(Roles.USER)) {
+      const [userApplications] =
+        await this.applicationRepository.getAllUserApplications(userId);
+
+      await this.userRepository.deleteUser(userId);
+
+      for (const { fileKey } of userApplications) {
+        try {
+          await this.s3Service.deleteApplicationFile(fileKey);
+        } catch {
+          this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+        }
+      }
+    }
+
+    if (
+      userRoles.includes(Roles.ADMIN) ||
+      userRoles.includes(Roles.MODERATOR)
+    ) {
+      await this.userRepository.deleteUser(userId);
+    }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.USER_DELETE_ACCOUNT });
   }

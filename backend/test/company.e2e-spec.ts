@@ -279,17 +279,17 @@ describe('CompanyController (e2e)', () => {
   };
 
   const getCompanyBranchesFromDB = async (companyId: string) => {
-    const applications = await branchRepository.find({
+    const branches = await branchRepository.find({
       where: { companyId },
     });
-    return applications;
+    return branches;
   };
 
   const getCompanyOffersFromDB = async (companyId: string) => {
-    const applications = await offerRepository.find({
+    const offers = await offerRepository.find({
       where: { companyId },
     });
-    return applications;
+    return offers;
   };
 
   // ------------------------------------  Requests  ------------------------------------- \\
@@ -1409,6 +1409,21 @@ describe('CompanyController (e2e)', () => {
         'message',
         'error',
       ]);
+    });
+
+    it('changes company role into user role', async () => {
+      const { accessToken, user } = await createActiveUser(USER_ONE);
+      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+
+      const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
+
+      await sendDeleteCompanyRequest(accessToken, company.id);
+
+      const { roles } = await getUserFromDB(user.id);
+      const userRoles = roles.map((role) => role.id);
+
+      expect(userRoles.includes(Roles.USER)).toBeTruthy();
+      expect(userRoles.includes(Roles.COMPANY)).toBeFalsy();
     });
 
     it('deletes company from the database', async () => {

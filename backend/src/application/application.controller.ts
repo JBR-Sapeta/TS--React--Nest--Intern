@@ -35,7 +35,11 @@ import { PaginationParams } from '../common/classes/params';
 import { HEADER } from '../common/docs';
 import { JwtPayload } from '../common/types';
 
-import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
+import {
+  AccessTokenGuard,
+  ExtendedAccessTokenGuard,
+  RolesGuard,
+} from '../auth/guards';
 import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
@@ -48,6 +52,7 @@ import {
   UserApplicationsResponseDto,
 } from './dto/response';
 import { API_BODY, OPERATION, PARAM, RES } from './docs';
+import { Roles } from '../common/enums';
 
 @ApiTags('Applications')
 @Controller('applications')
@@ -55,6 +60,7 @@ export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
   @Post('/:offerId/create')
+  @UseGuards(RolesGuard(Roles.USER))
   @UseGuards(ExtendedAccessTokenGuard)
   @UseInterceptors(
     FileInterceptor('file', { fileFilter: applicationFileFilter }),
@@ -142,6 +148,7 @@ export class ApplicationController {
   }
 
   @Get('/users/:userId')
+  @UseGuards(RolesGuard(Roles.USER))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_USER_APPLICATIONS)
@@ -166,6 +173,7 @@ export class ApplicationController {
   }
 
   @Delete('/:applicationId/delete')
+  @UseGuards(RolesGuard(Roles.USER))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)
