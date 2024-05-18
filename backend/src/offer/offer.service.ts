@@ -8,7 +8,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { isNil, isEmpty, isNotNil, not } from 'ramda';
-import { isNotEmptyObject } from 'class-validator';
 
 import { OfferEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
@@ -247,7 +246,7 @@ export class OfferService {
     userId: string,
     updateOffetDto: UpdateOfferDto,
   ): Promise<SuccessMessageDto> {
-    if (!isNotEmptyObject(updateOffetDto)) {
+    if (isEmpty(updateOffetDto)) {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 

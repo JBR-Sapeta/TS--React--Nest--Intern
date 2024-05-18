@@ -46,11 +46,22 @@ export class BranchRepository extends Repository<BranchEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getBranchById(
-    branchId: number,
-  ): Promise<Nullable<BranchEntity>> {
+  public async getBranchById({
+    branchId,
+    address = false,
+    company = false,
+    offers = false,
+  }: {
+    branchId: number;
+    address?: boolean;
+    company?: boolean;
+    offers?: boolean;
+  }): Promise<Nullable<BranchEntity>> {
     try {
-      const branch = await this.findOneBy({ id: branchId });
+      const branch = await this.findOne({
+        where: { id: branchId },
+        relations: { company, address, offers },
+      });
       return branch;
     } catch (error) {
       this.logger.error(

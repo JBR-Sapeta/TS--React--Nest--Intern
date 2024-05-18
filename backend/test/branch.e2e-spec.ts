@@ -7,18 +7,20 @@ import {
   AddressRepository,
   BranchRepository,
   CompanyRepository,
+  OfferRepository,
   UserRepository,
 } from './../src/repositories';
 
 import { AppModule } from './../src/app.module';
 
-import { MailService } from './../src/mail/mail.service';
-import { GeocoderService } from './../src/geocoder/geocoder.service';
-import { CacheService } from './../src/cache/cache.service';
 import { AuthService } from './../src/auth/auth.service';
+import { BranchService } from './../src/branch/branch.service';
+import { CacheService } from './../src/cache/cache.service';
 import { CompanyService } from './../src/company/company.service';
+import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { MailService } from './../src/mail/mail.service';
+import { OfferService } from './../src/offer/offer.service';
 import { S3Service } from './../src/s3/s3.service';
-
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
 import { s3Service } from './mocks/s3-service';
@@ -32,9 +34,11 @@ import {
 import {
   BRANCH_ONE,
   BRANCH_TWO,
+  COMPANY_ONE_BRANCHES,
   INVALID_BRANCH,
   INVALID_BRANCH_ID,
 } from './helpers/branch-data';
+import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
 
 describe('BranchController (e2e)', () => {
   let app: INestApplication;
@@ -42,9 +46,12 @@ describe('BranchController (e2e)', () => {
   let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
+  let branchService: BranchService;
+  let offerService: OfferService;
   let addressRepository: AddressRepository;
-  let branchRepository: BranchRepository;
   let companyRepository: CompanyRepository;
+  let branchRepository: BranchRepository;
+  let offerRepository: OfferRepository;
   let userRepository: UserRepository;
 
   beforeEach(async () => {
@@ -65,9 +72,12 @@ describe('BranchController (e2e)', () => {
     authService = moduleFixture.get<AuthService>(AuthService);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
+    branchService = moduleFixture.get<BranchService>(BranchService);
+    offerService = moduleFixture.get<OfferService>(OfferService);
     addressRepository = moduleFixture.get<AddressRepository>(AddressRepository);
     branchRepository = moduleFixture.get<BranchRepository>(BranchRepository);
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
+    offerRepository = moduleFixture.get<OfferRepository>(OfferRepository);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
 
     await app.init();
@@ -110,6 +120,62 @@ describe('BranchController (e2e)', () => {
       accessToken: tokens.data.accessToken,
       companyId: company.id,
       company,
+    };
+  };
+
+  const createUserAndCompanyWithOffers = async (
+    userData: any,
+    companyData: any,
+    companyBranches: any,
+    offersData: any,
+  ) => {
+    await authService.createUserAccount(userData);
+    const user = await userRepository.findOne({
+      where: { email: userData.email },
+      relations: { roles: true },
+    });
+    user.activationToken = null;
+    user.isActive = true;
+    const updatedUser = await userRepository.save(user);
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
+    await companyService.createCompany(updatedUser, companyData);
+    const company = await companyRepository.getCompanyBySlug(companyData.slug);
+
+    company.isVerified = true;
+    await companyRepository.save(company);
+
+    // Create branches
+    let branches = [];
+
+    for (const branch of companyBranches) {
+      await branchService.createBranch(company.id, updatedUser, branch);
+    }
+
+    const createdBranches = await branchRepository.find({
+      where: { companyId: company.id },
+    });
+    branches = createdBranches;
+
+    // Create offers
+    for (let i = 0; i < offersData.length; i++) {
+      const offer = { ...offersData[i], branches: [branches[i].id] };
+      await offerService.createOffer(company.id, user.id, offer);
+    }
+
+    const offers = await offerRepository.find({
+      where: { companyId: company.id },
+    });
+
+    return {
+      accessToken: tokens.data.accessToken,
+      branches: createdBranches,
+      offers,
+      user: updatedUser,
+      companyId: company.id,
     };
   };
 
@@ -933,7 +999,25 @@ describe('BranchController (e2e)', () => {
       expect(response.status).toBe(403);
     });
 
-    it('returns 403 status code when branch belongs to another company', async () => {
+    it('returns 403 status code when branch is associated with offers', async () => {
+      const { accessToken, companyId, branches } =
+        await createUserAndCompanyWithOffers(
+          USER_ONE,
+          COMPANY_ONE,
+          COMPANY_ONE_BRANCHES,
+          COMPANY_ONE_OFFERS,
+        );
+
+      const response = await sendDeleteBranchRequest(
+        accessToken,
+        companyId,
+        branches[0].id,
+      );
+
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 404 status code when the company ID does not match the ID provided as a parameter', async () => {
       const { accessToken: tokenOne, companyId } =
         await createActiveUserAndCompany(USER_ONE, COMPANY_ONE);
       await sendCreateBranchRequest(tokenOne, companyId, BRANCH_ONE);
@@ -948,7 +1032,7 @@ describe('BranchController (e2e)', () => {
         branches[0].id,
       );
 
-      expect(response.status).toBe(403);
+      expect(response.status).toBe(404);
     });
 
     it('returns 404 status code when company with given id does not exist', async () => {

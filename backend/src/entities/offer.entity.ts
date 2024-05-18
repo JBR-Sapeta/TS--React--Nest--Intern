@@ -64,11 +64,14 @@ export class OfferEntity {
   @Column({ name: 'operating_mode_id' })
   public operatingModeId: number;
 
-  @ManyToMany(() => BranchEntity)
+  @ManyToMany(() => BranchEntity, (branch: BranchEntity) => branch.offers)
   @JoinTable({ name: 'offers_branches' })
   public branches: BranchEntity[];
 
-  @ManyToMany(() => CategoryEntity)
+  @ManyToMany(
+    () => CategoryEntity,
+    (category: CategoryEntity) => category.offers,
+  )
   @JoinTable({ name: 'offers_categories' })
   public categories: CategoryEntity[];
 

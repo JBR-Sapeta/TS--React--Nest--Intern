@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { isNil, isNotNil, not } from 'ramda';
+import { isEmpty, isNil, isNotNil, not } from 'ramda';
 
 import { UserEntity } from '../entities';
 import {
@@ -18,11 +18,11 @@ import {
 } from '../repositories';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { SuccessMessageDto } from '../common/classes';
+
 import { GeocoderService } from '../geocoder/geocoder.service';
 
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
 import { BranchesDto } from './dto/response';
-import { isNotEmptyObject } from 'class-validator';
 
 @Injectable()
 export class BranchService {
@@ -109,7 +109,7 @@ export class BranchService {
     userId: string,
     updateBranchDto: UpdateBranchDto,
   ): Promise<SuccessMessageDto> {
-    if (!isNotEmptyObject(updateBranchDto)) {
+    if (isEmpty(updateBranchDto)) {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
@@ -128,7 +128,7 @@ export class BranchService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const branch = await this.branchRepository.getBranchById(branchId);
+    const branch = await this.branchRepository.getBranchById({ branchId });
 
     if (isNil(branch)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCH);
@@ -162,14 +162,21 @@ export class BranchService {
     branchId: number,
     userId: string,
   ): Promise<SuccessMessageDto> {
-    const company = await this.companyRepository.getCompanyById({ companyId });
-    const branch = await this.branchRepository.getBranchById(branchId);
+    const branch = await this.branchRepository.getBranchById({
+      branchId,
+      company: true,
+      offers: true,
+    });
 
-    if (isNil(company) || isNil(branch)) {
+    if (isNil(branch) || branch.companyId !== companyId) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND);
     }
 
-    if (company.userId !== userId || branch.companyId !== companyId) {
+    if (!isEmpty(branch.offers)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_BRANCH_IN_USE);
+    }
+
+    if (branch.company.userId !== userId) {
       this.logger.error(
         BranchService.name + ' - deleteBranch',
         `ForbiddenException - ${userId}`,

@@ -5,6 +5,7 @@ import {
   AddressEntity,
   BranchEntity,
   CompanyEntity,
+  OfferEntity,
   UserEntity,
 } from '../entities';
 import {
@@ -22,20 +23,21 @@ import { BranchService } from './branch.service';
   imports: [
     AuthModule,
     TypeOrmModule.forFeature([
-      UserEntity,
-      CompanyEntity,
-      BranchEntity,
       AddressEntity,
+      BranchEntity,
+      CompanyEntity,
+      OfferEntity,
+      UserEntity,
     ]),
   ],
   controllers: [BranchController],
   providers: [
     Logger,
-    GeocoderService,
     BranchService,
-    CompanyRepository,
-    BranchRepository,
+    GeocoderService,
     AddressRepository,
+    BranchRepository,
+    CompanyRepository,
   ],
 })
 export class BranchModule {}
