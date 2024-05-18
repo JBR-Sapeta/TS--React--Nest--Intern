@@ -32,6 +32,7 @@ import { S3Service } from '../s3/s3.service';
 
 import {
   CompaniesPreviewResponseDto,
+  FullCompanyResponseDto,
   PartialCompanyResponseDto,
 } from './dto/response';
 import {
@@ -336,6 +337,58 @@ export class CompanyService {
   }
 
   // ----------------------------------------------------------------------- \\\
+  public async getCompanyBySlug(
+    slug: string,
+  ): Promise<PartialCompanyResponseDto> {
+    const company = await this.companyRepository.getCompanyBySlug(slug);
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    return new PartialCompanyResponseDto({}, company);
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async getCompanies(
+    pageNumber: number,
+    limit: number,
+  ): Promise<CompaniesPreviewResponseDto> {
+    const [data, count] = await this.companyRepository.getCompanies(
+      pageNumber,
+      limit,
+    );
+
+    return new CompaniesPreviewResponseDto({ limit, pageNumber, count }, data);
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async getUserCompany(
+    userId: string,
+    userIdParam: string,
+  ): Promise<FullCompanyResponseDto> {
+    if (userIdParam !== userId) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const company = await this.companyRepository.getCompanyByUserId({
+      userId,
+      branches: true,
+      categories: true,
+    });
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (company.userId !== userId) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    return new FullCompanyResponseDto({}, company);
+  }
+
+  // ----------------------------------------------------------------------- \\\
   public async deleteCompany(
     user: UserEntity,
     companyId: string,
@@ -404,31 +457,5 @@ export class CompanyService {
     }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_DELETED });
-  }
-
-  // ----------------------------------------------------------------------- \\\
-  public async getCompanyBySlug(
-    slug: string,
-  ): Promise<PartialCompanyResponseDto> {
-    const company = await this.companyRepository.getCompanyBySlug(slug);
-
-    if (isNil(company)) {
-      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
-    }
-
-    return new PartialCompanyResponseDto({}, company);
-  }
-
-  // ----------------------------------------------------------------------- \\\
-  public async getCompanies(
-    pageNumber: number,
-    limit: number,
-  ): Promise<CompaniesPreviewResponseDto> {
-    const [data, count] = await this.companyRepository.getCompanies(
-      pageNumber,
-      limit,
-    );
-
-    return new CompaniesPreviewResponseDto({ limit, pageNumber, count }, data);
   }
 }

@@ -51,6 +51,7 @@ import {
 } from './dto/request';
 import {
   CompaniesPreviewResponseDto,
+  FullCompanyResponseDto,
   PartialCompanyResponseDto,
 } from './dto/response';
 import { OPERATION, PARAM, RES, API_BODY } from './docs';
@@ -101,6 +102,16 @@ export class CompanyController {
     @Param('slug') slug: string,
   ): Promise<PartialCompanyResponseDto> {
     return this.companyService.getCompanyBySlug(slug);
+  }
+
+  @Get('/users/:usersId')
+  @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  getUserCompany(
+    @Param('usersId') usersIdParam: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ): Promise<FullCompanyResponseDto> {
+    return this.companyService.getUserCompany(userId, usersIdParam);
   }
 
   @Put('/:companyId/update')

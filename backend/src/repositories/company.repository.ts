@@ -110,17 +110,22 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   // ----------------------------------------------------------------------- \\
   public async getCompanyByUserId({
     userId,
+    branches = false,
+    categories = false,
   }: {
     userId: string;
+    branches?: boolean;
+    categories?: boolean;
   }): Promise<Nullable<CompanyEntity>> {
     try {
       const company = await this.findOne({
         where: { userId },
+        relations: { categories, branches },
       });
       return company;
     } catch (error) {
       this.logger.error(
-        CompanyRepository.name + ' - getCompanyById',
+        CompanyRepository.name + ' - getCompanyByUserId',
         error.stack,
       );
 
