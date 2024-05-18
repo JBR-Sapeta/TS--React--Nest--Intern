@@ -4,7 +4,7 @@ import { Expose } from 'class-transformer';
 import { OfferEntity } from '../../../entities';
 import { transformDate } from '../../../common/functions';
 import { CategoryPreviewDto } from '../../../category/dto/response';
-import { CompanyPreviewDto } from '../../../company/dto/response';
+import { BaseCompanyDto } from '../../../company/dto/response';
 import { BranchPreviewDto } from '../../../branch/dto/response';
 
 export class PartialOfferDto {
@@ -52,9 +52,9 @@ export class PartialOfferDto {
   @Expose()
   public categories: CategoryPreviewDto[];
 
-  @ApiProperty({ type: CompanyPreviewDto })
+  @ApiProperty({ type: BaseCompanyDto })
   @Expose()
-  public company: CompanyPreviewDto;
+  public company: BaseCompanyDto;
 
   constructor({
     categories,
@@ -65,7 +65,7 @@ export class PartialOfferDto {
   }: OfferEntity) {
     this.createdAt = transformDate(createdAt);
     this.branches = branches.map((branch) => new BranchPreviewDto(branch));
-    this.company = new CompanyPreviewDto(company);
+    this.company = new BaseCompanyDto(company);
     this.categories = categories.map(
       (category) => new CategoryPreviewDto(category),
     );

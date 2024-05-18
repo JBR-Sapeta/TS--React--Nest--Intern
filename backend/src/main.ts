@@ -4,6 +4,22 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { LoggerFactory } from './common/classes';
 
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+// https://www.youtube.com/watch?v=52nqjrCs57s
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: LoggerFactory('App'),

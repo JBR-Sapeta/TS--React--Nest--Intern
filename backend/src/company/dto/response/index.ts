@@ -1,3 +1,4 @@
+export { BaseCompanyDto } from './base-company.dto';
 export { CompaniesPreviewResponseDto } from './companies-preview-response.dto';
 export { CompanyPreviewDto } from './company-preview.dto';
 export { FullCompanyResponseDto } from './full-company-response.dto';
