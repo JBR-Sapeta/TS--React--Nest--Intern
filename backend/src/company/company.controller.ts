@@ -60,6 +60,26 @@ import { OPERATION, PARAM, RES, API_BODY } from './docs';
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
+  @Post('/create')
+  @UseGuards(RolesGuard(Roles.USER))
+  @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation(OPERATION.CREATE)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiResponse(RES.CREATE.OK)
+  @ApiResponse(RES.CREATE.BAD_REQUEST)
+  @ApiResponse(RES.CREATE.UNAUTHORIZED)
+  @ApiResponse(RES.CREATE.FORBIDDEN)
+  @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
+  @ApiResponse(RES.CREATE.CONFLICT)
+  createCompany(
+    @Body() createCompanyDto: CreateCompanyDto,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    return this.companyService.createCompany(user, createCompanyDto);
+  }
+
   @Get('/')
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_COMPANIES)
@@ -81,26 +101,6 @@ export class CompanyController {
     @Param('slug') slug: string,
   ): Promise<PartialCompanyResponseDto> {
     return this.companyService.getCompanyBySlug(slug);
-  }
-
-  @Post('/create')
-  @UseGuards(RolesGuard(Roles.USER))
-  @UseGuards(ExtendedAccessTokenGuard)
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation(OPERATION.CREATE)
-  @ApiBearerAuth()
-  @ApiHeader(HEADER.ACCESS_TOKEN)
-  @ApiResponse(RES.CREATE.OK)
-  @ApiResponse(RES.CREATE.BAD_REQUEST)
-  @ApiResponse(RES.CREATE.UNAUTHORIZED)
-  @ApiResponse(RES.CREATE.FORBIDDEN)
-  @ApiResponse(RES.CREATE.INTERNAL_SERVER_ERROR)
-  @ApiResponse(RES.CREATE.CONFLICT)
-  createCompany(
-    @Body() createCompanyDto: CreateCompanyDto,
-    @GetAccessTokentExtendedPayload() user: UserEntity,
-  ): Promise<SuccessMessageDto> {
-    return this.companyService.createCompany(user, createCompanyDto);
   }
 
   @Put('/:companyId/update')

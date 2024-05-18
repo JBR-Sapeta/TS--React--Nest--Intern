@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -11,6 +13,7 @@ import {
 import { UserEntity } from './user.entity';
 import { BranchEntity } from './branch.entity';
 import { OfferEntity } from './offer.entity';
+import { CategoryEntity } from './category.entity';
 
 @Entity({ name: 'companies' })
 export class CompanyEntity {
@@ -62,4 +65,11 @@ export class CompanyEntity {
 
   @OneToMany(() => OfferEntity, (offer: OfferEntity) => offer.company)
   public offers: OfferEntity[];
+
+  @ManyToMany(
+    () => CategoryEntity,
+    (category: CategoryEntity) => category.companies,
+  )
+  @JoinTable({ name: 'companies_categories' })
+  public categories: CategoryEntity[];
 }

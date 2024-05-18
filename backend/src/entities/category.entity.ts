@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { OfferEntity } from './offer.entity';
+import { CompanyEntity } from './company.entity';
 
 @Entity({ name: 'categories' })
 export class CategoryEntity {
@@ -29,4 +30,10 @@ export class CategoryEntity {
 
   @ManyToMany(() => OfferEntity, (offer: OfferEntity) => offer.categories)
   public offers: OfferEntity[];
+
+  @ManyToMany(
+    () => CompanyEntity,
+    (company: CompanyEntity) => company.categories,
+  )
+  public companies: CompanyEntity[];
 }

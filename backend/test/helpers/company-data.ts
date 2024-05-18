@@ -4,6 +4,7 @@ export const COMPANY_ONE = {
   email: 'newcompanyinfo@mail.com',
   description: 'It is a long established fact that a reader will be.',
   size: 24,
+  categories: [1, 2, 4, 17, 31, 32, 33],
 };
 
 export const COMPANY_TWO = {
@@ -12,6 +13,7 @@ export const COMPANY_TWO = {
   email: 'oldcompanyinfo@mail.com',
   description: 'It is a long established fact that a reader will be.',
   size: 500,
+  categories: [1, 2, 4, 17, 31, 32, 33],
 };
 
 export const INVALID_COMPANY = {
@@ -20,6 +22,7 @@ export const INVALID_COMPANY = {
   email: 'oldcompanyinfomail.com',
   description: 'It is a long established fact.',
   size: 0,
+  categories: [7777, 8888, 9999],
 };
 
 export const INVALID_COMPANY_ID = 'dacf9572-55f5-45af-a6ea-f58fc5724220';
@@ -40,3 +43,5 @@ export const COMPANY_ONE_LOGO_URL =
 
 export const COMPANY_ONE_MAIN_PHOTO_URL =
   'https://intern-images-development.s3.eu-north-1.amazonaws.com/new-company_mainPhoto_8e77d34e-f4a3-491d-ab4c-297e3d9413fb';
+
+export const INVALID_CATEGOREIS = [7777, 8888, 9999];

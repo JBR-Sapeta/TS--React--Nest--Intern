@@ -3,6 +3,8 @@ import { Expose } from 'class-transformer';
 
 import { CompanyEntity } from '../../../entities';
 
+import { CategoryPreviewDto } from '../../../category/dto/response';
+
 export class PartialCompanyDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
   @Expose()
@@ -47,7 +49,15 @@ export class PartialCompanyDto {
   @Expose()
   public isVerified: boolean;
 
-  constructor(company: CompanyEntity) {
-    Object.assign(this, company);
+  @ApiProperty({ isArray: true, type: CategoryPreviewDto })
+  @Expose()
+  public categories: CategoryPreviewDto[];
+
+  constructor({ categories, ...companyData }: CompanyEntity) {
+    this.categories = categories.map(
+      (category) => new CategoryPreviewDto(category),
+    );
+
+    Object.assign(this, companyData);
   }
 }

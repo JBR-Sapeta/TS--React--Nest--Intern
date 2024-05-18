@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { CompanyEntity, UserEntity } from '../entities';
+import { CategoryEntity, CompanyEntity, UserEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
 import { PostgresqlErrorCode } from '../common/enums';
 import { Nullable } from '../common/types';
@@ -31,6 +31,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
       email: string;
       description: string;
       size: number;
+      categories: CategoryEntity[];
     },
     queryRunner: QueryRunner,
   ): Promise<CompanyEntity> {
@@ -132,7 +133,10 @@ export class CompanyRepository extends Repository<CompanyEntity> {
     slug: string,
   ): Promise<Nullable<CompanyEntity>> {
     try {
-      const company = await this.findOne({ where: { slug } });
+      const company = await this.findOne({
+        where: { slug },
+        relations: { categories: true },
+      });
       return company;
     } catch (error) {
       this.logger.error(

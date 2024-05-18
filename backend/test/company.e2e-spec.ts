@@ -35,6 +35,7 @@ import {
   COMPANY_ONE_MAIN_PHOTO_URL,
   COMPANY_TWO,
   FILES,
+  INVALID_CATEGOREIS,
   INVALID_COMPANY,
   INVALID_COMPANY_ID,
 } from './helpers/company-data';
@@ -515,11 +516,22 @@ describe('CompanyController (e2e)', () => {
       expect(response.status).toBe(401);
     });
 
-    it('returns 403 status code when user already has a company', async () => {
+    it('returns a 403 status code when user already has a company', async () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const response = await sendCreateCompanyRequest(accessToken, COMPANY_TWO);
       expect(response.status).toBe(403);
+    });
+
+    it('returns a 404 status code when the provided categories do not exist', async () => {
+      const { accessToken } = await createActiveUser(USER_ONE);
+
+      const response = await sendCreateCompanyRequest(accessToken, {
+        ...COMPANY_ONE,
+        categories: INVALID_CATEGOREIS,
+      });
+
+      expect(response.status).toBe(404);
     });
 
     it.each`
@@ -581,6 +593,7 @@ describe('CompanyController (e2e)', () => {
         'description',
         'size',
         'isVerified',
+        'categories',
       ]);
     });
   });
@@ -797,6 +810,17 @@ describe('CompanyController (e2e)', () => {
         INVALID_COMPANY_ID,
         COMPANY_TWO,
       );
+      expect(response.status).toBe(404);
+    });
+
+    it('returns 404 status code when the provided categories do not exist', async () => {
+      const { accessToken } = await createActiveUser(USER_ONE);
+      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
+      const company = await getCompanyByNameFromDB(COMPANY_ONE.name);
+      const response = await sendUpdateCompanyRequest(accessToken, company.id, {
+        ...COMPANY_TWO,
+        categories: INVALID_CATEGOREIS,
+      });
       expect(response.status).toBe(404);
     });
 

@@ -16,6 +16,7 @@ import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
   ApplicationRepository,
+  CategoryRepository,
   CompanyRepository,
   OfferRepository,
   RoleRepository,
@@ -45,6 +46,7 @@ export class CompanyService {
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly s3Service: S3Service,
     private readonly applicationRepository: ApplicationRepository,
+    private readonly categoriesRepository: CategoryRepository,
     private readonly companyRepository: CompanyRepository,
     private readonly offeryRepository: OfferRepository,
     private readonly userRepository: UserRepository,
@@ -61,6 +63,15 @@ export class CompanyService {
 
     if (userRoles.includes(Roles.COMPANY)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ONE_COMPANY_PER_USER);
+    }
+
+    const { categories: categoriesDto, ...companyData } = createCompanyDto;
+
+    const categories =
+      await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+
+    if (isEmpty(categories)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
     }
 
     const roles = await this.roleRepository.getRolesByIds([Roles.COMPANY]);
@@ -87,7 +98,7 @@ export class CompanyService {
 
       await this.companyRepository.createCompanyTransaction(
         updatedUser,
-        createCompanyDto,
+        { ...companyData, categories },
         queryRunner,
       );
 
@@ -133,7 +144,24 @@ export class CompanyService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    await this.companyRepository.updateCompany(company, updateCompanyDto);
+    const { categories: categoriesDto, ...companyData } = updateCompanyDto;
+
+    console.log(categoriesDto);
+
+    if (isNotNil(categoriesDto)) {
+      const categories =
+        await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+
+      console.log(categories);
+
+      if (isEmpty(categories)) {
+        throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
+      } else {
+        company.categories = categories;
+      }
+    }
+
+    await this.companyRepository.updateCompany(company, companyData);
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
   }

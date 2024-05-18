@@ -5,6 +5,7 @@ import {
   AddressEntity,
   ApplicationEntity,
   BranchEntity,
+  CategoryEntity,
   CompanyEntity,
   OfferEntity,
   RoleEntity,
@@ -12,6 +13,7 @@ import {
 } from '../entities';
 import {
   ApplicationRepository,
+  CategoryRepository,
   CompanyRepository,
   OfferRepository,
   RoleRepository,
@@ -31,6 +33,7 @@ import { CompanyService } from './company.service';
       AddressEntity,
       ApplicationEntity,
       BranchEntity,
+      CategoryEntity,
       CompanyEntity,
       OfferEntity,
       UserEntity,
@@ -43,6 +46,7 @@ import { CompanyService } from './company.service';
     CompanyService,
     S3Service,
     ApplicationRepository,
+    CategoryRepository,
     CompanyRepository,
     OfferRepository,
     UserRepository,

@@ -5,6 +5,8 @@ import {
   MaxLength,
   Matches,
   IsPositive,
+  ArrayNotEmpty,
+  IsInt,
 } from 'class-validator';
 
 import { PL_ERRORS } from '../../../locales';
@@ -35,4 +37,9 @@ export class CreateCompanyDto {
   @ApiProperty({ required: true, example: 100 })
   @IsPositive({ message: PL_ERRORS.VALIDATION_COMPANY_SIZE })
   readonly size: number;
+
+  @ApiProperty({ required: true, example: [1, 4, 17, 32, 33] })
+  @ArrayNotEmpty({ message: PL_ERRORS.VALIDATION_OFFER_BRANCHES })
+  @IsInt({ each: true, message: PL_ERRORS.VALIDATION_OFFER_CATEGORIES })
+  readonly categories: number[];
 }
