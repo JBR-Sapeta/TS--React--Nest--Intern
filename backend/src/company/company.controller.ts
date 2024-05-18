@@ -37,7 +37,11 @@ import {
   GetAccessTokentExtendedPayload,
 } from '../auth/decorators';
 import { SuccessMessageDto } from '../common/classes';
-import { PaginationParams } from '../common/classes/params';
+import {
+  AddressParams,
+  CategoriesParams,
+  PaginationParams,
+} from '../common/classes/params';
 import { HEADER } from '../common/docs';
 import { Roles } from '../common/enums';
 import { imageFileFilter } from '../common/functions';
@@ -87,9 +91,15 @@ export class CompanyController {
   @ApiResponse(RES.GET_COMPANIES.OK)
   @ApiResponse(RES.GET_COMPANIES.INTERNAL_SERVER_ERROR)
   getCompanies(
-    @Query() { pageNumber, limit }: PaginationParams,
+    @Query() categoreisParams: CategoriesParams,
+    @Query() locationParams: AddressParams,
+    @Query() paginationParams: PaginationParams,
   ): Promise<CompaniesPreviewResponseDto> {
-    return this.companyService.getCompanies(pageNumber, limit);
+    return this.companyService.getCompanies(
+      categoreisParams,
+      locationParams,
+      paginationParams,
+    );
   }
 
   @Get('/:slug')

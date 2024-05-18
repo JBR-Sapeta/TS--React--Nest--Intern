@@ -39,7 +39,11 @@ import {
   INVALID_COMPANY,
   INVALID_COMPANY_ID,
 } from './helpers/company-data';
-import { COMPANY_ONE_BRANCHES } from './helpers/branch-data';
+import {
+  BRANCH_ONE,
+  COMPANY_ONE_BRANCHES,
+  COMPANY_TWO_BRANCHES,
+} from './helpers/branch-data';
 import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
 
 import { geocoderService } from './mocks/geocoder-service';
@@ -215,6 +219,7 @@ describe('CompanyController (e2e)', () => {
       user: updatedUser,
       offers,
       companyId: company.id,
+      branches,
     };
   };
 
@@ -311,9 +316,13 @@ describe('CompanyController (e2e)', () => {
     return response;
   };
 
-  const sendGetCompaniesRequest = async (pageNumber: any, limit: any) => {
+  const sendGetCompaniesRequest = async (params: any) => {
+    const queryParams = Object.entries(params).map(
+      ([key, value]) => `&${key}=${value}`,
+    );
+
     const response = await request(app.getHttpServer())
-      .get(`/companies?pageNumber=${pageNumber}&limit=${limit}`)
+      .get(`/companies?${queryParams.join('')}`)
       .send();
     return response;
   };
@@ -621,23 +630,39 @@ describe('CompanyController (e2e)', () => {
 
   describe('/companies (GET) - Valid Request', () => {
     it('returns 200 status code', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest(0, 12);
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({});
       expect(response.status).toBe(200);
     });
 
     it('returns success message', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest(0, 12);
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({});
+
       expect(response.body.message).toBeTruthy();
     });
 
     it('returns proper response object', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest(0, 12);
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({});
       expect(Object.keys(response.body)).toEqual([
         'statusCode',
         'message',
@@ -651,35 +676,181 @@ describe('CompanyController (e2e)', () => {
     });
 
     it('returns company data', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest(0, 12);
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({});
       expect(Object.keys(response.body.data[0])).toEqual([
         'id',
         'name',
         'slug',
         'logoUrl',
         'size',
+        'locations',
+        'categories',
       ]);
     });
 
     it('returns empty array when page is out of the range', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest(100, 12);
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({ pageNumber: 2 });
+
       expect(response.body.data).toEqual([]);
+    });
+
+    it('returns one element when limit is set to 1', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({ limit: 1 });
+
+      expect(response.body.data.length).toBe(1);
+    });
+
+    it('returns second page when pageNumber is set to 1', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({
+        limit: 1,
+        pageNumber: 1,
+      });
+
+      expect(response.body.pageNumber).toBe(1);
+    });
+
+    it('returns filtered offers when categories param is set', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({ categories: '1' });
+
+      expect(response.body.data.length).toBe(2);
+    });
+
+    it('returns filtered offers when city param is set', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        [],
+      );
+
+      const encodedParam = encodeURIComponent('Gdańsk');
+
+      const response = await sendGetCompaniesRequest({ city: encodedParam });
+
+      expect(response.body.data.length).toBe(1);
+    });
+
+    it('returns filtered offers when region param is set', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetCompaniesRequest({ region: 'pomorskie' });
+
+      expect(response.body.data.length).toBe(1);
+    });
+
+    it('returns filtered offers when location params are set', async () => {
+      await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        [],
+      );
+
+      // Point in Cracow
+      const { lat, long } = BRANCH_ONE.address;
+
+      const response = await sendGetCompaniesRequest({ lat, long, range: 4 });
+
+      expect(response.body.data.length).toBe(2);
     });
   });
 
   // -------------------------- GET COMPANIES - Invalid Request -------------------------- \\
 
   describe('/companies (GET) - Invalid Request', () => {
-    it('returns 400 status when query params are invalid', async () => {
-      const { accessToken } = await createActiveUser(USER_ONE);
-      await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
-      const response = await sendGetCompaniesRequest('page', 'limit');
-      expect(response.status).toBe(400);
-    });
+    it.each`
+      invalidParam    | value
+      ${'limit'}      | ${300}
+      ${'pageNumber'} | ${-300}
+      ${'lat'}        | ${300}
+      ${'long'}       | ${300}
+      ${'range'}      | ${300}
+    `(
+      'returns 400 status code when provided $invalidParam param is invalid ',
+      async ({ invalidParam, value }) => {
+        await createUserAndCompanyWithOffers(
+          USER_ONE,
+          COMPANY_ONE,
+          COMPANY_ONE_BRANCHES,
+          COMPANY_ONE_OFFERS,
+        );
+
+        const params = {};
+        params[invalidParam] = value;
+
+        const response = await sendGetCompaniesRequest(params);
+
+        expect(response.status).toBe(400);
+      },
+    );
   });
 
   // ------------------------- GET USER COMPANY - Valid Request -------------------------- \\

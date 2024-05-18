@@ -3,6 +3,8 @@ import { Expose } from 'class-transformer';
 
 import { CompanyEntity } from '../../../entities';
 
+import { CategoryPreviewDto } from '../../../category/dto/response';
+
 export class CompanyPreviewDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
   @Expose()
@@ -26,7 +28,22 @@ export class CompanyPreviewDto {
   @Expose()
   public size: number;
 
-  constructor(company: CompanyEntity) {
-    Object.assign(this, company);
+  @ApiProperty({ isArray: true, example: ['Cracov', 'Warsaw'] })
+  @Expose()
+  public locations: string[];
+
+  @ApiProperty({ isArray: true, type: CategoryPreviewDto })
+  @Expose()
+  public categories: CategoryPreviewDto[];
+
+  constructor({ categories, branches, ...companyData }: CompanyEntity) {
+    this.locations = [
+      ...new Set(branches.map((branch) => branch.address.city)),
+    ];
+
+    this.categories = categories.map(
+      (category) => new CategoryPreviewDto(category),
+    );
+    Object.assign(this, companyData);
   }
 }

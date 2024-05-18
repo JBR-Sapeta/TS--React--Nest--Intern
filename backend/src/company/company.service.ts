@@ -23,6 +23,11 @@ import {
   UserRepository,
 } from '../repositories';
 import { SuccessMessageDto } from '../common/classes';
+import {
+  AddressParams,
+  CategoriesParams,
+  PaginationParams,
+} from '../common/classes/params';
 import { FILE_SIZE_LIMIT } from '../common/config';
 import { Roles } from '../common/enums';
 import { imageFileValidator } from '../common/functions';
@@ -347,15 +352,20 @@ export class CompanyService {
 
   // ----------------------------------------------------------------------- \\\
   public async getCompanies(
-    pageNumber: number,
-    limit: number,
+    categoreisParams: CategoriesParams,
+    locationParams: AddressParams,
+    paginationParams: PaginationParams,
   ): Promise<CompaniesPreviewResponseDto> {
     const [data, count] = await this.companyRepository.getCompanies(
-      pageNumber,
-      limit,
+      categoreisParams,
+      locationParams,
+      paginationParams,
     );
 
-    return new CompaniesPreviewResponseDto({ limit, pageNumber, count }, data);
+    return new CompaniesPreviewResponseDto(
+      { ...paginationParams, count },
+      data,
+    );
   }
 
   // ----------------------------------------------------------------------- \\\

@@ -76,10 +76,10 @@ export class OfferController {
   @ApiResponse(RES.GET_OFFERS.BAD_REQUEST)
   @ApiResponse(RES.GET_OFFERS.INTERNAL_SERVER_ERROR)
   getOffers(
-    @Query() paginationParams: PaginationParams,
-    @Query() offerParams: OfferParams,
-    @Query() locationParams: AddressParams,
     @Query() categoreisParams: CategoriesParams,
+    @Query() locationParams: AddressParams,
+    @Query() offerParams: OfferParams,
+    @Query() paginationParams: PaginationParams,
   ): Promise<OfferPreviewsResponseDto> {
     return this.offerService.getOffers(
       paginationParams,

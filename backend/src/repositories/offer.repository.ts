@@ -49,7 +49,7 @@ export class OfferRepository extends Repository<OfferEntity> {
   // ----------------------------------------------------------------------- \\
   public async getOffers(
     offerParams: OfferParams,
-    categoreis: CategoriesParams,
+    categoreisParams: CategoriesParams,
     locationParams: AddressParams,
     paginationParams: PaginationParams,
   ): Promise<[OfferEntity[], number]> {
@@ -65,11 +65,13 @@ export class OfferRepository extends Repository<OfferEntity> {
         .andWhere('offer.expirationDate > :now', { now });
 
       addOfferParamsToQueryBuilder(query, offerParams);
-      addCategoriesParamsToQueryBuilder(query, categoreis);
+      addCategoriesParamsToQueryBuilder(query, categoreisParams);
       addAddressParamsToQueryBuilder(query, locationParams);
       addPaginationParamsToQueryBuilder(query, paginationParams);
 
-      const offers = await query.getManyAndCount();
+      const offers = await query
+        .orderBy('company.createdAt', 'DESC')
+        .getManyAndCount();
 
       return offers;
     } catch (error) {

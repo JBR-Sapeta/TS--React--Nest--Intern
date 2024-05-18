@@ -724,7 +724,9 @@ describe('OfferController (e2e)', () => {
         COMPANY_TWO_OFFERS,
       );
 
-      const response = await sendGetOffersRequest({ city: 'Kraków' });
+      const encodedParam = encodeURIComponent('Kraków');
+
+      const response = await sendGetOffersRequest({ city: encodedParam });
 
       expect(response.body.data.length).toBe(3);
     });
@@ -812,7 +814,7 @@ describe('OfferController (e2e)', () => {
       expect(response.body.data.length).toBe(0);
     });
 
-    it('returns filtered offers when operatingMode param is set', async () => {
+    it('returns filtered offers when isPaid param is set', async () => {
       await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,

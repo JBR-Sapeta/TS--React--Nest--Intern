@@ -10,6 +10,14 @@ import { QueryRunner, Repository } from 'typeorm';
 
 import { CategoryEntity, CompanyEntity, UserEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
+import {
+  AddressParams,
+  CategoriesParams,
+  PaginationParams,
+  addAddressParamsToQueryBuilder,
+  addCategoriesParamsToQueryBuilder,
+  addPaginationParamsToQueryBuilder,
+} from '../common/classes/params';
 import { PostgresqlErrorCode } from '../common/enums';
 import { Nullable } from '../common/types';
 
@@ -155,17 +163,25 @@ export class CompanyRepository extends Repository<CompanyEntity> {
 
   // ----------------------------------------------------------------------- \\
   public async getCompanies(
-    pageNumber: number,
-    limit: number,
+    categoreisParams: CategoriesParams,
+    locationParams: AddressParams,
+    paginationParams: PaginationParams,
   ): Promise<[CompanyEntity[], number]> {
     try {
-      const companies = await this.findAndCount({
-        order: {
-          createdAt: 'DESC',
-        },
-        skip: pageNumber * limit,
-        take: limit,
-      });
+      const query = this.createQueryBuilder('company')
+        .leftJoinAndSelect('company.categories', 'category')
+        .leftJoinAndSelect('company.branches', 'branch')
+        .leftJoinAndSelect('branch.address', 'address')
+        .where('company.is_verified = :isVerified', { isVerified: true });
+
+      addCategoriesParamsToQueryBuilder(query, categoreisParams);
+      addAddressParamsToQueryBuilder(query, locationParams);
+      addPaginationParamsToQueryBuilder(query, paginationParams);
+
+      const companies = await query
+        .orderBy('company.createdAt', 'DESC')
+        .getManyAndCount();
+
       return companies;
     } catch (error) {
       this.logger.error(
