@@ -107,6 +107,15 @@ export class CompanyController {
   @Get('/users/:usersId')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiOperation(OPERATION.GET_USER_COMPANY)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.USER_ID)
+  @ApiResponse(RES.GET_USER_COMPANY.OK)
+  @ApiResponse(RES.GET_USER_COMPANY.UNAUTHORIZED)
+  @ApiResponse(RES.GET_USER_COMPANY.FORBIDDEN)
+  @ApiResponse(RES.GET_USER_COMPANY.NOT_FOUND)
+  @ApiResponse(RES.GET_USER_COMPANY.INTERNAL_SERVER_ERROR)
   getUserCompany(
     @Param('usersId') usersIdParam: string,
     @GetAccessTokenPayload() { userId }: JwtPayload,

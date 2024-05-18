@@ -9,6 +9,7 @@ import {
 
 import {
   CompaniesPreviewResponseDto,
+  FullCompanyResponseDto,
   PartialCompanyDto,
 } from '../dto/response';
 import {
@@ -33,6 +34,17 @@ export const RES = {
       description: 'Success',
       type: PartialCompanyDto,
     },
+    NOT_FOUND,
+    INTERNAL_SERVER_ERROR,
+  },
+  GET_USER_COMPANY: {
+    OK: {
+      status: 200,
+      description: 'Success',
+      type: FullCompanyResponseDto,
+    },
+    UNAUTHORIZED,
+    FORBIDDEN,
     NOT_FOUND,
     INTERNAL_SERVER_ERROR,
   },
