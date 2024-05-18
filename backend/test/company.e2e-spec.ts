@@ -176,16 +176,17 @@ describe('CompanyController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login({
-      email: userData.email,
-      password: userData.password,
-    });
 
     await companyService.createCompany(updatedUser, companyData);
     const company = await companyRepository.getCompanyBySlug(companyData.slug);
 
     company.isVerified = true;
     await companyRepository.save(company);
+
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
 
     // Create branches
     let branches = [];
@@ -313,6 +314,14 @@ describe('CompanyController (e2e)', () => {
   const sendGetCompaniesRequest = async (pageNumber: any, limit: any) => {
     const response = await request(app.getHttpServer())
       .get(`/companies?pageNumber=${pageNumber}&limit=${limit}`)
+      .send();
+    return response;
+  };
+
+  const sendGetUserCompanyRequest = async (token: string, userId: string) => {
+    const response = await request(app.getHttpServer())
+      .get(`/companies/users/${userId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send();
     return response;
   };
@@ -670,6 +679,139 @@ describe('CompanyController (e2e)', () => {
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const response = await sendGetCompaniesRequest('page', 'limit');
       expect(response.status).toBe(400);
+    });
+  });
+
+  // ------------------------- GET USER COMPANY - Valid Request -------------------------- \\
+
+  describe('/companies/users/:userId (GET) - Invalid Request', () => {
+    it('returns 200 status code', async () => {
+      const { accessToken, user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns success message', async () => {
+      const { accessToken, user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(response.body.message).toBeTruthy();
+    });
+
+    it('returns proper response object', async () => {
+      const { accessToken, user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(Object.keys(response.body)).toEqual([
+        'statusCode',
+        'message',
+        'error',
+        'data',
+      ]);
+    });
+
+    it('returns company data', async () => {
+      const { accessToken, user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const { body } = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(Object.keys(body.data)).toEqual([
+        'id',
+        'name',
+        'slug',
+        'email',
+        'phoneNumber',
+        'logoUrl',
+        'mainPhotoUrl',
+        'description',
+        'size',
+        'isVerified',
+        'createdAt',
+        'branches',
+        'categories',
+      ]);
+    });
+  });
+
+  // ------------------------ GET USER COMPANY - Invalid Request ------------------------- \\
+
+  describe('/companies/users/:userId  (GET) - Invalid Request', () => {
+    it('returns 400 status when userId param is not a valid uuid', async () => {
+      const { accessToken } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetUserCompanyRequest(
+        accessToken,
+        'invalidParam',
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    it('returns 401 status code when access token is invalid', async () => {
+      const { user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+
+      const response = await sendGetUserCompanyRequest(
+        INVALID_ACCESS_TOKEN,
+        user.id,
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('returns 403 status code when userId param does not match access token param', async () => {
+      const { user } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
+      const { accessToken } = await createActiveUser(USER_TWO);
+
+      const response = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 403 status code when user does not have company', async () => {
+      const { accessToken, user } = await createActiveUser(USER_ONE);
+
+      const response = await sendGetUserCompanyRequest(accessToken, user.id);
+
+      expect(response.status).toBe(403);
     });
   });
 
@@ -1554,7 +1696,7 @@ describe('CompanyController (e2e)', () => {
   // ------------------------------ DELETE - Invalid Request ----------------------------- \\
 
   describe('/companies/:companyId/delete (DELETE) - Invalid Request', () => {
-    it('returns 400 status when companyId param is not uuid', async () => {
+    it('returns 400 status when companyId param is not a valid uuid', async () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
       const response = await sendDeleteCompanyRequest(

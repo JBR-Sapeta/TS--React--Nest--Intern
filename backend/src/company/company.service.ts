@@ -147,13 +147,9 @@ export class CompanyService {
 
     const { categories: categoriesDto, ...companyData } = updateCompanyDto;
 
-    console.log(categoriesDto);
-
     if (isNotNil(categoriesDto)) {
       const categories =
         await this.categoriesRepository.getCategoriesByIds(categoriesDto);
-
-      console.log(categories);
 
       if (isEmpty(categories)) {
         throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
@@ -379,10 +375,6 @@ export class CompanyService {
 
     if (isNil(company)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
-    }
-
-    if (company.userId !== userId) {
-      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     return new FullCompanyResponseDto({}, company);

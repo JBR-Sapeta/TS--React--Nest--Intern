@@ -105,6 +105,7 @@ export class CompanyController {
   }
 
   @Get('/users/:usersId')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_USER_COMPANY)
@@ -117,7 +118,7 @@ export class CompanyController {
   @ApiResponse(RES.GET_USER_COMPANY.NOT_FOUND)
   @ApiResponse(RES.GET_USER_COMPANY.INTERNAL_SERVER_ERROR)
   getUserCompany(
-    @Param('usersId') usersIdParam: string,
+    @Param('usersId', ParseUUIDPipe) usersIdParam: string,
     @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<FullCompanyResponseDto> {
     return this.companyService.getUserCompany(userId, usersIdParam);
