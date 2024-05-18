@@ -53,13 +53,16 @@ export class OfferRepository extends Repository<OfferEntity> {
     locationParams: AddressParams,
     paginationParams: PaginationParams,
   ): Promise<[OfferEntity[], number]> {
+    const now = new Date();
+
     try {
       const query = this.createQueryBuilder('offer')
         .leftJoinAndSelect('offer.categories', 'category')
         .leftJoinAndSelect('offer.company', 'company')
         .leftJoinAndSelect('offer.branches', 'branch')
         .leftJoinAndSelect('branch.address', 'address')
-        .where('offer.is_active = :isActive', { isActive: true });
+        .where('offer.is_active = :isActive', { isActive: true })
+        .andWhere('offer.expirationDate > :now', { now });
 
       addOfferParamsToQueryBuilder(query, offerParams);
       addCategoriesParamsToQueryBuilder(query, categoreis);

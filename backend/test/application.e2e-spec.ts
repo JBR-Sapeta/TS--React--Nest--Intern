@@ -1276,6 +1276,7 @@ describe('ApplicationController (e2e)', () => {
         'companyId',
         'companyName',
         'logoUrl',
+        'isActive',
       ]);
     });
 

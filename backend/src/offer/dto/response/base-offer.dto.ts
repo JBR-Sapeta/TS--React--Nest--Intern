@@ -28,6 +28,10 @@ export class BaseOfferDto {
   @Expose()
   public logoUrl: string;
 
+  @ApiProperty({ example: true })
+  @Expose()
+  public isActive: boolean;
+
   constructor({ company, ...offerData }: OfferEntity) {
     this.companyId = company.id;
     this.companyName = company.name;
