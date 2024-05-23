@@ -120,7 +120,9 @@ export class CompanyService {
       try {
         await this.s3Service.deleteApplicationFile(fileKey);
       } catch {
-        this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+        this.logger.error(
+          `S3Service - deleteApplicationFile - fileKey:$${fileKey}`,
+        );
       }
     }
 
@@ -229,7 +231,7 @@ export class CompanyService {
       }
     } catch (error) {
       if (isNotNil(newLogUrl)) {
-        this.logger.error(`S3 - uploadImageFile - fileKey:$${logoKey}`);
+        this.logger.error(`S3Service - uploadImageFile - fileKey:$${logoKey}`);
       }
 
       throw error;
@@ -239,10 +241,12 @@ export class CompanyService {
       await this.companyRepository.save(company);
     } catch (error) {
       if (isNotNil(newLogUrl)) {
-        this.logger.error(`S3 - uploadImageFile - fileKey:$${logoKey}`);
+        this.logger.error(`S3Service - uploadImageFile - fileKey:$${logoKey}`);
       }
       if (isNotNil(newMainPhotoUrl)) {
-        this.logger.error(`S3 - uploadImageFile - fileKey:$${mainPhotoKey}`);
+        this.logger.error(
+          `S3Service - uploadImageFile - fileKey:$${mainPhotoKey}`,
+        );
       }
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
@@ -253,7 +257,7 @@ export class CompanyService {
       }
     } catch {
       const fileKey = this.s3Service.getKeyFromUrl(oldLogoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+      this.logger.error(`S3Service - deleteImageFile - fileKey:$${fileKey}`);
     }
 
     try {
@@ -262,7 +266,7 @@ export class CompanyService {
       }
     } catch {
       const fileKey = this.s3Service.getKeyFromUrl(oldMainPhotoUrl);
-      this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+      this.logger.error(`S3Service - deleteImageFile - fileKey:$${fileKey}`);
     }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_UPDATED });
@@ -329,7 +333,9 @@ export class CompanyService {
           await this.s3Service.deleteImageFile(oldUrl);
         } catch {
           const fileKey = this.s3Service.getKeyFromUrl(oldUrl);
-          this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+          this.logger.error(
+            `S3Service - deleteImageFile - fileKey:$${fileKey}`,
+          );
         }
       }
     }
@@ -441,7 +447,9 @@ export class CompanyService {
       try {
         await this.s3Service.deleteApplicationFile(fileKey);
       } catch {
-        this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+        this.logger.error(
+          `S3Service - deleteApplicationFile - fileKey:$${fileKey}`,
+        );
       }
     }
 
@@ -454,7 +462,7 @@ export class CompanyService {
         }
       } catch {
         const fileKey = this.s3Service.getKeyFromUrl(image);
-        this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+        this.logger.error(`S3Service - deleteImageFile - fileKey:$${fileKey}`);
       }
     }
 

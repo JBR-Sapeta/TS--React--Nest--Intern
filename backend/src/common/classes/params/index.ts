@@ -1,3 +1,4 @@
+export { DateParams } from './date-query-params';
 export {
   OfferParams,
   addOfferParamsToQueryBuilder,

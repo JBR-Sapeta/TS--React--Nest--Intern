@@ -28,7 +28,14 @@ export const LoggerFactory = (appName: string): LoggerService => {
           }),
         ),
       }),
-      new winston.transports.File({ filename, level: 'error' }),
+      new winston.transports.File({
+        filename,
+        level: 'error',
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+        ),
+      }),
     ],
   });
 };

@@ -34,7 +34,6 @@ export class ApplicationRepository extends Repository<ApplicationEntity> {
       const createdApplication = await this.save(application);
       return createdApplication;
     } catch (error) {
-      this.logger.error(`S3 - createApplication - fileKey:$${fileKey}`);
       this.logger.error(
         ApplicationRepository.name + ` - createApplication `,
         error.stack,

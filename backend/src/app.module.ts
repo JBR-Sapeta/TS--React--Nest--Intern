@@ -27,6 +27,7 @@ import { CategoryModule } from './category/category.module';
 import { OfferModule } from './offer/offer.module';
 import { ApplicationModule } from './application/application.module';
 import { S3Module } from './s3/s3.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { S3Module } from './s3/s3.module';
         return dataSource;
       },
     }),
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

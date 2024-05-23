@@ -144,7 +144,9 @@ export class UserService {
         try {
           await this.s3Service.deleteApplicationFile(fileKey);
         } catch {
-          this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+          this.logger.error(
+            `S3Service - deleteApplicationFile - fileKey:$${fileKey}`,
+          );
         }
       }
 
@@ -157,7 +159,9 @@ export class UserService {
           }
         } catch {
           const fileKey = this.s3Service.getKeyFromUrl(image);
-          this.logger.error(`S3 - deleteImageFile - fileKey:$${fileKey}`);
+          this.logger.error(
+            `S3Service - deleteImageFile - fileKey:$${fileKey}`,
+          );
         }
       }
     }
@@ -172,7 +176,9 @@ export class UserService {
         try {
           await this.s3Service.deleteApplicationFile(fileKey);
         } catch {
-          this.logger.error(`S3 - deleteApplicationFile - fileKey:$${fileKey}`);
+          this.logger.error(
+            `S3Service - deleteApplicationFile - fileKey:$${fileKey}`,
+          );
         }
       }
     }

@@ -1,6 +1,9 @@
 import {
   ForbiddenException,
+  Inject,
   Injectable,
+  Logger,
+  LoggerService,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -37,6 +40,7 @@ export class AuthService {
   private resetTokenExpiartionTime: number;
 
   constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
@@ -123,6 +127,11 @@ export class AuthService {
     const isValidToken = equals(refreshToken, user.refreshToken);
 
     if (not(isValidToken)) {
+      this.logger.error(
+        AuthService.name + ' - refreshToken',
+        `ForbiddenException - ${userId}`,
+      );
+
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
