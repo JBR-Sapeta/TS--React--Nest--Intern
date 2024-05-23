@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { isNil, not } from 'ramda';
 
 import { SuccessMessageDto } from '../common/classes';
 import { DateParams } from '../common/classes/params';
+import { Nullable } from '../common/types';
 
 import { ErrorLog, ErrorType } from './utils/type';
 import {
@@ -12,8 +14,6 @@ import {
   ErrorBucketsResponseDto,
   ErrorDto,
 } from './dto/response';
-import { isNil, not } from 'ramda';
-import { Nullable } from 'src/common/types';
 
 const LOGGER_FILE_PATH = path.join('.', 'error.dev.log');
 
