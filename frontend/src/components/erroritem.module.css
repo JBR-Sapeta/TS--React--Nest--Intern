@@ -1,0 +1,49 @@
+.container {
+  width: 100%;
+  margin-top: 16px;
+  padding: 8px;
+  display: block;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #bcc1c2;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.dataBlock {
+  padding: 0 8px;
+  max-width: 100%;
+  display: flex;
+  gap: 16px;
+}
+
+.bold {
+  font-size: 18px;
+}
+
+.std {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.msgHeader {
+  margin-top: 16px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.msg {
+  max-width: 1170px;
+  padding: 4px;
+  display: block;
+  word-wrap: break-word; /* Older name, still widely supported */
+  overflow-wrap: break-word; /* Modern name, recommended */
+}
+
+.hr {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  border: none;
+  height: 1px;
+  background-color: #f2f2f3;
+}

@@ -7,7 +7,7 @@ describe('App', () => {
   it('renders h1 with "Stażysta" text', () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Stażysta'
+      'Intern'
     );
   });
 });

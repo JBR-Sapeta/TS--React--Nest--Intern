@@ -1,0 +1,88 @@
+.container {
+  padding: 8px 0;
+}
+
+.header {
+  display: flex;
+  gap: 24px;
+
+  & h4 {
+    font-size: 20px;
+  }
+}
+
+.dataContainer {
+  width: 100%;
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f2f2f3;
+}
+
+.errorsCount {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+}
+
+.orangeButton {
+  padding: 4px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #f57a00;
+  color: #fff;
+  place-self: flex-end end;
+  border: 2px solid #f57a00;
+
+  &:hover {
+    background-color: #f2f2f3;
+    color: #f57a00;
+    box-shadow: rgb(0 0 0 / 8%) 0 4px 12px;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: #f57a00;
+    color: #fff;
+    transform: translateY(1px);
+  }
+}
+
+.redButton {
+  padding: 4px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #e14032;
+  color: #fff;
+  place-self: flex-end end;
+  border: 2px solid #e14032;
+
+  &:hover {
+    background-color: #f2f2f3;
+    color: #e14032;
+    box-shadow: rgb(0 0 0 / 8%) 0 4px 12px;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    background-color: #e14032;
+    color: #fff;
+    transform: translateY(1px);
+  }
+}
+
+.messages {
+  max-width: 100%;
+}
+
+.emptyState {
+  margin-top: 16px;
+  padding: 8px;
+  border: 1px solid #bcc1c2;
+  background-color: #fff;
+  border-radius: 8px;
+}
