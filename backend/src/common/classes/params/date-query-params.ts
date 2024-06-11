@@ -11,7 +11,7 @@ export class DateParams {
   })
   @IsOptional()
   @Matches(
-    /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(.\d{3})?(Z|([+-]\d{2}:\d{2}))?)?$/,
+    /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?(.\d{3})?(Z|([+-]\d{2}:\d{2}))?)?$/,
     { message: `Value does not match ISO-8601 format` },
   )
   startDate?: string;
@@ -24,7 +24,7 @@ export class DateParams {
   })
   @IsOptional()
   @Matches(
-    /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(.\d{3})?(Z|([+-]\d{2}:\d{2}))?)?$/,
+    /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2})?(.\d{3})?(Z|([+-]\d{2}:\d{2}))?)?$/,
     { message: `Value does not match ISO-8601 format` },
   )
   endDate?: string;

@@ -79,8 +79,6 @@ export class AdminService {
       console.error(error);
     }
 
-    console.log(ERROR_MAP);
-
     const lines = fileContent.split('\n');
 
     for (const line of lines) {
