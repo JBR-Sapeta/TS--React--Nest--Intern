@@ -47,6 +47,9 @@ export class UserEntity {
   @Column({ default: false })
   public isActive: boolean;
 
+  @Column({ default: false })
+  public hasBan: boolean;
+
   @CreateDateColumn()
   public createdAt: Date;
 

@@ -75,6 +75,7 @@ export const PL_ERRORS: ErrorTranslations = {
   FORBIDDEN_APPLICATION_DUPLICATION: 'Już aplikowałeś na to stanowisko.',
   FORBIDDEN_BRANCH_IN_USE:
     'Odział firmy przypisany jest do oferty. Upewnij się, że żadna oferta nie jest przypisana do tego oddziału.',
+  FORBIDDEN_COMPANY_OWNER_HAS_BAN: 'Konto właściciela firmy zostało zbanowane.',
   FORBIDDEN_INACTIVE_ACCOUNT:
     'Twoje konto nie zostało aktywowane, sprawdź pocztę email.',
   FORBIDDEN_ONE_COMPANY_PER_USER: 'To konto posiada już firmowy profil.',

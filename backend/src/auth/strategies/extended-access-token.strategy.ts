@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
+import { UserEntity } from '../../entities';
 import { UserRepository } from '../../repositories';
 
 import { ENV_KEYS } from '../../common/constants';
@@ -23,7 +24,7 @@ export class ExtendedAccessTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: JwtPayload): Promise<UserEntity> {
     const { userId } = payload;
     const user = await this.userRepository.getUserById(userId);
 

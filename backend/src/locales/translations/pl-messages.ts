@@ -1,6 +1,11 @@
 import { MessageTranslations } from '../translation.interface';
 
 export const PL_MESSAGES: MessageTranslations = {
+  ADMIN_BAN_USER: 'Użytkownik została zbanowany.',
+  ADMIN_UNBAN_USER: 'Użytkownik został odbanowany.',
+  ADMIN_UNVERIFY_COMPANY:
+    'Status firmy został ustawiony jako niezweryfikowana.',
+  ADMIN_VERIFY_COMPANY: 'Firma została zweryfikowana.',
   AUTH_ACCOUNT_ACTIVATION: 'Twoje konto zostało aktywowane.',
   AUTH_ACCOUNT_CREATED: 'Konto zostało utworzone. Sprawdź pocztę E-mail.',
   AUTH_ACCOUNT_RECOVERY:

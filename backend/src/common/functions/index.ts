@@ -5,3 +5,4 @@ export { exceptionFactory } from './exception-factory';
 export { imageFileFilter } from './image-file-filter';
 export { imageFileValidator } from './image-file-validator';
 export { transformDate } from './transform-date';
+export { hasRole } from './has-role';

@@ -47,6 +47,7 @@ export interface ErrorTranslations {
   FORBIDDEN_ACCOUNT_ACTIVATION: string;
   FORBIDDEN_APPLICATION_DUPLICATION: string;
   FORBIDDEN_BRANCH_IN_USE: string;
+  FORBIDDEN_COMPANY_OWNER_HAS_BAN: string;
   FORBIDDEN_INACTIVE_ACCOUNT: string;
   FORBIDDEN_ONE_COMPANY_PER_USER: string;
   FORBIDDEN_RESET_TOKEN: string;
@@ -71,6 +72,10 @@ export interface ErrorTranslations {
 }
 
 export interface MessageTranslations {
+  ADMIN_BAN_USER: string;
+  ADMIN_UNBAN_USER: string;
+  ADMIN_VERIFY_COMPANY: string;
+  ADMIN_UNVERIFY_COMPANY: string;
   AUTH_ACCOUNT_ACTIVATION: string;
   AUTH_ACCOUNT_CREATED: string;
   AUTH_ACCOUNT_RECOVERY: string;

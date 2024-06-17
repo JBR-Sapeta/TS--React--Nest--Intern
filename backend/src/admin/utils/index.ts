@@ -1,1 +1,2 @@
-export { ErrorType } from './type';
+export { ErrorType, ErrorLog } from './type';
+export * from './create-error-map';

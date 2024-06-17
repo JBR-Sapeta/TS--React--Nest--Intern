@@ -1,8 +1,23 @@
-import { Controller, Get, HttpCode, HttpStatus, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SuccessMessageDto } from '../common/classes';
+import { Roles } from '../common/enums';
 import { DateParams } from '../common/classes/params';
+import { UserEntity } from '../entities';
+
+import { GetAccessTokentExtendedPayload } from '../auth/decorators';
+import { ExtendedAccessTokenGuard, RolesGuard } from '../auth/guards';
 
 import { AdminService } from './admin.service';
 
@@ -12,8 +27,35 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get('/logs')
+  @UseGuards(RolesGuard(Roles.ADMIN))
+  @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
-  rootPage(@Query() dateParams: DateParams): Promise<SuccessMessageDto> {
-    return this.adminService.getLogs(dateParams);
+  rootPage(
+    @Query() dateParams: DateParams,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    return this.adminService.getLogs({ ...dateParams, user });
+  }
+
+  @Post('/companies/:companyId/is-verified')
+  @UseGuards(RolesGuard(Roles.ADMIN))
+  @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  verifyCompany(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    return this.adminService.toggleIsVerified(companyId, user);
+  }
+
+  @Post('/users/:userId/has-ban')
+  @UseGuards(RolesGuard(Roles.ADMIN))
+  @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  updateHasBan(
+    @Param('userId', ParseUUIDPipe) usersIdParam: string,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    return this.adminService.toggleHasBan(usersIdParam, user);
   }
 }

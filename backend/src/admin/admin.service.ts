@@ -1,61 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  Logger,
+  LoggerService,
+  NotFoundException,
+} from '@nestjs/common';
 import * as fs from 'fs';
-import * as path from 'path';
 import { isNil, not } from 'ramda';
 
-import { SuccessMessageDto } from '../common/classes';
 import { DateParams } from '../common/classes/params';
+import { SuccessMessageDto } from '../common/classes';
+import { Roles } from '../common/enums';
+import { hasRole } from '../common/functions';
 import { Nullable } from '../common/types';
+import { UserEntity } from '../entities';
+import { PL_ERRORS, PL_MESSAGES } from '../locales';
+import { CompanyRepository, UserRepository } from '../repositories';
 
-import { ErrorLog, ErrorType } from './utils/type';
+import { ErrorLog, ErrorType, LOGGER_FILE_PATH, createErrorMap } from './utils';
 import {
-  ErrorBucketDto,
   ErrorBucketsDto,
   ErrorBucketsResponseDto,
   ErrorDto,
 } from './dto/response';
 
-const LOGGER_FILE_PATH = path.join('.', 'error.dev.log');
-
-function createErrorMap() {
-  return new Map([
-    ['AppService', new ErrorBucketDto('AppService')],
-    ['AddressRepository', new ErrorBucketDto('AddressRepository')],
-    ['ApplicationService', new ErrorBucketDto('ApplicationService')],
-    ['ApplicationRepository', new ErrorBucketDto('ApplicationRepository')],
-    ['AuthService', new ErrorBucketDto('AuthService')],
-    ['BranchService', new ErrorBucketDto('BranchService')],
-    ['BranchRepository', new ErrorBucketDto('BranchRepository')],
-    ['CacheService', new ErrorBucketDto('CacheService')],
-    ['CategoryService', new ErrorBucketDto('CategoryService')],
-    ['CategoryRepository', new ErrorBucketDto('CategoryRepository')],
-    ['CompanyService', new ErrorBucketDto('CompanyService')],
-    ['CompanyRepository', new ErrorBucketDto('CompanyRepository')],
-    ['GeocoderService', new ErrorBucketDto('GeocoderService')],
-    ['MailService', new ErrorBucketDto('MailService')],
-    ['OfferService', new ErrorBucketDto('OfferService')],
-    ['OfferRepository', new ErrorBucketDto('OfferRepository')],
-    ['OperatingModeRepository', new ErrorBucketDto('OperatingModeRepository')],
-    ['S3Service', new ErrorBucketDto('S3Service')],
-    ['UserService', new ErrorBucketDto('UserService')],
-    ['UserRepository', new ErrorBucketDto('UserRepository')],
-    ['RoleRepository', new ErrorBucketDto('RoleRepository')],
-    ['TypeOrmModule', new ErrorBucketDto('TypeOrmModule')],
-    ['ExceptionsHandler', new ErrorBucketDto('ExceptionsHandler')],
-    ['UnknownException', new ErrorBucketDto('UnknownException')],
-    [
-      'EmploymentTypeRepository',
-      new ErrorBucketDto('EmploymentTypeRepository'),
-    ],
-  ]);
-}
-
 @Injectable()
 export class AdminService {
+  constructor(
+    @Inject(Logger) private readonly logger: LoggerService,
+    private readonly companyRepository: CompanyRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
+
   public async getLogs({
     startDate,
     endDate,
-  }: DateParams): Promise<SuccessMessageDto> {
+    user,
+  }: DateParams & { user: UserEntity }): Promise<SuccessMessageDto> {
+    if (!hasRole(user.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
+    }
+
     const ERROR_MAP = createErrorMap();
     let fileContent = '';
     const unknownExceptions: string[] = [];
@@ -264,5 +250,73 @@ export class AdminService {
       { message: 'Success' },
       new ErrorBucketsDto({ buckets, unknownExceptions }),
     );
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async toggleIsVerified(companyId: string, user: UserEntity) {
+    if (!hasRole(user.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
+    }
+
+    const company = await this.companyRepository.getCompanyById({
+      companyId,
+      user: true,
+    });
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    const newValue = !company.isVerified;
+
+    if (newValue && company.user.hasBan) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_COMPANY_OWNER_HAS_BAN);
+    }
+
+    await this.companyRepository.updateCompany(company, {
+      isVerified: newValue,
+    });
+
+    const message = newValue
+      ? PL_MESSAGES.ADMIN_VERIFY_COMPANY
+      : PL_MESSAGES.ADMIN_UNVERIFY_COMPANY;
+
+    return new SuccessMessageDto({ message });
+  }
+
+  // ----------------------------------------------------------------------- \\\
+  public async toggleHasBan(userIdParam: string, user: UserEntity) {
+    console.log(user.roles);
+
+    if (!hasRole(user.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
+    }
+
+    const userToUpdate = await this.userRepository.getUserById(userIdParam);
+
+    if (isNil(userToUpdate)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (userToUpdate.id === user.id) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    if (hasRole(userToUpdate.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const newValue = !userToUpdate.hasBan;
+
+    await this.userRepository.updateUser(userToUpdate, {
+      hasBan: newValue,
+      refreshToken: null,
+    });
+
+    const message = newValue
+      ? PL_MESSAGES.ADMIN_BAN_USER
+      : PL_MESSAGES.ADMIN_UNBAN_USER;
+
+    return new SuccessMessageDto({ message });
   }
 }

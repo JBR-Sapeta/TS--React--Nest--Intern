@@ -94,6 +94,22 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async updateUser(
+    user: UserEntity,
+    fieldsToUpdate: Partial<UserEntity>,
+  ): Promise<UserEntity> {
+    try {
+      Object.assign(user, fieldsToUpdate);
+      const updatedUser = await this.save(user);
+      return updatedUser;
+    } catch (error) {
+      this.logger.error(UserRepository.name + ' - updateUser', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async updateUserTransaction(
     user: UserEntity,
     fieldsToUpdate: Partial<UserEntity>,
