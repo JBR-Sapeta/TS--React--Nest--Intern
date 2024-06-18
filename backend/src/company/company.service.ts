@@ -362,7 +362,7 @@ export class CompanyService {
     locationParams: AddressParams,
     paginationParams: PaginationParams,
   ): Promise<CompaniesPreviewResponseDto> {
-    const [data, count] = await this.companyRepository.getCompanies(
+    const [data, count] = await this.companyRepository.getVerifiedCompanies(
       categoreisParams,
       locationParams,
       paginationParams,

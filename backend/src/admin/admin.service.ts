@@ -9,7 +9,12 @@ import {
 import * as fs from 'fs';
 import { isNil, not } from 'ramda';
 
-import { DateParams } from '../common/classes/params';
+import {
+  CompanyAdminParams,
+  CompanyParams,
+  DateParams,
+  PaginationParams,
+} from '../common/classes/params';
 import { SuccessMessageDto } from '../common/classes';
 import { Roles } from '../common/enums';
 import { hasRole } from '../common/functions';
@@ -20,6 +25,7 @@ import { CompanyRepository, UserRepository } from '../repositories';
 
 import { ErrorLog, ErrorType, LOGGER_FILE_PATH, createErrorMap } from './utils';
 import {
+  CompaniesAdminResponseDto,
   ErrorBucketsDto,
   ErrorBucketsResponseDto,
   ErrorDto,
@@ -37,7 +43,7 @@ export class AdminService {
     startDate,
     endDate,
     user,
-  }: DateParams & { user: UserEntity }): Promise<SuccessMessageDto> {
+  }: DateParams & { user: UserEntity }): Promise<ErrorBucketsResponseDto> {
     if (!hasRole(user.roles, Roles.ADMIN)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
     }
@@ -252,8 +258,11 @@ export class AdminService {
     );
   }
 
-  // ----------------------------------------------------------------------- \\\
-  public async toggleIsVerified(companyId: string, user: UserEntity) {
+  // ----------------------------------------------------------------------- \\
+  public async toggleIsVerified(
+    companyId: string,
+    user: UserEntity,
+  ): Promise<SuccessMessageDto> {
     if (!hasRole(user.roles, Roles.ADMIN)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
     }
@@ -284,10 +293,11 @@ export class AdminService {
     return new SuccessMessageDto({ message });
   }
 
-  // ----------------------------------------------------------------------- \\\
-  public async toggleHasBan(userIdParam: string, user: UserEntity) {
-    console.log(user.roles);
-
+  // ----------------------------------------------------------------------- \\
+  public async toggleHasBan(
+    userIdParam: string,
+    user: UserEntity,
+  ): Promise<SuccessMessageDto> {
     if (!hasRole(user.roles, Roles.ADMIN)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
     }
@@ -318,5 +328,30 @@ export class AdminService {
       : PL_MESSAGES.ADMIN_UNBAN_USER;
 
     return new SuccessMessageDto({ message });
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getCompanies(
+    companyAdminParams: CompanyAdminParams,
+    companyParams: CompanyParams,
+    paginationParams: PaginationParams,
+    user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    if (!hasRole(user.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
+    }
+
+    const [data, count] = await this.companyRepository.getAllCompanies(
+      companyAdminParams,
+      companyParams,
+      paginationParams,
+    );
+
+    return new CompaniesAdminResponseDto({ ...paginationParams, count }, data);
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getUsers(): Promise<SuccessMessageDto> {
+    return new SuccessMessageDto({});
   }
 }

@@ -13,10 +13,15 @@ import { PL_ERRORS } from '../locales';
 import {
   AddressParams,
   CategoriesParams,
+  CompanyAdminParams,
+  CompanyParams,
   PaginationParams,
   addAddressParamsToQueryBuilder,
   addCategoriesParamsToQueryBuilder,
+  addCompanyAdminParamsToQueryBuilder,
+  addCompanyParamsToQueryBuilder,
   addPaginationParamsToQueryBuilder,
+  joinUserBaseOnCompanyAdminParams,
 } from '../common/classes/params';
 import { PostgresqlErrorCode } from '../common/enums';
 import { Nullable } from '../common/types';
@@ -162,7 +167,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getCompanies(
+  public async getVerifiedCompanies(
     categoreisParams: CategoriesParams,
     locationParams: AddressParams,
     paginationParams: PaginationParams,
@@ -185,7 +190,37 @@ export class CompanyRepository extends Repository<CompanyEntity> {
       return companies;
     } catch (error) {
       this.logger.error(
-        CompanyRepository.name + ' - getCompanies',
+        CompanyRepository.name + ' - getVerifiedCompanies',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getAllCompanies(
+    companyAdminParams: CompanyAdminParams,
+    companyParams: CompanyParams,
+    paginationParams: PaginationParams,
+  ): Promise<[CompanyEntity[], number]> {
+    try {
+      const query = this.createQueryBuilder('company');
+
+      joinUserBaseOnCompanyAdminParams(query, companyAdminParams);
+
+      addCompanyParamsToQueryBuilder(query, companyParams);
+      addCompanyAdminParamsToQueryBuilder(query, companyAdminParams);
+      addPaginationParamsToQueryBuilder(query, paginationParams);
+
+      const companies = await query
+        .orderBy('company.createdAt', 'DESC')
+        .getManyAndCount();
+
+      return companies;
+    } catch (error) {
+      this.logger.error(
+        CompanyRepository.name + ' - getAllCompanies',
         error.stack,
       );
 

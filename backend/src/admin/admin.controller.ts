@@ -13,7 +13,12 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { SuccessMessageDto } from '../common/classes';
 import { Roles } from '../common/enums';
-import { DateParams } from '../common/classes/params';
+import {
+  CompanyAdminParams,
+  CompanyParams,
+  DateParams,
+  PaginationParams,
+} from '../common/classes/params';
 import { UserEntity } from '../entities';
 
 import { GetAccessTokentExtendedPayload } from '../auth/decorators';
@@ -26,6 +31,24 @@ import { AdminService } from './admin.service';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @Get('/companies')
+  @UseGuards(RolesGuard(Roles.ADMIN))
+  @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  getCompanies(
+    @Query() companyAdminParams: CompanyAdminParams,
+    @Query() companyParams: CompanyParams,
+    @Query() paginationParams: PaginationParams,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ) {
+    return this.adminService.getCompanies(
+      companyAdminParams,
+      companyParams,
+      paginationParams,
+      user,
+    );
+  }
+
   @Get('/logs')
   @UseGuards(RolesGuard(Roles.ADMIN))
   @UseGuards(ExtendedAccessTokenGuard)
@@ -35,6 +58,14 @@ export class AdminController {
     @GetAccessTokentExtendedPayload() user: UserEntity,
   ): Promise<SuccessMessageDto> {
     return this.adminService.getLogs({ ...dateParams, user });
+  }
+
+  @Get('/users')
+  @UseGuards(RolesGuard(Roles.ADMIN))
+  @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  getUser() {
+    return this.adminService.getUsers();
   }
 
   @Post('/companies/:companyId/is-verified')
