@@ -18,6 +18,7 @@ import {
   CompanyParams,
   DateParams,
   PaginationParams,
+  UserParams,
 } from '../common/classes/params';
 import { UserEntity } from '../entities';
 
@@ -64,8 +65,12 @@ export class AdminController {
   @UseGuards(RolesGuard(Roles.ADMIN))
   @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
-  getUser() {
-    return this.adminService.getUsers();
+  getUser(
+    @Query() userParams: UserParams,
+    @Query() paginationParams: PaginationParams,
+    @GetAccessTokentExtendedPayload() user: UserEntity,
+  ) {
+    return this.adminService.getUsers(userParams, paginationParams, user);
   }
 
   @Post('/companies/:companyId/is-verified')

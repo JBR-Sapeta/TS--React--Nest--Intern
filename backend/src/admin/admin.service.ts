@@ -14,6 +14,7 @@ import {
   CompanyParams,
   DateParams,
   PaginationParams,
+  UserParams,
 } from '../common/classes/params';
 import { SuccessMessageDto } from '../common/classes';
 import { Roles } from '../common/enums';
@@ -29,6 +30,7 @@ import {
   ErrorBucketsDto,
   ErrorBucketsResponseDto,
   ErrorDto,
+  UsersAdminResponseDto,
 } from './dto/response';
 
 @Injectable()
@@ -351,7 +353,20 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getUsers(): Promise<SuccessMessageDto> {
-    return new SuccessMessageDto({});
+  public async getUsers(
+    userParams: UserParams,
+    paginationParams: PaginationParams,
+    user: UserEntity,
+  ): Promise<SuccessMessageDto> {
+    if (!hasRole(user.roles, Roles.ADMIN)) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
+    }
+
+    const [data, count] = await this.userRepository.getUsers(
+      userParams,
+      paginationParams,
+    );
+
+    return new UsersAdminResponseDto({ ...paginationParams, count }, data);
   }
 }

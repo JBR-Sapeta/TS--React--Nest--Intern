@@ -11,10 +11,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
-import { UserEntity, RoleEntity } from '../entities';
-import { PL_ERRORS } from '../locales';
+import {
+  PaginationParams,
+  UserParams,
+  addPaginationParamsToQueryBuilder,
+  addUserParamsToQueryBuilder,
+} from '../common/classes/params';
 import { PostgresqlErrorCode } from '../common/enums';
 import type { Nullable } from '../common/types';
+import { UserEntity, RoleEntity } from '../entities';
+import { PL_ERRORS } from '../locales';
 
 export class UserRepository extends Repository<UserEntity> {
   constructor(
@@ -229,6 +235,29 @@ export class UserRepository extends Repository<UserEntity> {
       return user;
     } catch (error) {
       this.logger.error(UserRepository.name + ' - getUserByEmail', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async getUsers(
+    userParams: UserParams,
+    paginationParams: PaginationParams,
+  ): Promise<[UserEntity[], number]> {
+    try {
+      const query = this.createQueryBuilder('user');
+
+      addUserParamsToQueryBuilder(query, userParams);
+      addPaginationParamsToQueryBuilder(query, paginationParams);
+
+      const companies = await query
+        .orderBy('user.createdAt', 'DESC')
+        .getManyAndCount();
+
+      return companies;
+    } catch (error) {
+      this.logger.error(UserRepository.name + ' - getUsers', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

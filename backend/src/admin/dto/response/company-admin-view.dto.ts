@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 import { CompanyEntity } from '../../../entities';
-import { UserAdminView } from './user-admin-view.dto';
+import { UserAdminViewDto } from './user-admin-view.dto';
 
 export class CompanyAdminViewDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })
@@ -35,15 +35,15 @@ export class CompanyAdminViewDto {
   @Expose()
   public isVerified: boolean;
 
-  @ApiProperty({ type: UserAdminView })
+  @ApiProperty({ type: UserAdminViewDto })
   @Expose()
-  public owner: UserAdminView | null;
+  public owner: UserAdminViewDto | null;
 
   constructor({ user, ...companyData }: CompanyEntity) {
     Object.assign(this, companyData);
 
     if (user) {
-      this.owner = new UserAdminView(user);
+      this.owner = new UserAdminViewDto(user);
     } else {
       this.owner = null;
     }

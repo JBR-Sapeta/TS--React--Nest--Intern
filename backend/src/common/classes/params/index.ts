@@ -20,6 +20,7 @@ export {
   OfferParams,
   addOfferParamsToQueryBuilder,
 } from './offer-query-params';
+export { UserParams, addUserParamsToQueryBuilder } from './user-query-params';
 export {
   PaginationParams,
   addPaginationParamsToQueryBuilder,
