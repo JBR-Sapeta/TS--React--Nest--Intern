@@ -95,6 +95,11 @@ export class AuthService {
   // ----------------------------------------------------------------------- \\
   public async login({ email, password }: LoginUserDto): Promise<TokensDto> {
     const user = await this.validateUserCredentials(email, password);
+
+    if (user.hasBan) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ACCOUNT_SUSPENDED);
+    }
+
     const refreshToken = await this.createRefreshToken(user.id);
     await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
     const accessToken = await this.createAccessToken(user.id, user.roles);

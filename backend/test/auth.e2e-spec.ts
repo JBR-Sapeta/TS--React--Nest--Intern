@@ -79,13 +79,14 @@ describe('AuthController (e2e)', () => {
     return user;
   };
 
-  const createActiveUser = async (userData: any) => {
+  const createActiveUser = async (userData: any, hasBan = false) => {
     await authService.createUserAccount(userData);
     const user = await userRepository.findOne({
       where: { email: userData.email },
     });
     user.activationToken = null;
     user.isActive = true;
+    user.hasBan = hasBan;
 
     const updatedUser = await userRepository.save(user);
     return updatedUser;
@@ -461,6 +462,12 @@ describe('AuthController (e2e)', () => {
 
     it('returns 403 status code when user account is inactive', async () => {
       await createInactiveUser(USER_ONE);
+      const response = await sendLoginRequest(USER_ONE_CREDENTIALS);
+      expect(response.status).toBe(403);
+    });
+
+    it('returns 403 status code when user account is suspended', async () => {
+      await createActiveUser(USER_ONE, true);
       const response = await sendLoginRequest(USER_ONE_CREDENTIALS);
       expect(response.status).toBe(403);
     });

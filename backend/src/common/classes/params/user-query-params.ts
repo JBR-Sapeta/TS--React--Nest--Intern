@@ -4,7 +4,7 @@ import { IsOptional, IsString, IsEmail, IsBoolean } from 'class-validator';
 import type { SelectQueryBuilder } from 'typeorm';
 
 import { PL_ERRORS } from '../../../locales';
-import { OPTIONAL_BOOLEAN_MAP } from 'src/common/constants';
+import { OPTIONAL_BOOLEAN_MAP } from '../../../common/constants';
 
 export class UserParams {
   @ApiProperty({

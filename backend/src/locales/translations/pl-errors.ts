@@ -73,6 +73,7 @@ export const PL_ERRORS: ErrorTranslations = {
   FORBIDDEN: 'Odmowa dostępu.',
   FORBIDDEN_ACCOUNT_ACTIVATION:
     'Konto zostało już aktywowane lub przesłany token jest nieprawidłowy.',
+  FORBIDDEN_ACCOUNT_SUSPENDED: 'Twoje konto zostało tymczasowo zawieszone.',
   FORBIDDEN_APPLICATION_DUPLICATION: 'Już aplikowałeś na to stanowisko.',
   FORBIDDEN_BRANCH_IN_USE:
     'Odział firmy przypisany jest do oferty. Upewnij się, że żadna oferta nie jest przypisana do tego oddziału.',
