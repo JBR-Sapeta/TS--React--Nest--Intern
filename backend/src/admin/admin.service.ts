@@ -338,7 +338,7 @@ export class AdminService {
     companyParams: CompanyParams,
     paginationParams: PaginationParams,
     user: UserEntity,
-  ): Promise<SuccessMessageDto> {
+  ): Promise<CompaniesAdminResponseDto> {
     if (!hasRole(user.roles, Roles.ADMIN)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
     }
@@ -357,7 +357,7 @@ export class AdminService {
     userParams: UserParams,
     paginationParams: PaginationParams,
     user: UserEntity,
-  ): Promise<SuccessMessageDto> {
+  ): Promise<UsersAdminResponseDto> {
     if (!hasRole(user.roles, Roles.ADMIN)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
     }

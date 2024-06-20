@@ -26,6 +26,11 @@ import { GetAccessTokentExtendedPayload } from '../auth/decorators';
 import { ExtendedAccessTokenGuard, RolesGuard } from '../auth/guards';
 
 import { AdminService } from './admin.service';
+import {
+  CompaniesAdminResponseDto,
+  ErrorBucketsResponseDto,
+  UsersAdminResponseDto,
+} from './dto/response';
 
 @ApiTags('App')
 @Controller('admin')
@@ -41,7 +46,7 @@ export class AdminController {
     @Query() companyParams: CompanyParams,
     @Query() paginationParams: PaginationParams,
     @GetAccessTokentExtendedPayload() user: UserEntity,
-  ) {
+  ): Promise<CompaniesAdminResponseDto> {
     return this.adminService.getCompanies(
       companyAdminParams,
       companyParams,
@@ -57,7 +62,7 @@ export class AdminController {
   rootPage(
     @Query() dateParams: DateParams,
     @GetAccessTokentExtendedPayload() user: UserEntity,
-  ): Promise<SuccessMessageDto> {
+  ): Promise<ErrorBucketsResponseDto> {
     return this.adminService.getLogs({ ...dateParams, user });
   }
 
@@ -69,7 +74,7 @@ export class AdminController {
     @Query() userParams: UserParams,
     @Query() paginationParams: PaginationParams,
     @GetAccessTokentExtendedPayload() user: UserEntity,
-  ) {
+  ): Promise<UsersAdminResponseDto> {
     return this.adminService.getUsers(userParams, paginationParams, user);
   }
 
