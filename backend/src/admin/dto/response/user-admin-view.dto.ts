@@ -28,6 +28,10 @@ export class UserAdminViewDto {
   @Expose()
   hasBan: boolean;
 
+  @ApiProperty({ example: true })
+  @Expose()
+  isActive: boolean;
+
   @ApiProperty({ example: '2024-02-28T23:20:32.083Z' })
   @Expose()
   createdAt: string;

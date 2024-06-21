@@ -49,7 +49,7 @@ export function joinUserBaseOnCompanyAdminParams<T>(
 ) {
   const { owner } = company;
 
-  if (typeof owner === 'boolean') {
+  if (owner === true) {
     queryBuilder.leftJoinAndSelect('company.user', 'user');
   }
 }
