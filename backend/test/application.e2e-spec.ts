@@ -1529,26 +1529,6 @@ describe('ApplicationController (e2e)', () => {
   // ------------------------------ DELETE - Invalid Request ----------------------------- \\
 
   describe('/applications/:applicationId/delete  (DELETE) - Invalid Request', () => {
-    it('returns 200 status code', async () => {
-      const { offers } = await createUserAndCompanyWithOffers(
-        USER_ONE,
-        COMPANY_ONE,
-        COMPANY_ONE_BRANCHES,
-        COMPANY_ONE_OFFERS,
-      );
-      const { applicationId, accessToken } = await createUserWithApplication(
-        USER_TWO,
-        offers[0],
-      );
-
-      const response = await sendDeleteApplicationRequest(
-        accessToken,
-        applicationId,
-      );
-
-      expect(response.status).toBe(200);
-    });
-
     it('returns 400 status code when url param is ivalid', async () => {
       const { offers } = await createUserAndCompanyWithOffers(
         USER_ONE,
