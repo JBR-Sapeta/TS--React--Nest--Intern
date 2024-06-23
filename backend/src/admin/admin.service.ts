@@ -6,6 +6,7 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import * as fs from 'fs';
 import { isNil, not } from 'ramda';
 
@@ -22,7 +23,13 @@ import { hasRole } from '../common/functions';
 import { Nullable } from '../common/types';
 import { UserEntity } from '../entities';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { CompanyRepository, UserRepository } from '../repositories';
+import {
+  CompanyRepository,
+  OfferRepository,
+  UserRepository,
+} from '../repositories';
+
+import { S3Service } from '../s3/s3.service';
 
 import { ErrorLog, ErrorType, LOGGER_FILE_PATH, createErrorMap } from './utils';
 import {
@@ -37,7 +44,9 @@ import {
 export class AdminService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly s3Service: S3Service,
     private readonly companyRepository: CompanyRepository,
+    private readonly offerRepository: OfferRepository,
     private readonly userRepository: UserRepository,
   ) {}
 
@@ -368,5 +377,47 @@ export class AdminService {
     );
 
     return new UsersAdminResponseDto({ ...paginationParams, count }, data);
+  }
+
+  // ----------------------------------------------------------------------- \\
+  @Cron('0 */12 15-20 * * *')
+  public async removeInactiveAccounts() {
+    const users = await this.userRepository.getInactiveUsers();
+
+    if (users.length > 0) {
+      await this.userRepository.deleteUsers(users);
+
+      this.logger.log(
+        UserRepository.name + ' - removeInactiveAccounts',
+        `remove inactive accounts - ${users.length}`,
+      );
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  @Cron('0 */5 15-20 * * *')
+  public async removeOldOffers() {
+    const offers = await this.offerRepository.getOffersToRemove();
+
+    if (offers.length > 0) {
+      const applications = offers.flatMap((offer) => offer.applications);
+
+      for (const { fileKey } of applications) {
+        try {
+          await this.s3Service.deleteApplicationFile(fileKey);
+        } catch {
+          this.logger.error(
+            `S3Service - removeOldOffers - fileKey:$${fileKey}`,
+          );
+        }
+      }
+
+      await this.offerRepository.deleteOldOffers(offers);
+
+      this.logger.log(
+        UserRepository.name + ' - removeOldOffers',
+        `remove old offers - ${offers.length}`,
+      );
+    }
   }
 }

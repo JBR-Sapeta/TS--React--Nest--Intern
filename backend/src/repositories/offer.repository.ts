@@ -5,7 +5,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 
 import { OfferEntity } from '../entities';
 import { PL_ERRORS } from '../locales';
@@ -82,6 +82,28 @@ export class OfferRepository extends Repository<OfferEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async getOffersToRemove(): Promise<OfferEntity[]> {
+    let offers: Nullable<OfferEntity[]> = null;
+
+    const now = new Date();
+
+    try {
+      offers = await this.find({
+        where: { removalDate: LessThan(now) },
+        relations: { applications: true },
+        take: 50,
+      });
+    } catch (error) {
+      this.logger.error(
+        OfferRepository.name + ' - getOffersToRemove',
+        error.stack,
+      );
+    }
+
+    return offers;
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async getOfferById({
     offerId,
     company = false,
@@ -154,6 +176,20 @@ export class OfferRepository extends Repository<OfferEntity> {
       await this.delete({ id: offerId });
     } catch (error) {
       this.logger.error(OfferRepository.name + ' - deleteOffer', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteOldOffers(offers: OfferEntity[]): Promise<void> {
+    try {
+      await this.remove(offers);
+    } catch (error) {
+      this.logger.error(
+        OfferRepository.name + ' - deleteOldOffers',
+        error.stack,
+      );
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

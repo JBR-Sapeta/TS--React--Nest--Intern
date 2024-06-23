@@ -8,7 +8,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { LessThan, QueryRunner, Repository } from 'typeorm';
 import { isNil } from 'ramda';
 
 import {
@@ -264,6 +264,28 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async getInactiveUsers(): Promise<UserEntity[]> {
+    let users: Nullable<UserEntity[]> = null;
+
+    const now = new Date();
+    const twoDaysAgo = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
+
+    try {
+      users = await this.find({
+        where: { isActive: false, createdAt: LessThan(twoDaysAgo) },
+        take: 100,
+      });
+    } catch (error) {
+      this.logger.error(
+        UserRepository.name + ' - getInactiveUsers',
+        error.stack,
+      );
+    }
+
+    return users;
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async setResetToken(
     email: string,
     resetToken: string,
@@ -372,6 +394,17 @@ export class UserRepository extends Repository<UserEntity> {
       await this.delete({ id: userId });
     } catch (error) {
       this.logger.error(UserRepository.name + ' - deleteUser', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  public async deleteUsers(users: UserEntity[]): Promise<void> {
+    try {
+      await this.remove(users);
+    } catch (error) {
+      this.logger.error(UserRepository.name + ' - deleteUsers', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

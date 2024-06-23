@@ -9,7 +9,13 @@ import {
   RoleEntity,
   UserEntity,
 } from '../entities';
-import { CompanyRepository, UserRepository } from '../repositories';
+import {
+  CompanyRepository,
+  OfferRepository,
+  UserRepository,
+} from '../repositories';
+
+import { S3Service } from '../s3/s3.service';
 
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
@@ -26,6 +32,13 @@ import { AdminService } from './admin.service';
     ]),
   ],
   controllers: [AdminController],
-  providers: [Logger, AdminService, CompanyRepository, UserRepository],
+  providers: [
+    Logger,
+    AdminService,
+    CompanyRepository,
+    OfferRepository,
+    UserRepository,
+    S3Service,
+  ],
 })
 export class AdminModule {}
