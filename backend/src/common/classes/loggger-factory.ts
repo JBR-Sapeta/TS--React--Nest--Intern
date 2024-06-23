@@ -6,14 +6,21 @@ import {
 import * as winston from 'winston';
 
 export const LoggerFactory = (appName: string): LoggerService => {
-  let filename: string;
+  let errorFilename: string;
+  let infoFilename: string;
 
   if (process.env.NODE_ENV === 'prod') {
-    filename = 'error.prod.log';
+    errorFilename = 'error.prod.log';
+    infoFilename = 'info.prod.log';
   } else if (process.env.NODE_ENV === 'dev') {
-    filename = 'error.dev.log';
+    errorFilename = 'error.dev.log';
+    infoFilename = 'info.dev.log';
+  } else if (process.env.NODE_ENV === 'test') {
+    errorFilename = 'error.test.log';
+    infoFilename = 'info.test.log';
   } else {
-    filename = 'error.log';
+    errorFilename = 'error.log';
+    infoFilename = 'info.log';
   }
 
   return WinstonModule.createLogger({
@@ -29,8 +36,16 @@ export const LoggerFactory = (appName: string): LoggerService => {
         ),
       }),
       new winston.transports.File({
-        filename,
+        filename: errorFilename,
         level: 'error',
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+        ),
+      }),
+      new winston.transports.File({
+        filename: infoFilename,
+        level: 'info',
         format: winston.format.combine(
           winston.format.timestamp(),
           winston.format.json(),

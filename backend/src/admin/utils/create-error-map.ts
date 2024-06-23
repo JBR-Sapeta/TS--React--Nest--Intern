@@ -2,7 +2,19 @@ import * as path from 'path';
 
 import { ErrorBucketDto } from '../dto/response';
 
-export const LOGGER_FILE_PATH = path.join('.', 'error.dev.log');
+let errorFilename: string;
+
+if (process.env.NODE_ENV === 'prod') {
+  errorFilename = 'error.prod.log';
+} else if (process.env.NODE_ENV === 'dev') {
+  errorFilename = 'error.dev.log';
+} else if (process.env.NODE_ENV === 'test') {
+  errorFilename = 'error.test.log';
+} else {
+  errorFilename = 'error.log';
+}
+
+export const LOGGER_FILE_PATH = path.join('.', errorFilename);
 
 export function createErrorMap() {
   return new Map([
