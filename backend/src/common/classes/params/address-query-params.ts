@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsOptional, IsString, IsNumber, Min, Max } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  Min,
+  Max,
+  Matches,
+} from 'class-validator';
 import type { SelectQueryBuilder } from 'typeorm';
 import { isNotNil } from 'ramda';
 
@@ -31,8 +38,9 @@ export class AddressParams {
     required: false,
   })
   @IsOptional()
-  @Type(() => String)
-  @IsString()
+  @Matches(/^[A-Z][a-zA-Z\s]+/, {
+    message: PL_ERRORS.VALIDATION_COMMON_STRING_ALPHABETIC,
+  })
   city?: string;
 
   @ApiProperty({

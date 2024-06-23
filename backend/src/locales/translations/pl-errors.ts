@@ -37,6 +37,8 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_COMMON_PAGE_NUMBER: 'Wprowadź dodatnią liczbę całkowitą.',
   VALIDATION_COMMON_RANGE: 'Wprowadź liczbę całkowitą z przedziałuod 1 do 100.',
   VALIDATION_COMMON_STRING: 'Wprowadzona wartość nie jest łańcuchem znaków.',
+  VALIDATION_COMMON_STRING_ALPHABETIC:
+    'Wprowadzona wartość nie powinna zawierać znaków specjalnych i cyfr.',
   VALIDATION_COMMON_NO_BODY: 'Żądanie nie zawiera żadnych danych.',
   VALIDATION_COMPANY_DESCRIPTION:
     'Opis powinień składać się minimum z 32 znaków.',

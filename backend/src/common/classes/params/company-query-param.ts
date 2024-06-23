@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Matches, IsEmail } from 'class-validator';
+import { IsOptional, Matches, IsEmail } from 'class-validator';
 import type { SelectQueryBuilder } from 'typeorm';
 
 import { PL_ERRORS } from '../../../locales';
@@ -13,7 +13,6 @@ export class CompanyParams {
     required: false,
   })
   @IsOptional()
-  @IsString({ message: PL_ERRORS.VALIDATION_COMMON_STRING })
   name?: string;
 
   @ApiProperty({

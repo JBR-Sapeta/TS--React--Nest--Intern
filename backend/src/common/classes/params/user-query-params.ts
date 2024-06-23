@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsOptional, IsString, IsEmail, IsBoolean } from 'class-validator';
+import { IsOptional, IsEmail, IsBoolean, Matches } from 'class-validator';
 import type { SelectQueryBuilder } from 'typeorm';
 
 import { PL_ERRORS } from '../../../locales';
@@ -15,7 +15,9 @@ export class UserParams {
     required: false,
   })
   @IsOptional()
-  @IsString({ message: PL_ERRORS.VALIDATION_COMMON_STRING })
+  @Matches(/^[A-Z][a-zA-Z\s]+/, {
+    message: PL_ERRORS.VALIDATION_COMMON_STRING_ALPHABETIC,
+  })
   firstName?: string;
 
   @ApiProperty({
@@ -26,7 +28,9 @@ export class UserParams {
     required: false,
   })
   @IsOptional()
-  @IsString({ message: PL_ERRORS.VALIDATION_COMMON_STRING })
+  @Matches(/^[A-Z][a-zA-Z\s]+/, {
+    message: PL_ERRORS.VALIDATION_COMMON_STRING_ALPHABETIC,
+  })
   lastName?: string;
 
   @ApiProperty({
