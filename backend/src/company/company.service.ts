@@ -30,7 +30,7 @@ import {
 } from '../common/classes/params';
 import { FILE_SIZE_LIMIT } from '../common/config';
 import { Roles } from '../common/enums';
-import { imageFileValidator } from '../common/functions';
+import { hasRole, imageFileValidator } from '../common/functions';
 import { Nullable, Optional } from '../common/types';
 
 import { S3Service } from '../s3/s3.service';
@@ -65,9 +65,7 @@ export class CompanyService {
     user: UserEntity,
     createCompanyDto: CreateCompanyDto,
   ): Promise<SuccessMessageDto> {
-    const userRoles = user.roles.map((role) => role.id);
-
-    if (userRoles.includes(Roles.COMPANY)) {
+    if (hasRole(user.roles, [Roles.COMPANY, Roles.ADMIN])) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ONE_COMPANY_PER_USER);
     }
 
