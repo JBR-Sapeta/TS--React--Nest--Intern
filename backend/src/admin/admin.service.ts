@@ -380,7 +380,7 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */12 15-20 * * *')
+  @Cron('0 */12 1-5 * * *')
   public async removeInactiveAccounts() {
     const users = await this.userRepository.getInactiveUsers();
 
@@ -395,7 +395,7 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */5 15-20 * * *')
+  @Cron('0 */5 1-5 * * *')
   public async removeOldOffers() {
     const offers = await this.offerRepository.getOffersToRemove();
 
