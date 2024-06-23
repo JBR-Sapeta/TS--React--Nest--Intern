@@ -6,7 +6,7 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import * as fs from 'fs';
 import { isNil, not } from 'ramda';
 
@@ -45,6 +45,7 @@ export class AdminService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
     private readonly s3Service: S3Service,
+    private readonly schedulerRegistry: SchedulerRegistry,
     private readonly companyRepository: CompanyRepository,
     private readonly offerRepository: OfferRepository,
     private readonly userRepository: UserRepository,
@@ -380,8 +381,14 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */12 1-5 * * *')
-  public async removeInactiveAccounts() {
+  public async closeScheduledTaska() {
+    this.schedulerRegistry.deleteCronJob('removeInactiveAccounts');
+    this.schedulerRegistry.deleteCronJob('removeOldOffers');
+  }
+
+  // ----------------------------------------------------------------------- \\
+  @Cron('0 */12 1-5 * * *', { name: 'removeInactiveAccounts' })
+  private async removeInactiveAccounts() {
     const users = await this.userRepository.getInactiveUsers();
 
     if (users.length > 0) {
@@ -395,8 +402,8 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */5 1-5 * * *')
-  public async removeOldOffers() {
+  @Cron('0 */5 1-5 * * *', { name: 'removeOldOffers' })
+  private async removeOldOffers() {
     const offers = await this.offerRepository.getOffersToRemove();
 
     if (offers.length > 0) {

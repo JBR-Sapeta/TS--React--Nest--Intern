@@ -13,6 +13,7 @@ import { AppModule } from './../src/app.module';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { CompanyService } from './../src/company/company.service';
 import { BranchService } from './../src/branch/branch.service';
@@ -40,6 +41,7 @@ describe('AppController (e2e)', () => {
   let companyRepository: CompanyRepository;
   let userRepository: UserRepository;
   let roleRepository: RoleRepository;
+  let adminService: AdminService;
   let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
@@ -65,6 +67,7 @@ describe('AppController (e2e)', () => {
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     roleRepository = moduleFixture.get<RoleRepository>(RoleRepository);
     cacheService = moduleFixture.get<CacheService>(CacheService);
+    adminService = moduleFixture.get<AdminService>(AdminService);
     authService = moduleFixture.get<AuthService>(AuthService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
     branchService = moduleFixture.get<BranchService>(BranchService);
@@ -74,6 +77,7 @@ describe('AppController (e2e)', () => {
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

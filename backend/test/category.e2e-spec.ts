@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
 import { AppModule } from './../src/app.module';
+import { AdminService } from './../src/admin/admin.service';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
@@ -16,6 +17,7 @@ import { s3Service } from './mocks/s3-service';
 describe('CategoryController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let adminService: AdminService;
   let cacheService: CacheService;
 
   beforeEach(async () => {
@@ -34,12 +36,14 @@ describe('CategoryController (e2e)', () => {
 
     dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
+    adminService = moduleFixture.get<AdminService>(AdminService);
 
     await app.init();
   });
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

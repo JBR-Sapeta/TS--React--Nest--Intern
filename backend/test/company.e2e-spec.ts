@@ -17,7 +17,7 @@ import {
 import { Roles } from './../src/common/enums';
 
 import { AppModule } from './../src/app.module';
-
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { CacheService } from './../src/cache/cache.service';
 import { CompanyService } from './../src/company/company.service';
@@ -53,6 +53,7 @@ import { s3Service } from './mocks/s3-service';
 describe('CompanyController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let adminService: AdminService;
   let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
@@ -79,6 +80,7 @@ describe('CompanyController (e2e)', () => {
     app = moduleFixture.createNestApplication();
 
     dataSource = moduleFixture.get(DataSource);
+    adminService = moduleFixture.get<AdminService>(AdminService);
     authService = moduleFixture.get<AuthService>(AuthService);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
@@ -97,6 +99,7 @@ describe('CompanyController (e2e)', () => {
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

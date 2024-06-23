@@ -14,7 +14,7 @@ import {
 } from './../src/repositories';
 
 import { AppModule } from './../src/app.module';
-
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { BranchService } from './../src/branch/branch.service';
 import { CacheService } from './../src/cache/cache.service';
@@ -50,6 +50,7 @@ import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
 describe('UserController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let adminService: AdminService;
   let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
@@ -76,6 +77,7 @@ describe('UserController (e2e)', () => {
     app = moduleFixture.createNestApplication();
 
     dataSource = moduleFixture.get(DataSource);
+    adminService = moduleFixture.get<AdminService>(AdminService);
     authService = moduleFixture.get<AuthService>(AuthService);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
@@ -94,6 +96,7 @@ describe('UserController (e2e)', () => {
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

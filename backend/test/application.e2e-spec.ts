@@ -19,6 +19,7 @@ import { AppModule } from './../src/app.module';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { CompanyService } from './../src/company/company.service';
 import { BranchService } from './../src/branch/branch.service';
@@ -65,6 +66,7 @@ describe('ApplicationController (e2e)', () => {
   let companyService: CompanyService;
   let branchService: BranchService;
   let offerService: OfferService;
+  let adminService: AdminService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -82,6 +84,7 @@ describe('ApplicationController (e2e)', () => {
 
     dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
+    adminService = moduleFixture.get<AdminService>(AdminService);
     authService = moduleFixture.get<AuthService>(AuthService);
     companyService = moduleFixture.get<CompanyService>(CompanyService);
     branchService = moduleFixture.get<BranchService>(BranchService);
@@ -100,6 +103,7 @@ describe('ApplicationController (e2e)', () => {
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

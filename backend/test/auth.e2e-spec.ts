@@ -11,6 +11,7 @@ import { UserRepository } from './../src/repositories';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { S3Service } from './../src/s3/s3.service';
 
@@ -35,6 +36,7 @@ describe('AuthController (e2e)', () => {
   let cacheService: CacheService;
   let userRepository: UserRepository;
   let authService: AuthService;
+  let adminService: AdminService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -55,12 +57,14 @@ describe('AuthController (e2e)', () => {
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     cacheService = moduleFixture.get<CacheService>(CacheService);
     authService = moduleFixture.get<AuthService>(AuthService);
+    adminService = moduleFixture.get<AdminService>(AdminService);
 
     await app.init();
   });
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

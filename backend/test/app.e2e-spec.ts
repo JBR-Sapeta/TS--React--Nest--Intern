@@ -8,6 +8,7 @@ import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';
 import { S3Service } from './../src/s3/s3.service';
+import { AdminService } from './../src/admin/admin.service';
 
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
@@ -18,6 +19,7 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
   let cacheService: CacheService;
+  let adminService: AdminService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,12 +37,14 @@ describe('AppController (e2e)', () => {
 
     dataSource = moduleFixture.get(DataSource);
     cacheService = moduleFixture.get<CacheService>(CacheService);
+    adminService = moduleFixture.get<AdminService>(AdminService);
 
     await app.init();
   });
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });

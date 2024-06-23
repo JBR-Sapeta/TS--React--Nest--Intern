@@ -12,7 +12,7 @@ import {
 } from './../src/repositories';
 
 import { AppModule } from './../src/app.module';
-
+import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { BranchService } from './../src/branch/branch.service';
 import { CacheService } from './../src/cache/cache.service';
@@ -43,6 +43,7 @@ import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
 describe('BranchController (e2e)', () => {
   let app: INestApplication;
   let dataSource: DataSource;
+  let adminService: AdminService;
   let authService: AuthService;
   let cacheService: CacheService;
   let companyService: CompanyService;
@@ -79,12 +80,14 @@ describe('BranchController (e2e)', () => {
     companyRepository = moduleFixture.get<CompanyRepository>(CompanyRepository);
     offerRepository = moduleFixture.get<OfferRepository>(OfferRepository);
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
+    adminService = moduleFixture.get<AdminService>(AdminService);
 
     await app.init();
   });
 
   afterEach(async () => {
     jest.clearAllMocks();
+    adminService.closeScheduledTaska();
     await dataSource.destroy();
     await cacheService.shutdownConnection();
   });
