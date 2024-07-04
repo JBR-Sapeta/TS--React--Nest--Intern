@@ -36,6 +36,10 @@ export class PartialOfferDto {
   @Expose()
   public createdAt: string;
 
+  @ApiProperty({ example: '2024-04-01T14:48:00.000Z' })
+  @Expose()
+  public expirationDate: string;
+
   @ApiProperty({ example: 1 })
   @Expose()
   public employmentTypeId: number;

@@ -930,6 +930,7 @@ describe('OfferController (e2e)', () => {
         'isPaid',
         'isActive',
         'createdAt',
+        'expirationDate',
         'employmentTypeId',
         'operatingModeId',
         'branches',
