@@ -73,7 +73,7 @@ export class UserController {
     @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<ProfileDto> {
+  ): Promise<SuccessMessageDto> {
     return this.userService.updateUserProfile(
       userId,
       userIdParam,
@@ -98,7 +98,7 @@ export class UserController {
     @Param('userId', ParseUUIDPipe) userIdParam: string,
     @GetAccessTokenPayload() { userId }: JwtPayload,
     @Body() updateEmailDto: UpdateEmailDto,
-  ): Promise<ProfileDto> {
+  ): Promise<SuccessMessageDto> {
     return this.userService.updateEmail(userId, userIdParam, updateEmailDto);
   }
 

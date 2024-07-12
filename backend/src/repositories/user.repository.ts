@@ -229,6 +229,23 @@ export class UserRepository extends Repository<UserEntity> {
   }
 
   // ----------------------------------------------------------------------- \\
+  public async getUserWithApplicationsById(
+    userId: string,
+  ): Promise<Nullable<UserEntity>> {
+    try {
+      const user = await this.findOne({
+        where: { id: userId },
+        relations: { applications: true },
+      });
+      return user;
+    } catch (error) {
+      this.logger.error(UserRepository.name + ' - getUserById', error.stack);
+
+      throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  // ----------------------------------------------------------------------- \\
   public async getUserByEmail(email: string): Promise<Nullable<UserEntity>> {
     try {
       const user = await this.findOne({ where: { email } });

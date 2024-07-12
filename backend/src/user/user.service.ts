@@ -44,7 +44,7 @@ export class UserService {
 
   // ----------------------------------------------------------------------- \\
   public async getUserProfile(userId: string): Promise<ProfileDto> {
-    const user = await this.userRepository.getUserById(userId);
+    const user = await this.userRepository.getUserWithApplicationsById(userId);
 
     if (isNil(user)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_USER);
@@ -58,7 +58,7 @@ export class UserService {
     userId: string,
     userIdParam: string,
     updateUserDto: UpdateUserDto,
-  ): Promise<ProfileDto> {
+  ): Promise<SuccessMessageDto> {
     if (userId !== userIdParam) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
@@ -67,11 +67,11 @@ export class UserService {
       throw new BadRequestException(PL_ERRORS.VALIDATION_COMMON_NO_BODY);
     }
 
-    const user = await this.userRepository.updateUserProfile(userId, {
+    await this.userRepository.updateUserProfile(userId, {
       ...updateUserDto,
     });
 
-    return new ProfileDto({ message: PL_MESSAGES.USER_ACCOUNT_UPDATE }, user);
+    return new SuccessMessageDto({ message: PL_MESSAGES.USER_ACCOUNT_UPDATE });
   }
 
   // ----------------------------------------------------------------------- \\\
@@ -79,21 +79,15 @@ export class UserService {
     userId: string,
     userIdParam: string,
     { newEmail, password }: UpdateEmailDto,
-  ): Promise<ProfileDto> {
+  ): Promise<SuccessMessageDto> {
     if (userId !== userIdParam) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
     const user = await this.authService.validateUserPassword(userId, password);
-    const updatedUser = await this.userRepository.updateUserEmail(
-      user,
-      newEmail,
-    );
+    await this.userRepository.updateUserEmail(user, newEmail);
 
-    return new ProfileDto(
-      { message: PL_MESSAGES.USER_EMAIL_UPDATE },
-      updatedUser,
-    );
+    return new SuccessMessageDto({ message: PL_MESSAGES.USER_EMAIL_UPDATE });
   }
 
   // ----------------------------------------------------------------------- \\\

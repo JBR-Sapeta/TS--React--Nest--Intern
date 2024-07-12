@@ -32,6 +32,10 @@ class UserProfileDto {
   @Expose()
   roles: RoleDto[];
 
+  @ApiProperty({ example: [34, 45, 67] })
+  @Expose()
+  applications: number[];
+
   @ApiProperty({ example: '2024-02-28T23:20:32.083Z' })
   @Expose()
   createdAt: string;
@@ -40,6 +44,9 @@ class UserProfileDto {
     Object.assign(this, user);
     this.createdAt = user.createdAt.toISOString();
     this.roles = user.roles.map((role) => new RoleDto(role));
+    this.applications = user.applications
+      ? user.applications.map((app) => app.id)
+      : [];
   }
 }
 

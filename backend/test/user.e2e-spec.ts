@@ -392,6 +392,7 @@ describe('UserController (e2e)', () => {
         'email',
         'phoneNumber',
         'roles',
+        'applications',
         'createdAt',
       ]);
     });
@@ -442,7 +443,7 @@ describe('UserController (e2e)', () => {
       expect(response.body.message).toBeTruthy();
     });
 
-    it('returns proper success response object with data field', async () => {
+    it('returns proper success response object', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserProfileRequest(
         accessToken,
@@ -453,25 +454,6 @@ describe('UserController (e2e)', () => {
         'statusCode',
         'message',
         'error',
-        'data',
-      ]);
-    });
-
-    it('returns user data', async () => {
-      const { user, accessToken } = await createActiveUser(USER_ONE);
-      const response = await sendUpdateUserProfileRequest(
-        accessToken,
-        user.id,
-        VALID_UPDATE_PROFILE_DATA,
-      );
-      expect(Object.keys(response.body.data)).toEqual([
-        'id',
-        'firstName',
-        'lastName',
-        'email',
-        'phoneNumber',
-        'roles',
-        'createdAt',
       ]);
     });
 
@@ -584,7 +566,7 @@ describe('UserController (e2e)', () => {
       expect(response.body.message).toBeTruthy();
     });
 
-    it('returns proper success response object with data field', async () => {
+    it('returns proper success response object', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserEmailRequest(accessToken, user.id, {
         ...VALID_NEW_EMAIL,
@@ -594,24 +576,6 @@ describe('UserController (e2e)', () => {
         'statusCode',
         'message',
         'error',
-        'data',
-      ]);
-    });
-
-    it('returns updated user data', async () => {
-      const { user, accessToken } = await createActiveUser(USER_ONE);
-      const response = await sendUpdateUserEmailRequest(accessToken, user.id, {
-        ...VALID_NEW_EMAIL,
-        password: USER_ONE.password,
-      });
-      expect(Object.keys(response.body.data)).toEqual([
-        'id',
-        'firstName',
-        'lastName',
-        'email',
-        'phoneNumber',
-        'roles',
-        'createdAt',
       ]);
     });
 
