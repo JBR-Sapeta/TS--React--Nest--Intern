@@ -1,6 +1,5 @@
 :root {
   /* BASE COLORS */
-
   --color-white: #fff;
   --color-gray-100: #fcfcfc;
   --color-gray-200: #f2f3f2;
@@ -77,15 +76,22 @@
 }
 
 body {
+  /* TEXT */
   --color-text: var(--color-gray-1000);
   --color-header: var(--color-black);
+
+  /* BACKGROUND */
   --color-bcg-main: var(--color-gray-100);
   --color-bcg-secondary: var(--color-gray-100);
   --color-bcg-input: var(--color-gray-200);
   --color-bcg-element: var(--color-white);
+
+  /* ELEMENTS */
   --color-element-hr: var(--color-gray-400);
   --color-element-border: var(--color-gray-500);
   --color-element-icon: var(--color-gray-700);
+
+  /* COLORS */
   --color-red: var(--color-red-400);
   --color-orange: var(--color-orange-300);
   --color-blue: var(--color-blue-300);
@@ -93,15 +99,22 @@ body {
 }
 
 body.dark {
+  /* TEXT */
   --color-text: var(--color-gray-100);
   --color-header: var(--color-white);
+
+  /* BACKGROUND */
   --color-bcg-main: var(--color-black);
   --color-bcg-secondary: var(--color-gray-1000);
   --color-bcg-input: var(--color-gray-1000);
   --color-bcg-element: var(--color-gray-1000);
+
+  /* ELEMENTS */
   --color-element-hr: : var(--color-gray-700);
   --color-element-border: var(--color-gray-700);
   --color-element-icon: var(--color-gray-500);
+
+  /* COLORS */
   --color-red: var(--color-red-300);
   --color-orange: var(--color-orange-200);
   --color-blue: var(--color-blue-200);
