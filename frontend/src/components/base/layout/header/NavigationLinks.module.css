@@ -1,0 +1,13 @@
+.list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.link {
+  color: var(--color-header-light);
+}
+
+.active {
+  color: var(--color-header);
+}

@@ -79,6 +79,7 @@ body {
   /* TEXT */
   --color-text: var(--color-gray-1000);
   --color-header: var(--color-black);
+  --color-header-light: var(--color-gray-700);
 
   /* BACKGROUND */
   --color-bcg-main: var(--color-gray-100);
@@ -102,6 +103,7 @@ body.dark {
   /* TEXT */
   --color-text: var(--color-gray-100);
   --color-header: var(--color-white);
+  --color-header-light: var(--color-gray-500);
 
   /* BACKGROUND */
   --color-bcg-main: var(--color-black);
