@@ -19,7 +19,12 @@
     "paths": {
       "@App/*": ["src/app/*"],
       "@Assets/*": ["src/assets/*"],
-      "@Styles/*": ["src/styles/*"]
+      "@Common/*": ["src/common/*"],
+      "@Components/*": ["src/components/*"],
+      "@Containers/*": ["src/containers/*"],
+      "@Router/*": ["src/router/*"],
+      "@Styles/*": ["src/styles/*"],
+      "@Views/*": ["src/views/*"]
     },
 
     /* Linting */
