@@ -5,11 +5,16 @@ import Footer from './footer/Footer';
 import Header from './header/Header';
 import Main from './main/Main';
 
-function Layout(): ReactElement {
+type Props = {
+  children?: ReactElement;
+};
+
+function Layout({ children }: Props): ReactElement {
   return (
     <>
       <Header />
       <Main>
+        {children}
         <Outlet />
       </Main>
       <Footer />

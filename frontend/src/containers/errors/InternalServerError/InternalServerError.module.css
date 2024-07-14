@@ -1,0 +1,26 @@
+.container {
+  width: 736px;
+  height: 604px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-8);
+  background-color: var(--color-bcg-main);
+  box-shadow: var(--shadow-l);
+
+  & svg {
+    color: var(--color-green);
+  }
+
+  & h2 {
+    font-size: var(--font-h-32);
+    color: var(--color-header);
+    margin: var(--space-16) auto;
+  }
+
+  & p {
+    font-size: var(--font-p-16);
+    color: var(--color-text);
+  }
+}
