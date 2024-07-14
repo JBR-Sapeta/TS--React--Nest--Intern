@@ -5,25 +5,25 @@ import { ROUTER_PATHS } from '@Router/constants';
 const BASE_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
 ];
 
 const USER_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
 ];
 
 const COMPANY_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
 ];
 
 const ADMIN_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
 ];
 
 class NavigationLinksMap {

@@ -1,0 +1,15 @@
+.row {
+  height: 100%;
+  max-width: var(--desktop-content-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.small {
+  margin: var(--space-64) auto;
+}
+
+.medium {
+  margin: var(--space-120) auto var(--space-64) auto;
+}
