@@ -10,6 +10,7 @@
 }
 
 .small {
+  height: 32px;
   padding: 6px 16px;
   font-size: var(--font-p-14);
 
@@ -20,6 +21,7 @@
 }
 
 .medium {
+  height: 40px;
   padding: 8px 20px;
   font-size: var(--font-p-16);
 
