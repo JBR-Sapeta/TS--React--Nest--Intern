@@ -1,8 +1,10 @@
 .header {
+  position: relative;
+  z-index: 10;
   width: 100%;
   height: var(--header-height);
-  box-shadow: var(--shadow-xl);
   background-color: var(--color-bcg-main);
+  box-shadow: var(--shadow-l);
 }
 
 .container {
