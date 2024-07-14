@@ -1,6 +1,6 @@
 :root {
   /* BASE COLORS */
-  --color-white: #fff;
+  --color-strict-white: #fff;
   --color-gray-100: #fcfcfc;
   --color-gray-200: #f2f3f2;
   --color-gray-300: #e5e7e6;
@@ -11,7 +11,7 @@
   --color-gray-800: #252726;
   --color-gray-900: #191a19;
   --color-gray-1000: #0c0d0d;
-  --color-black: #050505;
+  --color-strict-black: #050505;
   --color-red-100: #e76156;
   --color-red-200: #e45144;
   --color-red-300: #e14032;
@@ -45,6 +45,7 @@
   --font-h-48: 48px;
   --weight-400: 400;
   --weight-600: 600;
+  --font-family: 'Roboto Slab', serif;
 
   /* RADIUS */
   --radius-4: 4px;
@@ -82,7 +83,7 @@
 body {
   /* TEXT */
   --color-text: var(--color-gray-1000);
-  --color-header: var(--color-black);
+  --color-header: var(--color-strict-black);
   --color-header-light: var(--color-gray-700);
 
   /* BACKGROUND */
@@ -90,7 +91,7 @@ body {
   --color-bcg-main: var(--color-gray-100);
   --color-bcg-secondary: var(--color-gray-100);
   --color-bcg-input: var(--color-gray-200);
-  --color-bcg-element: var(--color-white);
+  --color-bcg-element: var(--color-strict-white);
 
   /* ELEMENTS */
   --color-element-hr: var(--color-gray-400);
@@ -99,20 +100,28 @@ body {
 
   /* COLORS */
   --color-red: var(--color-red-400);
+  --color-red-dark: var(--color-red-500);
   --color-orange: var(--color-orange-300);
+  --color-orange-dark: var(--color-orange-400);
   --color-blue: var(--color-blue-300);
+  --color-blue-dark: var(--color-blue-400);
   --color-green: var(--color-green-300);
+  --color-green-dark: var(--color-green-400);
+  --color-black: var(--color-strict-black);
+  --color-gray-light: var(--color-gray-300);
+  --color-gray: var(--color-gray-500);
+  --color-gray-dark: var(--color-gray-700);
 }
 
 body.dark {
   /* TEXT */
   --color-text: var(--color-gray-100);
-  --color-header: var(--color-white);
+  --color-header: var(--color-strict-white);
   --color-header-light: var(--color-gray-500);
 
   /* BACKGROUND */
   --color-bcg: var(--color-gray-800);
-  --color-bcg-main: var(--color-black);
+  --color-bcg-main: var(--color-strict-black);
   --color-bcg-secondary: var(--color-gray-1000);
   --color-bcg-input: var(--color-gray-1000);
   --color-bcg-element: var(--color-gray-1000);
@@ -124,7 +133,15 @@ body.dark {
 
   /* COLORS */
   --color-red: var(--color-red-300);
+  --color-red-dark: var(--color-red-200);
   --color-orange: var(--color-orange-200);
+  --color-orange-dark: var(--color-orange-100);
   --color-blue: var(--color-blue-200);
-  --color-green: var(--color-green-100);
+  --color-blue-dark: var(--color-blue-100);
+  --color-green: var(--color-green-200);
+  --color-green-dark: var(--color-green-100);
+  --color-black: var(--color-strict-white);
+  --color-gray-light: var(--color-gray-800);
+  --color-gray: var(--color-gray-600);
+  --color-gray-dark: var(--color-gray-500);
 }
