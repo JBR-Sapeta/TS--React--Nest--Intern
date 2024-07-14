@@ -2,12 +2,12 @@ import type { ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 
-import type { NavtigationLink } from '@Common/types';
+import type { NavigationLink } from '@Common/types';
 
 import styles from './NavigationLinks.module.css';
 
 type Props = {
-  links: NavtigationLink[];
+  links: NavigationLink[];
 };
 
 function NavigationLinks({ links }: Props): ReactElement {

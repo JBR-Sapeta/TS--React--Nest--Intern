@@ -1,0 +1,4 @@
+.hr {
+  margin: 0 auto;
+  border-color: var(--color-element-hr);
+}

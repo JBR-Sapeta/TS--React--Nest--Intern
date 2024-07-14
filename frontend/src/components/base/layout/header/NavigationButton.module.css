@@ -1,3 +1,20 @@
 .button {
-  display: block;
+  width: 32px;
+  height: 32px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  @media (width <= 642px) {
+    display: block;
+  }
+
+  & svg {
+    width: 36px;
+    height: 36px;
+    fill: var(--color-element-icon);
+  }
 }

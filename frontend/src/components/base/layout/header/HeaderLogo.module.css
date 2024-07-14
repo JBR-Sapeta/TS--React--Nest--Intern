@@ -1,0 +1,16 @@
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+
+  & svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--color-green);
+  }
+
+  & h1 {
+    font-size: var(--font-h-24);
+    color: var(--color-header);
+  }
+}

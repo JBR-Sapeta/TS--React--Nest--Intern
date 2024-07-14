@@ -1,3 +1,11 @@
 .button {
+  border: none;
+  background: transparent;
+  font-size: var(--font-h-18);
   color: var(--color-header-light);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-header);
+  }
 }

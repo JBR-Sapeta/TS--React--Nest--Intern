@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 
 import {
-  LogoLink,
+  HeaderLogo,
   LogoutButton,
   NavigationButton,
   NavigationLinks,
@@ -20,17 +20,19 @@ function Header(): ReactElement {
 
   return (
     <header className={styles.header}>
-      <LogoLink />
-      <div>
-        <UiThemeButton />
-        <nav>
-          <NavigationLinks links={links} />
-          <LogoutButton onClick={() => {}} />
-        </nav>
-        <NavigationButton
-          isMenuOpen={isMenuOpen}
-          onClick={() => setIsMenuOpen((state) => !state)}
-        />
+      <div className={styles.container}>
+        <HeaderLogo />
+        <div className={styles.controls}>
+          <nav className={styles.navigation}>
+            <NavigationLinks links={links} />
+            <LogoutButton onClick={() => {}} />
+          </nav>
+          <UiThemeButton />
+          <NavigationButton
+            isMenuOpen={isMenuOpen}
+            onClick={() => setIsMenuOpen((state) => !state)}
+          />
+        </div>
       </div>
     </header>
   );

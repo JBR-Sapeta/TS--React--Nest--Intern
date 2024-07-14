@@ -1,3 +1,28 @@
 .header {
+  width: 100%;
+  height: var(--header-height);
+  box-shadow: var(--shadow-xl);
+  background-color: var(--color-bcg-main);
+}
+
+.container {
+  width: var(--desktop-content-width);
+  padding-top: var(--space-24);
+  margin: 0 auto;
   display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: var(--space-16);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
 }

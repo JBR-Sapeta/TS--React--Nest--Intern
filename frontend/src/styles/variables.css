@@ -69,6 +69,10 @@
   --shadow-l: rgb(0 0 0 / 12%) 0px 2px 6px, rgb(0 0 0 / 12%) 0px 4px 6px;
   --shadow-xl: rgb(0 0 0 / 12%) 0px 3px 9px, rgb(0 0 0 / 12%) 0px 6px 9px;
 
+  /* CONTENT SIZE */
+  --header-height: 72px;
+  --desktop-content-width: 1274px;
+
   /* BREAKPOINTS */
   --bp-mobile: 632px;
   --bp-tablet: 968px;
@@ -82,6 +86,7 @@ body {
   --color-header-light: var(--color-gray-700);
 
   /* BACKGROUND */
+  --color-bcg: var(--color-gray-400);
   --color-bcg-main: var(--color-gray-100);
   --color-bcg-secondary: var(--color-gray-100);
   --color-bcg-input: var(--color-gray-200);
@@ -106,13 +111,14 @@ body.dark {
   --color-header-light: var(--color-gray-500);
 
   /* BACKGROUND */
+  --color-bcg: var(--color-gray-800);
   --color-bcg-main: var(--color-black);
   --color-bcg-secondary: var(--color-gray-1000);
   --color-bcg-input: var(--color-gray-1000);
   --color-bcg-element: var(--color-gray-1000);
 
   /* ELEMENTS */
-  --color-element-hr: : var(--color-gray-700);
+  --color-element-hr: var(--color-gray-700);
   --color-element-border: var(--color-gray-700);
   --color-element-icon: var(--color-gray-500);
 
@@ -120,5 +126,5 @@ body.dark {
   --color-red: var(--color-red-300);
   --color-orange: var(--color-orange-200);
   --color-blue: var(--color-blue-200);
-  --color-green: var(--color-green-200);
+  --color-green: var(--color-green-100);
 }

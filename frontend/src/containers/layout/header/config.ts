@@ -1,33 +1,33 @@
 import { Users } from '@Common/enums';
-import type { NavtigationLink } from '@Common/types';
+import type { NavigationLink } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
-const BASE_NAVIGATION_LINKS: NavtigationLink[] = [
+const BASE_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
 ];
 
-const USER_NAVIGATION_LINKS: NavtigationLink[] = [
+const USER_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
 ];
 
-const COMPANY_NAVIGATION_LINKS: NavtigationLink[] = [
+const COMPANY_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
 ];
 
-const ADMIN_NAVIGATION_LINKS: NavtigationLink[] = [
+const ADMIN_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Zaloguj się', path: ROUTER_PATHS.SIGN_IN },
 ];
 
 class NavigationLinksMap {
-  private data: Map<string, NavtigationLink[]>;
+  private data: Map<string, NavigationLink[]>;
 
   constructor() {
     this.data = new Map([
@@ -38,7 +38,7 @@ class NavigationLinksMap {
     ]);
   }
 
-  public get(key: string): NavtigationLink[] {
+  public get(key: string): NavigationLink[] {
     const navigationLinks = this.data.get(key);
 
     return navigationLinks || this.data.get(Users.BASE)!;

@@ -1,3 +1,35 @@
 .button {
+  height: 32px;
+  width: 64px;
   display: flex;
+  padding: 0 var(--space-4);
+  align-items: center;
+  background-color: var(--color-bcg-element);
+  border: 1px solid var(--color-element-border);
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.circle {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-700);
+  border-radius: 50%;
+
+  & svg {
+    width: 16px;
+    height: 16px;
+    color: var(--color-gray-100);
+  }
+}
+
+.dark{
+  justify-content: flex-start;
+}
+
+.light {
+  justify-content: flex-end;
 }

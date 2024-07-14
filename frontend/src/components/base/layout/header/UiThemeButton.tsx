@@ -1,22 +1,41 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
+import { FaMoon } from 'react-icons/fa6';
+import { MdSunny } from 'react-icons/md';
+import clsx from 'clsx';
 
 import styles from './UiThemeButton.module.css';
 
+enum UiMode {
+  DARK = 'dark',
+  LIGHT = 'light',
+}
+
 function UiThemeButton(): ReactElement {
-  const [selectedTheam, setSelectedTheam] = useState('DM');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const onClick = () => {
-    if (selectedTheam === 'DM') {
-      setSelectedTheam('LM');
+    setIsDarkMode((state) => !state);
+
+    if (isDarkMode) {
+      document.querySelector('body')?.classList.remove(UiMode.DARK);
     } else {
-      setSelectedTheam('DM');
+      document.querySelector('body')?.classList.add(UiMode.DARK);
     }
   };
 
   return (
-    <button type="button" onClick={onClick} className={styles.button}>
-      {selectedTheam}
+    <button
+      type="button"
+      onClick={onClick}
+      className={clsx(styles.button, {
+        [styles.dark]: isDarkMode,
+        [styles.light]: !isDarkMode,
+      })}
+    >
+      <div className={styles.circle}>
+        {isDarkMode ? <FaMoon /> : <MdSunny />}
+      </div>
     </button>
   );
 }
