@@ -1,11 +1,13 @@
 import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 
+import { ROUTER_PATHS } from '@Router/constants';
+
 import styles from './HeaderLogo.module.css';
 
 function HeaderLogo(): ReactElement {
   return (
-    <Link to="/" className={styles.link}>
+    <Link to={ROUTER_PATHS.OFFERS} className={styles.link}>
       <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           fillRule="evenodd"
