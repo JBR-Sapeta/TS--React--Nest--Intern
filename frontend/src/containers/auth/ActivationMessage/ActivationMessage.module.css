@@ -1,0 +1,30 @@
+.section {
+  width: 736px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-8);
+  background: var(--color-bcg-main);
+  box-shadow: var(--shadow-l);
+
+
+  & h2 {
+    margin: var(--space-32) 0 var(--space-16) 0;
+    font-size: var(--font-h-32);
+    color: var(--color-header);
+  }
+
+  & p {
+    margin-bottom: var(--space-64);
+    font-size: var(--font-p-16);
+    color: var(--color-text);
+  }
+}
+
+.svg {
+  width: 128px;
+  height: 128px;
+  color: var(--color-green);
+}

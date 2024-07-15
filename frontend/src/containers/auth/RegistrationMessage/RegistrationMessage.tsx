@@ -1,0 +1,47 @@
+import type { ReactElement } from 'react';
+import { MdKeyboardArrowRight } from 'react-icons/md';
+
+import { BaseButton } from '@Components/shared';
+
+import styles from './RegistrationMessage.module.css';
+
+function RegistrationMessage(): ReactElement {
+  return (
+    <section className={styles.section}>
+      <svg
+        width="512"
+        height="512"
+        viewBox="0 0 512 512"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={styles.svg}
+      >
+        <g clipPath="url(#clip0_708_2464)">
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M512 256C512 397.385 397.385 512 256 512C114.615 512 0 397.385 0 256C0 114.615 114.615 0 256 0C276.82 0 297.059 2.48533 316.437 7.17549C388.189 36.7427 466.742 126.778 466.742 225.623C466.742 305.883 417.183 389.15 359.492 439.003C431.053 388.86 479.389 293.53 475.573 227.174C482.174 149.526 411.546 40.0853 316.719 7.24391C428.795 34.5053 512 135.536 512 256ZM209.331 157.331C196.954 169.708 190 186.496 190 204H179C173.165 204 167.569 206.318 163.444 210.444C159.318 214.569 157 220.165 157 226V336C157 341.835 159.318 347.431 163.444 351.556C167.569 355.682 173.165 358 179 358H333C338.835 358 344.431 355.682 348.556 351.556C352.682 347.431 355 341.835 355 336V226C355 220.165 352.682 214.569 348.556 210.444C344.431 206.318 338.835 204 333 204H322C322 186.496 315.046 169.708 302.669 157.331C290.292 144.954 273.504 138 256 138C238.496 138 221.708 144.954 209.331 157.331ZM287.113 172.887C278.861 164.636 267.67 160 256 160C244.33 160 233.139 164.636 224.887 172.887C216.636 181.139 212 192.33 212 204H300C300 192.33 295.364 181.139 287.113 172.887ZM275.052 281C276.983 277.655 278 273.862 278 270C278 264.165 275.682 258.569 271.556 254.444C267.431 250.318 261.835 248 256 248C251.157 248 246.45 249.598 242.608 252.546C238.766 255.495 236.004 259.628 234.751 264.306C233.497 268.984 233.822 273.944 235.675 278.418C237.529 282.893 240.806 286.63 245 289.052V303C245 305.917 246.159 308.715 248.222 310.778C250.285 312.841 253.083 314 256 314C258.917 314 261.715 312.841 263.778 310.778C265.841 308.715 267 305.917 267 303V289.052C270.344 287.121 273.122 284.344 275.052 281Z"
+            fill="currentColor"
+          />
+        </g>
+        <defs>
+          <clipPath id="clip0_708_2464">
+            <rect width="512" height="512" fill="white" />
+          </clipPath>
+        </defs>
+      </svg>
+
+      <h2>Aktywuj swoje konto</h2>
+      <p>
+        Kliknij link aktywacyjny w przesłanej do Ciebie wiadomości i zyskaj
+        pełen dostęp do aplikacji.
+      </p>
+      {/* @ TO DO - Use Links  */}
+      <BaseButton size="medium" color="green" RightIcon={MdKeyboardArrowRight}>
+        Zaloguj się
+      </BaseButton>
+    </section>
+  );
+}
+
+export default RegistrationMessage;

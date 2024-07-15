@@ -15,8 +15,8 @@
   font-size: var(--font-p-14);
 
   & svg {
-    width: 19px;
-    height: 19px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -26,8 +26,8 @@
   font-size: var(--font-p-16);
 
   & svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
   }
 }
 
