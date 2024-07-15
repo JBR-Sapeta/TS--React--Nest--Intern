@@ -9,11 +9,11 @@ import { FORM_FIELDS } from './data';
 
 import styles from './RecoveryForm.module.css';
 
-export type SignInData = {
+export type RecoveryData = {
   email: string;
 };
 
-const initialState: SignInData = {
+const initialState: RecoveryData = {
   email: '',
 };
 

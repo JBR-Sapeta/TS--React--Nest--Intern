@@ -1,5 +1,5 @@
 type FormFields = {
-  name: 'email' | 'password';
+  name: 'password' | 'confirmPassword';
   type: string;
   label: { id: string; text: string };
   placeholder: string;
@@ -8,16 +8,16 @@ type FormFields = {
 
 export const FORM_FIELDS: FormFields[] = [
   {
-    name: 'email',
-    type: 'email',
-    label: { id: '1-email', text: 'Email' },
+    name: 'password',
+    type: 'password',
+    label: { id: '1-email', text: 'Hasło' },
     placeholder: '',
     required: true,
   },
   {
-    name: 'password',
+    name: 'confirmPassword',
     type: 'password',
-    label: { id: '2-password', text: 'Hasło' },
+    label: { id: '2-password', text: 'Powtórz hasło' },
     placeholder: '',
     required: true,
   },
