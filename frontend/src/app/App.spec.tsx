@@ -4,10 +4,10 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 describe('App', () => {
-  it('renders h1 with "Stażysta" text', () => {
+  it('renders h1 with "Praktyka" text', () => {
     render(<App />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Stażysta'
+      'Praktyka'
     );
   });
 });
