@@ -1,22 +1,27 @@
+import { useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { ContentRow } from '@Containers/content';
+import {
+  AuthForms,
+  RecoveryForm,
+  SignInForm,
+  SignUpForm,
+} from '@Containers/auth';
 
 function SignInView(): ReactElement {
+  const [formView, setFormView] = useState(AuthForms.SIGN_IN);
   return (
-    <ContentRow margin="medium">
-      <div
-        style={{
-          background: '#fff',
-          width: '952px',
-          height: '600px',
-          padding: '32px',
-          borderRadius: '8px',
-        }}
-      >
-        <h2>Sign In Page</h2>
-        <p>Sign in</p>
-      </div>
+    <ContentRow margin="large">
+      {formView === AuthForms.SIGN_IN && (
+        <SignInForm changeForm={setFormView} />
+      )}
+      {formView === AuthForms.SIGN_UP && (
+        <SignUpForm changeForm={setFormView} />
+      )}
+      {formView === AuthForms.RECOVERY && (
+        <RecoveryForm changeForm={setFormView} />
+      )}
     </ContentRow>
   );
 }

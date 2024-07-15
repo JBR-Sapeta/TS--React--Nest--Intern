@@ -33,6 +33,7 @@
 }
 
 .controls {
+  width: 140px;
   display: flex;
   flex-direction: column;
   gap: var(--space-24);

@@ -7,23 +7,21 @@ import { BaseButton, BaseInput } from '@Components/shared';
 import { AuthForms } from '../enum';
 import { FORM_FIELDS } from './data';
 
-import styles from './SignInForm.module.css';
+import styles from './RecoveryForm.module.css';
 
 export type SignInData = {
   email: string;
-  password: string;
 };
 
 const initialState: SignInData = {
   email: '',
-  password: '',
 };
 
 type Props = {
   changeForm: (data: AuthForms) => void;
 };
 
-function SignInForm({ changeForm }: Props): ReactElement {
+function RecoveryForm({ changeForm }: Props): ReactElement {
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState(initialState);
 
@@ -44,23 +42,24 @@ function SignInForm({ changeForm }: Props): ReactElement {
           onClick: () => changeForm(AuthForms.SIGN_UP),
         }}
         secondButton={{
-          label: 'Odzyskaj konto',
-          onClick: () => changeForm(AuthForms.RECOVERY),
+          label: 'Zaloguj się',
+          onClick: () => changeForm(AuthForms.SIGN_IN),
         }}
       />
       <form className={styles.form} onSubmit={onSubmit}>
-        <AuthHeader header="Logowanie" subHeader="Witamy ponownie" />
+        <AuthHeader header="Odzyskaj konto" subHeader="Zresetuj hasło" />
         <div className={styles.inputs}>
-          {FORM_FIELDS.map((input) => (
-            <BaseInput
-              inputSize="small"
-              key={input.name}
-              {...input}
-              onChange={onChange}
-              value={values[input.name]}
-              error={errors[input.name]}
-            />
-          ))}
+          <BaseInput
+            inputSize="small"
+            onChange={onChange}
+            value={values.email}
+            error={errors.email}
+            {...FORM_FIELDS[0]}
+          />
+          <p>
+            Wprowadź adres e-mail powiązany z kontem, a my prześlemy wiadomość z
+            kolejnymi instrukcjami.
+          </p>
         </div>
         <BaseButton
           size="medium"
@@ -68,11 +67,11 @@ function SignInForm({ changeForm }: Props): ReactElement {
           type="submit"
           className={styles.button}
         >
-          Zaloguj się
+          Zresetuj hasło
         </BaseButton>
       </form>
     </div>
   );
 }
 
-export default SignInForm;
+export default RecoveryForm;

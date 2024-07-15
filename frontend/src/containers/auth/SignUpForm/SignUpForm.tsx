@@ -7,14 +7,18 @@ import { BaseButton, BaseInput } from '@Components/shared';
 import { AuthForms } from '../enum';
 import { FORM_FIELDS } from './data';
 
-import styles from './SignInForm.module.css';
+import styles from './SignUpForm.module.css';
 
 export type SignInData = {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
 
 const initialState: SignInData = {
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
 };
@@ -23,7 +27,7 @@ type Props = {
   changeForm: (data: AuthForms) => void;
 };
 
-function SignInForm({ changeForm }: Props): ReactElement {
+function SignUpForm({ changeForm }: Props): ReactElement {
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState(initialState);
 
@@ -40,8 +44,8 @@ function SignInForm({ changeForm }: Props): ReactElement {
     <div className={styles.container}>
       <AuthSideCard
         fisrtButton={{
-          label: 'Zarejestruj się',
-          onClick: () => changeForm(AuthForms.SIGN_UP),
+          label: 'Zaloguj się',
+          onClick: () => changeForm(AuthForms.SIGN_IN),
         }}
         secondButton={{
           label: 'Odzyskaj konto',
@@ -49,7 +53,7 @@ function SignInForm({ changeForm }: Props): ReactElement {
         }}
       />
       <form className={styles.form} onSubmit={onSubmit}>
-        <AuthHeader header="Logowanie" subHeader="Witamy ponownie" />
+        <AuthHeader header="Rejestracja" subHeader="Załóż konto za darmo" />
         <div className={styles.inputs}>
           {FORM_FIELDS.map((input) => (
             <BaseInput
@@ -68,11 +72,11 @@ function SignInForm({ changeForm }: Props): ReactElement {
           type="submit"
           className={styles.button}
         >
-          Zaloguj się
+          Zarejestruj się
         </BaseButton>
       </form>
     </div>
   );
 }
 
-export default SignInForm;
+export default SignUpForm;

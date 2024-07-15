@@ -10,14 +10,7 @@ export const FORM_FIELDS: FormFields[] = [
   {
     name: 'email',
     type: 'email',
-    label: { id: '2-email', text: 'Email' },
-    placeholder: '',
-    required: true,
-  },
-  {
-    name: 'password',
-    type: 'password',
-    label: { id: '2-password', text: 'Hasło' },
+    label: { id: '1-email', text: 'Email' },
     placeholder: '',
     required: true,
   },

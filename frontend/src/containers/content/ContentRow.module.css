@@ -11,5 +11,9 @@
 }
 
 .medium {
+  margin: var(--space-96) auto var(--space-64) auto;
+}
+
+.large {
   margin: var(--space-120) auto var(--space-64) auto;
 }
