@@ -9,8 +9,8 @@ import styles from './BaseButton.module.css';
 type Props = {
   size: 'small' | 'medium';
   color: 'red' | 'orange' | 'blue' | 'green' | 'plain';
-  onClick: () => void;
   children: ReactNode;
+  onClick?: () => void;
   className?: string;
   LeftIcon?: IconType;
   RightIcon?: IconType;

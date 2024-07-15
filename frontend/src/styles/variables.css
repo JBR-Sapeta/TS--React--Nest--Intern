@@ -90,6 +90,7 @@ body {
   --color-bcg: var(--color-gray-400);
   --color-bcg-main: var(--color-gray-100);
   --color-bcg-secondary: var(--color-gray-100);
+  --color-bcg-dark: var(--color-gray-900);
   --color-bcg-input: var(--color-gray-200);
   --color-bcg-element: var(--color-strict-white);
 
@@ -123,6 +124,7 @@ body.dark {
   --color-bcg: var(--color-gray-800);
   --color-bcg-main: var(--color-strict-black);
   --color-bcg-secondary: var(--color-gray-1000);
+  --color-bcg-dark: var(--color-strict-black);
   --color-bcg-input: var(--color-gray-1000);
   --color-bcg-element: var(--color-gray-1000);
 

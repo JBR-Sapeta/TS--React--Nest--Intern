@@ -16,8 +16,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-gray-700);
+  background-color: var(--color-gray-600);
   border-radius: 50%;
+
+  :global(body.dark) & {
+    background-color: var(--color-gray-700);
+  }
 
   & svg {
     width: 16px;
@@ -26,7 +30,7 @@
   }
 }
 
-.dark{
+.dark {
   justify-content: flex-start;
 }
 
