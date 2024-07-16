@@ -4,7 +4,7 @@ import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
 
-import { SignInView } from '@Views/auth';
+import { ActivationView, PostRegistrationView, SignInView } from '@Views/auth';
 import { CompanyListingView } from '@Views/companies';
 import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
@@ -17,6 +17,8 @@ const ROUTER = createBrowserRouter(
       <Route path={ROUTER_PATHS.COMPANIES} element={<OfferListingView />} />
       <Route path={ROUTER_PATHS.OFFERS} element={<CompanyListingView />} />
       <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />
+      <Route path={ROUTER_PATHS.POST_AUTH} element={<PostRegistrationView />} />
+      <Route path={ROUTER_PATHS.ACTIVATION} element={<ActivationView />} />
     </Route>
   )
 );

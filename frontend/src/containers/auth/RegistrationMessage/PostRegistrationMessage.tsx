@@ -3,9 +3,9 @@ import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { BaseButton } from '@Components/shared';
 
-import styles from './RegistrationMessage.module.css';
+import styles from './PostRegistrationMessage.module.css';
 
-function RegistrationMessage(): ReactElement {
+function PostRegistrationMessage(): ReactElement {
   return (
     <section className={styles.section}>
       <svg
@@ -44,4 +44,4 @@ function RegistrationMessage(): ReactElement {
   );
 }
 
-export default RegistrationMessage;
+export default PostRegistrationMessage;
