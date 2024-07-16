@@ -1,22 +1,21 @@
 /* eslint-disable react/button-has-type */
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactElement, PropsWithChildren } from 'react';
 import type { IconType } from 'react-icons';
 
 import clsx from 'clsx';
 
 import styles from './BaseButton.module.css';
 
-type Props = {
+type Props = PropsWithChildren<{
   size: 'small' | 'medium';
   color: 'red' | 'orange' | 'blue' | 'green' | 'plain';
-  children: ReactNode;
   onClick?: () => void;
   className?: string;
   LeftIcon?: IconType;
   RightIcon?: IconType;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-};
+}>;
 
 function BaseButton({
   size,

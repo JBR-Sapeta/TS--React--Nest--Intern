@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
-import { BaseButton } from '@Components/shared';
+import { ROUTER_PATHS } from '@Router/constants';
+import { BaseLink } from '@Components/shared';
 
 import styles from './ActivationMessage.module.css';
 
@@ -33,10 +34,14 @@ function ActivationMessage(): ReactElement {
 
       <h2>Konto aktywowane </h2>
       <p>Zaloguj się i znajdź wymarzony staż !</p>
-      {/* @ TO DO - Use Links  */}
-      <BaseButton size="medium" color="green" RightIcon={MdKeyboardArrowRight}>
+      <BaseLink
+        path={ROUTER_PATHS.AUTH}
+        size="medium"
+        color="green"
+        RightIcon={MdKeyboardArrowRight}
+      >
         Zaloguj się
-      </BaseButton>
+      </BaseLink>
     </section>
   );
 }

@@ -1,15 +1,31 @@
 import type { ReactElement } from 'react';
 
-import { BaseButton } from '../../../shared';
+import { BaseButton, BaseLink } from '../../../shared';
 
 import styles from './AuthSideCard.module.css';
 
-type Props = {
+type ButtonData = {
+  hasLink: false;
   fisrtButton: { label: string; onClick: VoidFunction };
   secondButton: { label: string; onClick: VoidFunction };
+  link?: never;
 };
 
-function AuthSideCard({ fisrtButton, secondButton }: Props): ReactElement {
+type LinkData = {
+  hasLink: true;
+  fisrtButton?: never;
+  secondButton?: never;
+  link: { label: string; path: string };
+};
+
+type Props = LinkData | ButtonData;
+
+function AuthSideCard({
+  hasLink,
+  fisrtButton,
+  secondButton,
+  link,
+}: Props): ReactElement {
   return (
     <div className={styles.container}>
       <div className={styles.logo}>
@@ -28,23 +44,35 @@ function AuthSideCard({ fisrtButton, secondButton }: Props): ReactElement {
         <h3>Praktyka</h3>
       </div>
       <div className={styles.controls}>
-        <BaseButton
-          size="small"
-          color="plain"
-          onClick={fisrtButton.onClick}
-          className={styles.button}
-        >
-          {fisrtButton.label}
-        </BaseButton>
-
-        <BaseButton
-          size="small"
-          color="plain"
-          onClick={secondButton.onClick}
-          className={styles.button}
-        >
-          {secondButton.label}
-        </BaseButton>
+        {hasLink ? (
+          <BaseLink
+            size="small"
+            color="plain"
+            path={link.path}
+            className={styles.button}
+          >
+            {link.label}
+          </BaseLink>
+        ) : (
+          <>
+            <BaseButton
+              size="small"
+              color="plain"
+              onClick={fisrtButton.onClick}
+              className={styles.button}
+            >
+              {fisrtButton.label}
+            </BaseButton>
+            <BaseButton
+              size="small"
+              color="plain"
+              onClick={secondButton.onClick}
+              className={styles.button}
+            >
+              {secondButton.label}
+            </BaseButton>
+          </>
+        )}
       </div>
     </div>
   );

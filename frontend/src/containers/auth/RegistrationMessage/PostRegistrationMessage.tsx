@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
-import { BaseButton } from '@Components/shared';
+import { ROUTER_PATHS } from '@Router/constants';
+import { BaseLink } from '@Components/shared';
 
 import styles from './PostRegistrationMessage.module.css';
 
@@ -36,10 +37,15 @@ function PostRegistrationMessage(): ReactElement {
         Kliknij link aktywacyjny w przesłanej do Ciebie wiadomości i zyskaj
         pełen dostęp do aplikacji.
       </p>
-      {/* @ TO DO - Use Links  */}
-      <BaseButton size="medium" color="green" RightIcon={MdKeyboardArrowRight}>
+
+      <BaseLink
+        path={ROUTER_PATHS.AUTH}
+        size="medium"
+        color="green"
+        RightIcon={MdKeyboardArrowRight}
+      >
         Zaloguj się
-      </BaseButton>
+      </BaseLink>
     </section>
   );
 }

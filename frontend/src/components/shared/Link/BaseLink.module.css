@@ -1,0 +1,117 @@
+.link {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--weight-600);
+  font-family: var(--font-family);
+  border-radius: var(--radius-8);
+  cursor: pointer;
+}
+
+.small {
+  height: 32px;
+  padding: 6px 16px;
+  font-size: var(--font-p-14);
+
+  & svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.medium {
+  height: 40px;
+  padding: 8px 20px;
+  font-size: var(--font-p-16);
+
+  & svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.plain {
+  color: var(--color-gray-dark);
+  border: 1px var(--color-gray-dark) solid;
+  background: transparent;
+
+  &:hover {
+    color: var(--color-green);
+    border: 1px var(--color-green) solid;
+  }
+
+  &:active {
+    color: var(--color-black);
+    border: 1px var(--color-black) solid;
+  }
+}
+
+.red {
+  color: var(--color-strict-white);
+  border: 1px var(--color-red) solid;
+  background: var(--color-red);
+
+  &:hover {
+    color: var(--color-red);
+    background: transparent;
+  }
+
+  &:active {
+    color: var(--color-strict-white);
+    background: var(--color-red-dark);
+    border: 1px var(--color-red-dark) solid;
+  }
+}
+
+.orange {
+  color: var(--color-strict-white);
+  border: 1px var(--color-orange) solid;
+  background: var(--color-orange);
+
+  &:hover {
+    color: var(--color-orange);
+    background: transparent;
+  }
+
+  &:active {
+    color: var(--color-strict-white);
+    background: var(--color-orange-dark);
+    border: 1px var(--color-orange-dark) solid;
+  }
+}
+
+.blue {
+  color: var(--color-strict-white);
+  border: 1px var(--color-blue) solid;
+  background: var(--color-blue);
+
+  &:hover {
+    color: var(--color-blue);
+    background: transparent;
+  }
+
+  &:active {
+    color: var(--color-strict-white);
+    background: var(--color-blue-dark);
+    border: 1px var(--color-blue-dark) solid;
+  }
+}
+
+.green {
+  color: var(--color-strict-white);
+  border: 1px var(--color-green) solid;
+  background: var(--color-green);
+
+  &:hover {
+    color: var(--color-green);
+    background: transparent;
+  }
+
+  &:active {
+    color: var(--color-strict-white);
+    background: var(--color-green-dark);
+    border: 1px var(--color-green-dark) solid;
+  }
+}
+

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
 
+import { ROUTER_PATHS } from '@Router/constants';
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
 
-import { AuthForms } from '../enum';
 import { FORM_FIELDS } from './data';
 
 import styles from './ResetForm.module.css';
@@ -19,11 +19,7 @@ const initialState: ResetData = {
   confirmPassword: '',
 };
 
-type Props = {
-  changeForm: (data: AuthForms) => void;
-};
-
-function ResetForm({ changeForm }: Props): ReactElement {
+function ResetForm(): ReactElement {
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState(initialState);
 
@@ -38,15 +34,11 @@ function ResetForm({ changeForm }: Props): ReactElement {
 
   return (
     <div className={styles.container}>
-      {/* @ TO DO - Use Links  */}
       <AuthSideCard
-        fisrtButton={{
-          label: 'Zarejestruj się',
-          onClick: () => changeForm(AuthForms.SIGN_UP),
-        }}
-        secondButton={{
+        hasLink
+        link={{
           label: 'Zaloguj się',
-          onClick: () => changeForm(AuthForms.SIGN_IN),
+          path: ROUTER_PATHS.AUTH,
         }}
       />
       <form className={styles.form} onSubmit={onSubmit}>
