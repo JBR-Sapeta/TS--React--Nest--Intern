@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
+import { isNil } from 'ramda';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
@@ -7,16 +8,11 @@ import { useSignIn } from '@Data/auth';
 import { extractValidationError } from '@Data/utils';
 
 import { AuthForms } from '../enum';
-import { FORM_FIELDS } from './data';
+import { FORM_FIELDS, SignInData, validateFormData } from './data';
 
 import styles from './SignInForm.module.css';
 
-export type SignInData = {
-  email: string;
-  password: string;
-};
-
-const initialState: SignInData = {
+const INITIAL_STATE: SignInData = {
   email: '',
   password: '',
 };
@@ -27,8 +23,8 @@ type Props = {
 
 function SignInForm({ changeForm }: Props): ReactElement {
   const { error, signInMutation, isPending } = useSignIn();
-  const [values, setValues] = useState(initialState);
-  const [errors, setErrors] = useState(initialState);
+  const [values, setValues] = useState(INITIAL_STATE);
+  const [errors, setErrors] = useState(INITIAL_STATE);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -37,11 +33,17 @@ function SignInForm({ changeForm }: Props): ReactElement {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    signInMutation(values);
+    const validationErrors = validateFormData(values);
+
+    if (isNil(validationErrors)) {
+      signInMutation(values);
+    } else {
+      setErrors(validationErrors);
+    }
   };
 
   const validationErrors = extractValidationError<SignInData>(
-    initialState,
+    INITIAL_STATE,
     error
   );
 

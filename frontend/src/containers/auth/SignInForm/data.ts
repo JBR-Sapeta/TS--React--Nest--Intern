@@ -1,3 +1,7 @@
+import { isEmpty } from 'ramda';
+
+import { isNotEmptyString, isValidEmail } from '@Common/validation';
+
 type FormFields = {
   name: 'email' | 'password';
   type: string;
@@ -22,3 +26,22 @@ export const FORM_FIELDS: FormFields[] = [
     required: true,
   },
 ];
+
+export type SignInData = {
+  email: string;
+  password: string;
+};
+
+export function validateFormData({ email, password }: SignInData) {
+  const emailMsg = isValidEmail(email);
+  const passwordMsg = isNotEmptyString(password, 'Wprowadź hasło.');
+
+  if ([emailMsg, passwordMsg].every((val) => isEmpty(val))) {
+    return null;
+  }
+
+  return {
+    email: emailMsg,
+    password: passwordMsg,
+  };
+}
