@@ -3,6 +3,8 @@ import type { ChangeEvent, FormEvent, ReactElement } from 'react';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
+import { useSignIn } from '@Data/auth';
+import { extractValidationError } from '@Data/utils';
 
 import { AuthForms } from '../enum';
 import { FORM_FIELDS } from './data';
@@ -24,6 +26,7 @@ type Props = {
 };
 
 function SignInForm({ changeForm }: Props): ReactElement {
+  const { error, signInMutation, isPending } = useSignIn();
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState(initialState);
 
@@ -34,11 +37,18 @@ function SignInForm({ changeForm }: Props): ReactElement {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+    signInMutation(values);
   };
+
+  const validationErrors = extractValidationError<SignInData>(
+    initialState,
+    error
+  );
 
   return (
     <div className={styles.container}>
       <AuthSideCard
+        hasLink={false}
         fisrtButton={{
           label: 'Zarejestruj się',
           onClick: () => changeForm(AuthForms.SIGN_UP),
@@ -58,7 +68,7 @@ function SignInForm({ changeForm }: Props): ReactElement {
               {...input}
               onChange={onChange}
               value={values[input.name]}
-              error={errors[input.name]}
+              error={errors[input.name] || validationErrors[input.name]}
             />
           ))}
         </div>
@@ -67,6 +77,7 @@ function SignInForm({ changeForm }: Props): ReactElement {
           color="green"
           type="submit"
           className={styles.button}
+          disabled={isPending}
         >
           Zaloguj się
         </BaseButton>

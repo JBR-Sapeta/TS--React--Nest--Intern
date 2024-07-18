@@ -22,6 +22,7 @@
       "@Common/*": ["src/common/*"],
       "@Components/*": ["src/components/*"],
       "@Containers/*": ["src/containers/*"],
+      "@Data/*": ["src/data/*"],
       "@Router/*": ["src/router/*"],
       "@Styles/*": ["src/styles/*"],
       "@Views/*": ["src/views/*"]

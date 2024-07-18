@@ -37,6 +37,7 @@ function RecoveryForm({ changeForm }: Props): ReactElement {
   return (
     <div className={styles.container}>
       <AuthSideCard
+        hasLink={false}
         fisrtButton={{
           label: 'Zarejestruj się',
           onClick: () => changeForm(AuthForms.SIGN_UP),

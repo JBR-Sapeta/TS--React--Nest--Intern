@@ -1,0 +1,4 @@
+export const QUERY_KEY = {
+  USER_PROFILE: 'USER_PROFILE',
+  ACCESS_TOKEN: 'ACCESS_TOKEN',
+};

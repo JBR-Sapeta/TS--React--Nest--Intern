@@ -1,0 +1,84 @@
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { isNil } from 'ramda';
+import axios, { AxiosError } from 'axios';
+
+import { HttpStatusCode } from '@Common/enums';
+import { Nullable } from '@Common/types';
+
+import { QUERY_KEY } from '../constant';
+import { AccessTokenResponse, BaseError } from '../types';
+import { tokenDataStorage } from '../utils';
+
+import { getTokenExpirationTime } from '../utils/get-token-expiration-time';
+
+async function refreshAccessToken(): Promise<Nullable<AccessTokenResponse>> {
+  const refreshToken = tokenDataStorage.getRefreshToken();
+
+  if (isNil(refreshToken)) return null;
+
+  const { data } = await axios.post<AccessTokenResponse>(
+    `${import.meta.env.VITE_API_URL}/auth/refresh-token`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    }
+  );
+
+  return data;
+}
+
+type UseGetAccessToken = {
+  accessToken?: string;
+};
+
+export function useGetAccessToken(): UseGetAccessToken {
+  const queryClient = useQueryClient();
+
+  const { data, error } = useQuery<
+    Nullable<AccessTokenResponse>,
+    AxiosError<BaseError>
+  >({
+    queryKey: [QUERY_KEY.ACCESS_TOKEN],
+    queryFn: async (): Promise<Nullable<AccessTokenResponse>> =>
+      refreshAccessToken(),
+    refetchInterval: 840000,
+    refetchIntervalInBackground: true,
+    retry: false,
+  });
+
+  useEffect(() => {
+    const tokensRes = tokenDataStorage.getTokens();
+    if (tokensRes) {
+      const expiresIn = getTokenExpirationTime(tokensRes.data);
+      const timeout = setTimeout(() => {
+        tokenDataStorage.removeTokens();
+        queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
+        queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
+      }, expiresIn);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+
+    return undefined;
+  }, [queryClient]);
+
+  if (
+    error?.response?.status === HttpStatusCode.FORBIDDEN ||
+    error?.response?.status === HttpStatusCode.UNAUTHORIZED
+  ) {
+    queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
+    queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
+    tokenDataStorage.removeTokens();
+  }
+
+  if (isNil(data)) {
+    return { accessToken: undefined };
+  }
+
+  return data.data;
+}
