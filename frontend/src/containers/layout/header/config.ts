@@ -1,4 +1,4 @@
-import { Users } from '@Common/enums';
+import { UserRole } from '@Common/enums';
 import type { NavigationLink } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
@@ -27,21 +27,21 @@ const ADMIN_NAVIGATION_LINKS: NavigationLink[] = [
 ];
 
 class NavigationLinksMap {
-  private data: Map<string, NavigationLink[]>;
+  private data: Map<number, NavigationLink[]>;
 
   constructor() {
     this.data = new Map([
-      [Users.BASE, BASE_NAVIGATION_LINKS],
-      [Users.USER, USER_NAVIGATION_LINKS],
-      [Users.COMPANY, COMPANY_NAVIGATION_LINKS],
-      [Users.ADMIN, ADMIN_NAVIGATION_LINKS],
+      [UserRole.BASE, BASE_NAVIGATION_LINKS],
+      [UserRole.USER, USER_NAVIGATION_LINKS],
+      [UserRole.COMPANY, COMPANY_NAVIGATION_LINKS],
+      [UserRole.ADMIN, ADMIN_NAVIGATION_LINKS],
     ]);
   }
 
-  public get(key: string): NavigationLink[] {
+  public get(key: number): NavigationLink[] {
     const navigationLinks = this.data.get(key);
 
-    return navigationLinks || this.data.get(Users.BASE)!;
+    return navigationLinks || this.data.get(UserRole.BASE)!;
   }
 }
 

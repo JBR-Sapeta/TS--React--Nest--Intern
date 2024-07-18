@@ -3,7 +3,7 @@ import { createRoutesFromElements, RouterProvider } from 'react-router';
 import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
-
+import { useGetAccessToken, useGetUserProfile } from '@Data/auth';
 import {
   ActivationView,
   PostRegistrationView,
@@ -30,5 +30,8 @@ const ROUTER = createBrowserRouter(
 );
 
 export default function Router(): ReactElement {
+  const { accessToken } = useGetAccessToken();
+  useGetUserProfile(accessToken);
+
   return <RouterProvider router={ROUTER} />;
 }

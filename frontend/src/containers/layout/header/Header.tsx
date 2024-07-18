@@ -8,7 +8,7 @@ import {
   NavigationLinks,
   UiThemeButton,
 } from '@Components/base';
-import { Users } from '@Common/enums';
+import { UserRole } from '@Common/enums';
 
 import { NAVIGATION_LINKS } from './config';
 
@@ -16,7 +16,7 @@ import styles from './Header.module.css';
 
 function Header(): ReactElement {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const links = NAVIGATION_LINKS.get(Users.BASE);
+  const links = NAVIGATION_LINKS.get(UserRole.BASE);
 
   return (
     <header className={styles.header}>
