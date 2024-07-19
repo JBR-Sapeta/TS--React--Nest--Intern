@@ -36,7 +36,7 @@ type UseGetAccessToken = {
 
 export function useGetAccessToken(): UseGetAccessToken {
   const queryClient = useQueryClient();
-
+  // @ TO DO Adjust to other hooks
   const { data, error } = useQuery<
     Nullable<AccessTokenResponse>,
     AxiosError<BaseError>
@@ -51,6 +51,7 @@ export function useGetAccessToken(): UseGetAccessToken {
     retry: false,
   });
 
+  // @ TO DO move it to separate hook and call it on top level
   useEffect(() => {
     const tokensRes = tokenDataStorage.getTokens();
     if (tokensRes) {

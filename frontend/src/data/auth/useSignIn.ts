@@ -11,7 +11,6 @@ import { Nullable } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
 import { QUERY_KEY } from '../constant';
-
 import type {
   BaseError,
   SignInBody,
@@ -20,17 +19,6 @@ import type {
   ValidationError,
 } from '../types';
 import { getErrorMessages, tokenDataStorage } from '../utils';
-
-type UseSignIn = {
-  isPending: boolean;
-  signInMutation: UseMutateFunction<
-    TokensResponse,
-    AxiosError<BaseError>,
-    SignInBody,
-    unknown
-  >;
-  error: Nullable<AxiosError<ValidationError<SignInError> | BaseError>>;
-};
 
 async function signIn(body: SignInBody): Promise<TokensResponse> {
   const { data } = await axios.post<TokensResponse>(
@@ -41,15 +29,28 @@ async function signIn(body: SignInBody): Promise<TokensResponse> {
   return data;
 }
 
+type UseSignIn = {
+  isPending: boolean;
+  data?: TokensResponse;
+  error: Nullable<AxiosError<ValidationError<SignInError> | BaseError>>;
+  signInMutation: UseMutateFunction<
+    TokensResponse,
+    AxiosError<BaseError>,
+    SignInBody,
+    unknown
+  >;
+};
+
 export function useSignIn(): UseSignIn {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
-    mutate: signInMutation,
     isPending,
+    data,
     error,
+    mutate: signInMutation,
   } = useMutation<TokensResponse, AxiosError<BaseError>, SignInBody, unknown>({
     mutationFn: (body) => signIn(body),
     onSuccess: (res) => {
@@ -71,5 +72,5 @@ export function useSignIn(): UseSignIn {
     },
   });
 
-  return { signInMutation, isPending, error };
+  return { isPending, data, error, signInMutation };
 }

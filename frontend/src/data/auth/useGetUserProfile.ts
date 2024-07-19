@@ -32,15 +32,15 @@ export async function getUserProfile(
 }
 
 type UseGetUserProfile = {
+  isLoading: boolean;
   userProfile?: UserProfile;
   error: Nullable<Error>;
-  isLoading: boolean;
 };
 
 export function useGetUserProfile(): UseGetUserProfile {
   const { accessToken } = useGetAccessToken();
 
-  const { data, error, isLoading } = useQuery({
+  const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.USER_PROFILE],
     queryFn: async (): Promise<Nullable<UserProfileResponse>> =>
       getUserProfile(accessToken),
@@ -58,8 +58,8 @@ export function useGetUserProfile(): UseGetUserProfile {
   }, [data]);
 
   return {
+    isLoading,
     userProfile: data?.data,
     error,
-    isLoading,
   };
 }
