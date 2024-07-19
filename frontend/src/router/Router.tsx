@@ -1,9 +1,12 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable max-len */
+
 import type { ReactElement } from 'react';
 import { createRoutesFromElements, RouterProvider } from 'react-router';
 import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
-import { useGetAccessToken, useGetUserProfile } from '@Data/auth';
+import { useGetUserProfile } from '@Data/auth';
 import {
   ActivationView,
   PostRegistrationView,
@@ -15,23 +18,56 @@ import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
 
 import { ROUTER_PATHS } from './constants';
+import {
+  CompanyRouteGuard,
+  ProtectedRoute,
+  PublicRoute,
+  UserRouteGuard,
+} from './guards';
 
 const ROUTER = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<NotFoundView />}>
       <Route path={ROUTER_PATHS.COMPANIES} element={<OfferListingView />} />
-      <Route path={ROUTER_PATHS.OFFERS} element={<CompanyListingView />} />
-      <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />
-      <Route path={ROUTER_PATHS.POST_AUTH} element={<PostRegistrationView />} />
-      <Route path={ROUTER_PATHS.ACTIVATION} element={<ActivationView />} />
-      <Route path={ROUTER_PATHS.RESET} element={<ResetView />} />
+      <Route
+        path={`${ROUTER_PATHS.COMPANIES}/:companyId`}
+        element={<CompanyListingView />}
+      />
+      <Route path={ROUTER_PATHS.OFFERS} element={<OfferListingView />} />
+      <Route
+        path={`${ROUTER_PATHS.OFFERS}/:offerId`}
+        element={<CompanyListingView />}
+      />
+      <Route element={<PublicRoute />}>
+        <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />
+        <Route
+          path={ROUTER_PATHS.POST_AUTH}
+          element={<PostRegistrationView />}
+        />
+        <Route path={ROUTER_PATHS.ACTIVATION} element={<ActivationView />} />
+        <Route path={ROUTER_PATHS.RESET} element={<ResetView />} />
+      </Route>
+      <Route element={<ProtectedRoute />}>
+        <Route path={ROUTER_PATHS.PROFILE} element={<PostRegistrationView />} />
+      </Route>
+      <Route element={<UserRouteGuard />}>
+        <Route
+          path={ROUTER_PATHS.APPLICATIONS}
+          element={<PostRegistrationView />}
+        />
+      </Route>
+      <Route element={<CompanyRouteGuard />}>
+        <Route path={ROUTER_PATHS.COMPANY} element={<PostRegistrationView />} />
+      </Route>
+      <Route element={<CompanyRouteGuard />}>
+        <Route path={ROUTER_PATHS.USERS} element={<PostRegistrationView />} />
+      </Route>
     </Route>
   )
 );
 
 export default function Router(): ReactElement {
-  const { accessToken } = useGetAccessToken();
-  useGetUserProfile(accessToken);
+  useGetUserProfile();
 
   return <RouterProvider router={ROUTER} />;
 }

@@ -1,8 +1,12 @@
 export const ROUTER_PATHS = {
-  OFFERS: '/offers',
-  COMPANIES: '/companies',
   ACTIVATION: '/activation',
+  APPLICATIONS: '/aplications',
   AUTH: '/auth',
+  COMPANIES: '/companies',
+  COMPANY: '/company',
+  OFFERS: '/offers',
+  USERS: 'USERS',
   POST_AUTH: 'post-auth',
+  PROFILE: '/profile',
   RESET: 'reset',
 };

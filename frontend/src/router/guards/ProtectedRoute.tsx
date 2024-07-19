@@ -6,18 +6,20 @@ import { hasRoles } from '@Common/functions';
 import { useGetUserProfile } from '@Data/auth';
 import { ROUTER_PATHS } from '@Router/constants';
 
-function CompanyRouteGuard() {
+const REQUIRED_ROLE = [UserRole.USER, UserRole.COMPANY, UserRole.ADMIN];
+
+function ProtectedRoute() {
   const { userProfile } = useGetUserProfile();
 
   if (isNil(userProfile)) {
     return <Navigate to={ROUTER_PATHS.AUTH} />;
   }
 
-  if (!hasRoles(userProfile.roles, [UserRole.ADMIN])) {
+  if (!hasRoles(userProfile.roles, REQUIRED_ROLE)) {
     return <Navigate to={ROUTER_PATHS.OFFERS} />;
   }
 
   return <Outlet />;
 }
 
-export default CompanyRouteGuard;
+export default ProtectedRoute;

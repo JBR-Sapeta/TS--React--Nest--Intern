@@ -8,7 +8,7 @@ import { Nullable } from '@Common/types';
 
 import { QUERY_KEY } from '../constant';
 import { AccessTokenResponse, BaseError } from '../types';
-import { tokenDataStorage } from '../utils';
+import { profileDataStorage, tokenDataStorage } from '../utils';
 
 import { getTokenExpirationTime } from '../utils/get-token-expiration-time';
 
@@ -46,6 +46,8 @@ export function useGetAccessToken(): UseGetAccessToken {
       refreshAccessToken(),
     refetchInterval: 840000,
     refetchIntervalInBackground: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: false,
   });
 
@@ -55,8 +57,9 @@ export function useGetAccessToken(): UseGetAccessToken {
       const expiresIn = getTokenExpirationTime(tokensRes.data);
       const timeout = setTimeout(() => {
         tokenDataStorage.removeTokens();
-        queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
+        profileDataStorage.removeProfile();
         queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
+        queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
       }, expiresIn);
 
       return () => {
@@ -71,9 +74,10 @@ export function useGetAccessToken(): UseGetAccessToken {
     error?.response?.status === HttpStatusCode.FORBIDDEN ||
     error?.response?.status === HttpStatusCode.UNAUTHORIZED
   ) {
-    queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
-    queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
     tokenDataStorage.removeTokens();
+    profileDataStorage.removeProfile();
+    queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
+    queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
   }
 
   if (isNil(data)) {

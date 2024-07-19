@@ -3,12 +3,11 @@ import { isNil } from 'ramda';
 
 import { UserRole } from '@Common/enums';
 import { hasRoles } from '@Common/functions';
-import { useGetAccessToken, useGetUserProfile } from '@Data/auth';
+import { useGetUserProfile } from '@Data/auth';
 import { ROUTER_PATHS } from '@Router/constants';
 
 function CompanyRouteGuard() {
-  const { accessToken } = useGetAccessToken();
-  const { userProfile } = useGetUserProfile(accessToken);
+  const { userProfile } = useGetUserProfile();
 
   if (isNil(userProfile)) {
     return <Navigate to={ROUTER_PATHS.AUTH} />;
