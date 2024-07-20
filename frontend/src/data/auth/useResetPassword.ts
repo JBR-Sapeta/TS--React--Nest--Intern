@@ -16,7 +16,7 @@ import type {
 } from '../types';
 
 async function resetPassword(body: ResetPasswordBody): Promise<BaseResponse> {
-  const { data } = await axios.patch<BaseResponse>(
+  const { data } = await axios.post<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/auth/reset-password`,
     body
   );
@@ -52,7 +52,11 @@ export function useResetPassword(): UseResetPassword {
     unknown
   >({
     mutationFn: (body) => resetPassword(body),
-    onSuccess: () => {
+    onSuccess: (res) => {
+      enqueueSnackbar({
+        message: res.message,
+        variant: 'success',
+      });
       navigate(ROUTER_PATHS.AUTH);
     },
     onError: (res) => {

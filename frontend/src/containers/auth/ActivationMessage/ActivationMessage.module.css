@@ -9,18 +9,37 @@
   background: var(--color-bcg-main);
   box-shadow: var(--shadow-l);
 
-
   & h2 {
     margin: var(--space-32) 0 var(--space-16) 0;
     font-size: var(--font-h-32);
     color: var(--color-header);
   }
+}
 
-  & p {
-    margin-bottom: var(--space-64);
-    font-size: var(--font-p-16);
-    color: var(--color-text);
-  }
+.p {
+  margin-bottom: var(--space-32);
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+}
+
+.loading {
+  margin-bottom: var(--space-48);
+}
+
+.success {
+  width: 320px;
+  margin-bottom: var(--space-48);
+  text-align: center;
+  font-size: var(--font-p-14);
+  color: var(--color-green);
+}
+
+.error {
+  width: 320px;
+  margin-bottom: var(--space-48);
+  text-align: center;
+  font-size: var(--font-p-14);
+  color: var(--color-red);
 }
 
 .svg {

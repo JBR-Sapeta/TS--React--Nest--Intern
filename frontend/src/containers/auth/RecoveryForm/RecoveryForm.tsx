@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
+import { isNil } from 'ramda';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
+import { useAccountRecovery } from '@Data/auth';
+import { extractValidationError } from '@Data/utils';
+import { AccountRecoveryBody, AccountRecoveryError } from '@Data/types';
 
 import { AuthForms } from '../enum';
-import { FORM_FIELDS } from './data';
+import { FORM_FIELDS, validateFormData } from './data';
 
 import styles from './RecoveryForm.module.css';
 
-export type RecoveryData = {
-  email: string;
-};
-
-const initialState: RecoveryData = {
+const INITIAL_STATE: AccountRecoveryBody = {
   email: '',
 };
 
@@ -22,8 +22,10 @@ type Props = {
 };
 
 function RecoveryForm({ changeForm }: Props): ReactElement {
-  const [values, setValues] = useState(initialState);
-  const [errors, setErrors] = useState(initialState);
+  const { isPending, data, error, accountRecoveryMutation } =
+    useAccountRecovery();
+  const [values, setValues] = useState(INITIAL_STATE);
+  const [errors, setErrors] = useState(INITIAL_STATE);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -32,7 +34,20 @@ function RecoveryForm({ changeForm }: Props): ReactElement {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+
+    const validationErrors = validateFormData(values);
+
+    if (isNil(validationErrors)) {
+      accountRecoveryMutation(values);
+    } else {
+      setErrors(validationErrors);
+    }
   };
+
+  const validationErrors = extractValidationError<AccountRecoveryError>(
+    INITIAL_STATE,
+    error
+  );
 
   return (
     <div className={styles.container}>
@@ -54,7 +69,7 @@ function RecoveryForm({ changeForm }: Props): ReactElement {
             inputSize="small"
             onChange={onChange}
             value={values.email}
-            error={errors.email}
+            error={errors.email || validationErrors.email}
             {...FORM_FIELDS[0]}
           />
           <p>
@@ -67,6 +82,7 @@ function RecoveryForm({ changeForm }: Props): ReactElement {
           color="green"
           type="submit"
           className={styles.button}
+          disabled={isPending || !!data}
         >
           Zresetuj hasło
         </BaseButton>

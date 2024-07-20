@@ -5,8 +5,8 @@ export const ROUTER_PATHS = {
   COMPANIES: '/companies',
   COMPANY: '/company',
   OFFERS: '/offers',
-  USERS: 'USERS',
-  POST_AUTH: 'post-auth',
+  USERS: '/USERS',
+  POST_AUTH: '/post-auth',
   PROFILE: '/profile',
-  RESET: 'reset',
+  RESET: '/reset',
 };

@@ -6,13 +6,14 @@ import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
 import { useSignIn } from '@Data/auth';
 import { extractValidationError } from '@Data/utils';
+import { SignInBody, SignInError } from '@Data/types';
 
 import { AuthForms } from '../enum';
-import { FORM_FIELDS, SignInData, validateFormData } from './data';
+import { FORM_FIELDS, validateFormData } from './data';
 
 import styles from './SignInForm.module.css';
 
-const INITIAL_STATE: SignInData = {
+const INITIAL_STATE: SignInBody = {
   email: '',
   password: '',
 };
@@ -22,7 +23,7 @@ type Props = {
 };
 
 function SignInForm({ changeForm }: Props): ReactElement {
-  const { error, signInMutation, isPending } = useSignIn();
+  const { isPending, error, signInMutation } = useSignIn();
   const [values, setValues] = useState(INITIAL_STATE);
   const [errors, setErrors] = useState(INITIAL_STATE);
 
@@ -42,7 +43,7 @@ function SignInForm({ changeForm }: Props): ReactElement {
     }
   };
 
-  const validationErrors = extractValidationError<SignInData>(
+  const validationErrors = extractValidationError<SignInError>(
     INITIAL_STATE,
     error
   );

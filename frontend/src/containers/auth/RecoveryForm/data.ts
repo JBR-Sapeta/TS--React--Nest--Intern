@@ -1,3 +1,8 @@
+import { isEmpty } from 'ramda';
+
+import { isValidEmail } from '@Common/validation';
+import { AccountRecoveryBody } from '@Data/types';
+
 type FormFields = {
   name: 'email' | 'password';
   type: string;
@@ -15,3 +20,15 @@ export const FORM_FIELDS: FormFields[] = [
     required: true,
   },
 ];
+
+export function validateFormData({ email }: AccountRecoveryBody) {
+  const emailMsg = isValidEmail(email);
+
+  if (isEmpty(emailMsg)) {
+    return null;
+  }
+
+  return {
+    email: emailMsg,
+  };
+}

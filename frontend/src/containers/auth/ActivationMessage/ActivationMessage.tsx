@@ -1,12 +1,30 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
-import { ROUTER_PATHS } from '@Router/constants';
 import { BaseLink } from '@Components/shared';
+import { useAccountActivation } from '@Data/auth';
+import { extractBaseError } from '@Data/utils';
+import { QUERY_PARAMS, ROUTER_PATHS } from '@Router/constants';
 
 import styles from './ActivationMessage.module.css';
 
 function ActivationMessage(): ReactElement {
+  const { isPending, data, error, accountActivationMutation } =
+    useAccountActivation();
+  const [searchParams] = useSearchParams();
+
+  const token = searchParams.get(QUERY_PARAMS.ACTIVATION_TOKEN);
+
+  useEffect(() => {
+    if (token) {
+      accountActivationMutation({ token });
+    }
+  }, [token, accountActivationMutation]);
+
+  const errorData = extractBaseError(error);
+
   return (
     <section className={styles.section}>
       <svg
@@ -32,8 +50,12 @@ function ActivationMessage(): ReactElement {
         </defs>
       </svg>
 
-      <h2>Konto aktywowane </h2>
-      <p>Zaloguj się i znajdź wymarzony staż !</p>
+      <h2>Aktywacja konta</h2>
+      <p className={styles.p}>Zaloguj się i znajdź wymarzony staż !</p>
+      {/* @ TO DO - add loading spinner */}
+      {isPending && <p>trwa weryfikacja...</p>}
+      {errorData && <p className={styles.error}>{errorData.message}</p>}
+      {data && <p className={styles.success}>{data.message}</p>}
       <BaseLink
         path={ROUTER_PATHS.AUTH}
         size="medium"

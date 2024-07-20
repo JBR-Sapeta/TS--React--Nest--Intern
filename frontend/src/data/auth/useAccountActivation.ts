@@ -9,7 +9,7 @@ import { getErrorMessages } from '@Data/utils';
 async function activateAccount({
   token,
 }: AccountActivationToken): Promise<BaseResponse> {
-  const { data } = await axios.patch<BaseResponse>(
+  const { data } = await axios.post<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/auth/activation/${token}`
   );
 

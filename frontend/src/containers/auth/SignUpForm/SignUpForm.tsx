@@ -1,22 +1,19 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
+import { isNil } from 'ramda';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
+import { useSignUp } from '@Data/auth';
+import { extractValidationError } from '@Data/utils';
+import { SignUpBody, SignUpError } from '@Data/types';
 
 import { AuthForms } from '../enum';
-import { FORM_FIELDS } from './data';
+import { FORM_FIELDS, validateFormData } from './data';
 
 import styles from './SignUpForm.module.css';
 
-export type SignUpData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
-
-const initialState: SignUpData = {
+const INITIAL_STATE: SignUpBody = {
   firstName: '',
   lastName: '',
   email: '',
@@ -28,8 +25,9 @@ type Props = {
 };
 
 function SignUpForm({ changeForm }: Props): ReactElement {
-  const [values, setValues] = useState(initialState);
-  const [errors, setErrors] = useState(initialState);
+  const { isPending, error, signUpMutation } = useSignUp();
+  const [values, setValues] = useState(INITIAL_STATE);
+  const [errors, setErrors] = useState(INITIAL_STATE);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -38,11 +36,24 @@ function SignUpForm({ changeForm }: Props): ReactElement {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
+    const validationErrors = validateFormData(values);
+
+    if (isNil(validationErrors)) {
+      signUpMutation(values);
+    } else {
+      setErrors(validationErrors);
+    }
   };
+
+  const validationErrors = extractValidationError<SignUpError>(
+    INITIAL_STATE,
+    error
+  );
 
   return (
     <div className={styles.container}>
       <AuthSideCard
+        hasLink={false}
         fisrtButton={{
           label: 'Zaloguj się',
           onClick: () => changeForm(AuthForms.SIGN_IN),
@@ -62,7 +73,7 @@ function SignUpForm({ changeForm }: Props): ReactElement {
               {...input}
               onChange={onChange}
               value={values[input.name]}
-              error={errors[input.name]}
+              error={errors[input.name] || validationErrors[input.name]}
             />
           ))}
         </div>
@@ -71,6 +82,7 @@ function SignUpForm({ changeForm }: Props): ReactElement {
           color="green"
           type="submit"
           className={styles.button}
+          disabled={isPending}
         >
           Zarejestruj się
         </BaseButton>
