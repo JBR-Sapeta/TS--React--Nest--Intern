@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { isNil } from 'ramda';
 
-import { Nullable, Nullish } from '@Common/types';
+import { Nullable } from '@Common/types';
 import { profileDataStorage } from '@Data/utils';
 
 import { QUERY_KEY } from '../constant';
@@ -15,7 +15,7 @@ import type {
 import { useGetAccessToken } from './useGetAccessToken';
 
 export async function getUserProfile(
-  accessToken: Nullish<string>
+  accessToken?: string
 ): Promise<Nullable<UserProfileResponse>> {
   if (isNil(accessToken)) return null;
 
@@ -59,7 +59,7 @@ export function useGetUserProfile(): UseGetUserProfile {
 
   return {
     isLoading,
-    userProfile: data?.data,
+    userProfile: data ? data.data : undefined,
     error,
   };
 }

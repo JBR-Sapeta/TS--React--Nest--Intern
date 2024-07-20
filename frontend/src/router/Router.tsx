@@ -1,12 +1,9 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable max-len */
-
 import type { ReactElement } from 'react';
 import { createRoutesFromElements, RouterProvider } from 'react-router';
 import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
-import { useGetUserProfile } from '@Data/auth';
+import { useGetUserProfile, useStorageSynchronize } from '@Data/auth';
 import {
   ActivationView,
   PostRegistrationView,
@@ -67,7 +64,8 @@ const ROUTER = createBrowserRouter(
 );
 
 export default function Router(): ReactElement {
-  useGetUserProfile();
+  const { userProfile } = useGetUserProfile();
+  useStorageSynchronize(userProfile);
 
   return <RouterProvider router={ROUTER} />;
 }

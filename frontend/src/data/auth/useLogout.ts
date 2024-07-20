@@ -47,7 +47,7 @@ type UseLogout = {
   logoutMutation: UseMutateFunction<
     Optional<BaseResponse>,
     AxiosError<BaseError>,
-    never,
+    null,
     unknown
   >;
 };
@@ -63,33 +63,30 @@ export function useLogout(): UseLogout {
     data,
     error,
     mutate: logoutMutation,
-  } = useMutation<
-    Optional<BaseResponse>,
-    AxiosError<BaseError>,
-    never,
-    unknown
-  >({
-    mutationFn: () => logout(accessToken),
-    onSuccess: (res) => {
-      if (res?.statusCode === HttpStatusCode.OK) {
-        tokenDataStorage.removeTokens();
-        profileDataStorage.removeProfile();
-        queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], undefined);
-        queryClient.setQueryData([QUERY_KEY.USER_PROFILE], undefined);
+  } = useMutation<Optional<BaseResponse>, AxiosError<BaseError>, null, unknown>(
+    {
+      mutationFn: () => logout(accessToken),
+      onSuccess: (res) => {
+        if (res?.statusCode === HttpStatusCode.OK) {
+          tokenDataStorage.removeTokens();
+          profileDataStorage.removeProfile();
+          queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], null);
+          queryClient.setQueryData([QUERY_KEY.USER_PROFILE], null);
+          enqueueSnackbar({
+            message: res.message,
+            variant: 'success',
+          });
+          navigate(ROUTER_PATHS.AUTH);
+        }
+      },
+      onError: (res) => {
         enqueueSnackbar({
-          message: res.message,
-          variant: 'success',
+          message: getErrorMessages(res),
+          variant: 'error',
         });
-        navigate(ROUTER_PATHS.AUTH);
-      }
-    },
-    onError: (res) => {
-      enqueueSnackbar({
-        message: getErrorMessages(res),
-        variant: 'error',
-      });
-    },
-  });
+      },
+    }
+  );
 
   return { isPending, data, error, logoutMutation };
 }

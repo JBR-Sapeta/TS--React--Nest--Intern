@@ -11,19 +11,19 @@ const BASE_NAVIGATION_LINKS: NavigationLink[] = [
 const USER_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 
 const COMPANY_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 
 const ADMIN_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
-  { label: 'Zaloguj się', path: ROUTER_PATHS.AUTH },
+  { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 
 class NavigationLinksMap {

@@ -9,14 +9,22 @@ import {
   UiThemeButton,
 } from '@Components/base';
 import { UserRole } from '@Common/enums';
+import { useGetUserProfile, useLogout } from '@Data/auth';
 
 import { NAVIGATION_LINKS } from './config';
 
 import styles from './Header.module.css';
 
 function Header(): ReactElement {
+  const { userProfile } = useGetUserProfile();
+  const { logoutMutation } = useLogout();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const links = NAVIGATION_LINKS.get(UserRole.BASE);
+
+  const userRole = userProfile
+    ? Math.max(...userProfile.roles.map((role) => role.id))
+    : UserRole.BASE;
+
+  const links = NAVIGATION_LINKS.get(userRole);
 
   return (
     <header className={styles.header}>
@@ -25,7 +33,9 @@ function Header(): ReactElement {
         <div className={styles.controls}>
           <nav className={styles.navigation}>
             <NavigationLinks links={links} />
-            <LogoutButton onClick={() => {}} />
+            {userProfile && (
+              <LogoutButton onClick={() => logoutMutation(null)} />
+            )}
           </nav>
           <UiThemeButton />
           <NavigationButton

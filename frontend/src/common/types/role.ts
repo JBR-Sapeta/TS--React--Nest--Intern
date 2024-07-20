@@ -1,4 +1,6 @@
+import { UserRole } from '@Common/enums';
+
 export type Role = {
-  id: number;
+  id: UserRole;
   name: string;
 };
