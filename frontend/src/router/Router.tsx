@@ -13,6 +13,7 @@ import {
 import { CompanyListingView } from '@Views/companies';
 import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
+import { ProfileView } from '@Views/user';
 
 import { ROUTER_PATHS } from './constants';
 import {
@@ -45,7 +46,7 @@ const ROUTER = createBrowserRouter(
         <Route path={ROUTER_PATHS.RESET} element={<ResetView />} />
       </Route>
       <Route element={<ProtectedRoute />}>
-        <Route path={ROUTER_PATHS.PROFILE} element={<PostRegistrationView />} />
+        <Route path={ROUTER_PATHS.PROFILE} element={<ProfileView />} />
       </Route>
       <Route element={<UserRouteGuard />}>
         <Route
