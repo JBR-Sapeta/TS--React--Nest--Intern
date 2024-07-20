@@ -22,13 +22,8 @@
   color: var(--color-text);
 }
 
-.loading {
-  margin-bottom: var(--space-48);
-}
-
 .success {
   width: 320px;
-  margin-bottom: var(--space-48);
   text-align: center;
   font-size: var(--font-p-14);
   color: var(--color-green);
@@ -36,7 +31,6 @@
 
 .error {
   width: 320px;
-  margin-bottom: var(--space-48);
   text-align: center;
   font-size: var(--font-p-14);
   color: var(--color-red);
@@ -46,4 +40,8 @@
   width: 128px;
   height: 128px;
   color: var(--color-green);
+}
+
+.button {
+  margin-top: var(--space-48);
 }

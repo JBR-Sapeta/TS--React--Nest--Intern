@@ -1,0 +1,85 @@
+.container {
+  position: relative;
+  display: block;
+  width: 256px;
+  height: 256px;
+}
+
+.smallContainer {
+  width: 128px;
+  height: 128px;
+}
+
+.message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-header);
+  font-size: var(--font-p-16);
+}
+
+.smallMessage {
+  font-size: var(--font-p-12);
+}
+
+.circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 140px;
+  width: 100%;
+  max-height: 140px;
+  height: 100%;
+  background-color: transparent;
+}
+
+.smallCircle {
+  max-width: 90px;
+  max-height: 90px;
+}
+
+.arrow {
+  position: absolute;
+  max-width: 140px;
+  width: 100%;
+  max-height: 140px;
+  height: 100%;
+  animation: spinner ease-in-out 0.8s infinite;
+  border-top: 5px var(--color-header) solid;
+  border-right: 5px transparent solid;
+  border-bottom: 5px var(--color-header) solid;
+  border-left: 5px transparent solid;
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+.smallArrow {
+  border-top: 2px var(--color-header) solid;
+  border-right: 2px transparentsolid;
+  border-bottom: 2px var(--color-header) solid;
+  border-left: 2px transparent solid;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(361deg);
+  }
+}
+
+@media only screen and (width <= 400px) {
+  .spinner__circle {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+  .spinner__arrow {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}

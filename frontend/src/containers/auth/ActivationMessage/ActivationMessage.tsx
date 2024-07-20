@@ -3,9 +3,9 @@ import type { ReactElement } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
-import { BaseLink } from '@Components/shared';
+import { BaseLink, PlainSpinner } from '@Components/shared';
 import { useAccountActivation } from '@Data/auth';
-import { extractBaseError } from '@Data/utils';
+import { getErrorMessages } from '@Data/utils';
 import { QUERY_PARAMS, ROUTER_PATHS } from '@Router/constants';
 
 import styles from './ActivationMessage.module.css';
@@ -22,8 +22,6 @@ function ActivationMessage(): ReactElement {
       accountActivationMutation({ token });
     }
   }, [token, accountActivationMutation]);
-
-  const errorData = extractBaseError(error);
 
   return (
     <section className={styles.section}>
@@ -52,18 +50,20 @@ function ActivationMessage(): ReactElement {
 
       <h2>Aktywacja konta</h2>
       <p className={styles.p}>Zaloguj się i znajdź wymarzony staż !</p>
-      {/* @ TO DO - add loading spinner */}
-      {isPending && <p>trwa weryfikacja...</p>}
-      {errorData && <p className={styles.error}>{errorData.message}</p>}
+      {isPending && <PlainSpinner size="small" />}
+      {error && <p className={styles.error}>{getErrorMessages(error)}</p>}
       {data && <p className={styles.success}>{data.message}</p>}
-      <BaseLink
-        path={ROUTER_PATHS.AUTH}
-        size="medium"
-        color="green"
-        RightIcon={MdKeyboardArrowRight}
-      >
-        Zaloguj się
-      </BaseLink>
+      {(data || error) && (
+        <BaseLink
+          path={ROUTER_PATHS.AUTH}
+          size="medium"
+          color="green"
+          RightIcon={MdKeyboardArrowRight}
+          className={styles.button}
+        >
+          Zaloguj się
+        </BaseLink>
+      )}
     </section>
   );
 }

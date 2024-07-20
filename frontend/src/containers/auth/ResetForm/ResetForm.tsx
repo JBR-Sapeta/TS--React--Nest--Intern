@@ -8,7 +8,6 @@ import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
 import { useResetPassword } from '@Data/auth';
 import { getErrorMessages } from '@Data/utils';
-import { ResetPasswordError } from '@Data/types';
 
 import { FORM_FIELDS, ResetFormData, validateFormData } from './data';
 
@@ -66,11 +65,7 @@ function ResetForm(): ReactElement {
               error={errors[input.name]}
             />
           ))}
-          {error && (
-            <p className={styles.error}>
-              {getErrorMessages<ResetPasswordError>(error)}
-            </p>
-          )}
+          {error && <p className={styles.error}>{getErrorMessages(error)}</p>}
         </div>
 
         <BaseButton
