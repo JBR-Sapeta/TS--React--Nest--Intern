@@ -1,0 +1,13 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  z-index: 39;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden hidden;
+  background-color: var(--color-white);
+}

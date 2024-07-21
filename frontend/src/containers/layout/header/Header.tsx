@@ -9,7 +9,8 @@ import {
   UiThemeButton,
 } from '@Components/base';
 import { UserRole } from '@Common/enums';
-import { useGetUserProfile, useLogout } from '@Data/auth';
+import { useLogout } from '@Data/auth';
+import { useGetUserProfile } from '@Data/user';
 
 import { NAVIGATION_LINKS } from './config';
 
