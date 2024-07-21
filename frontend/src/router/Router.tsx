@@ -1,5 +1,9 @@
 import type { ReactElement } from 'react';
-import { createRoutesFromElements, RouterProvider } from 'react-router';
+import {
+  createRoutesFromElements,
+  Navigate,
+  RouterProvider,
+} from 'react-router';
 import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
@@ -26,6 +30,7 @@ import {
 const ROUTER = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<NotFoundView />}>
+      <Route path="/" element={<Navigate to={ROUTER_PATHS.OFFERS} />} />
       <Route path={ROUTER_PATHS.COMPANIES} element={<OfferListingView />} />
       <Route
         path={`${ROUTER_PATHS.COMPANIES}/:companyId`}

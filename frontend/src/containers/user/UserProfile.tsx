@@ -1,32 +1,38 @@
 import { ReactElement } from 'react';
+import { isNil } from 'ramda';
 
+import { Nullable } from '@Common/types';
 import { BaseButton, Hr } from '@Components/shared';
 import { useGetUserProfile } from '@Data/auth';
 
 import styles from './UserProfile.module.css';
 
-function UserProfile(): ReactElement {
+function UserProfile(): Nullable<ReactElement> {
   const { userProfile } = useGetUserProfile();
 
-  const phone = userProfile?.phoneNumber ? userProfile.phoneNumber : ' -';
+  if (isNil(userProfile)) {
+    return null;
+  }
+
+  const { firstName, lastName, phoneNumber, email } = userProfile;
 
   return (
     <section className={styles.section}>
       <h3>Mój Profil</h3>
       <div className={styles.data}>
         <p>
-          Imię:<span>{userProfile?.firstName}</span>
+          Imię:<span>{firstName}</span>
         </p>
         <p>
-          Nazwisko:<span> {userProfile?.lastName}</span>
+          Nazwisko:<span> {lastName}</span>
         </p>
       </div>
       <div className={styles.data}>
         <p>
-          Telefon:<span> {phone}</span>
+          Telefon:<span>{phoneNumber || ' -'}</span>
         </p>
         <p>
-          Email:<span>{userProfile?.email}</span>
+          Email:<span>{email}</span>
         </p>
       </div>
       <Hr className={styles.hr} />
