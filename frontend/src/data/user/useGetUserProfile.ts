@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { isNil } from 'ramda';
 
-import { Nullable } from '@Common/types';
+import type { Nullable } from '@Common/types';
 import { profileDataStorage } from '@Data/utils';
 
 import { QUERY_KEY } from '../constant';
@@ -12,7 +12,7 @@ import type {
   UserProfile,
   UserProfileResponse,
 } from '../types';
-import { useGetAccessToken } from './useGetAccessToken';
+import { useGetAccessToken } from '../auth/useGetAccessToken';
 
 export async function getUserProfile(
   accessToken?: string

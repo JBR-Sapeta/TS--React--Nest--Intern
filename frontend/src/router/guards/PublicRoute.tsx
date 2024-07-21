@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
 
-import { useGetUserProfile } from '@Data/auth';
+import { useGetUserProfile } from '@Data/user';
 import { ROUTER_PATHS } from '@Router/constants';
 
 export default function PublicRoute() {

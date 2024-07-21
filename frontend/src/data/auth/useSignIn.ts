@@ -35,7 +35,7 @@ type UseSignIn = {
   error: Nullable<AxiosError<ValidationError<SignInError> | BaseError>>;
   signInMutation: UseMutateFunction<
     TokensResponse,
-    AxiosError<BaseError>,
+    AxiosError<ValidationError<SignInError> | BaseError>,
     SignInBody,
     unknown
   >;

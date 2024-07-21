@@ -3,7 +3,7 @@ import { isNil } from 'ramda';
 
 import { UserRole } from '@Common/enums';
 import { hasRoles } from '@Common/functions';
-import { useGetUserProfile } from '@Data/auth';
+import { useGetUserProfile } from '@Data/user';
 import { ROUTER_PATHS } from '@Router/constants';
 
 function UserRouteGuard() {
