@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
-import { isEmpty, isNil } from 'ramda';
+import { filter, isEmpty, isNil, isNotEmpty } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
 import { useGetAccessToken } from '@Data/auth';
@@ -28,13 +28,15 @@ async function updateProfile(
   userId?: string,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
-  if (isNil(userId) || isNil(accessToken) || isEmpty(body)) {
+  const reqBody = filter((val) => isNotEmpty(val), body);
+
+  if (isNil(userId) || isNil(accessToken) || isEmpty(reqBody)) {
     return undefined;
   }
 
   const { data } = await axios.put<TokensResponse>(
     `${import.meta.env.VITE_API_URL}/users/${userId}/update`,
-    body,
+    reqBody,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -49,7 +51,7 @@ type UseUpdateProfile = {
   isPending: boolean;
   data?: BaseResponse;
   error: Nullable<AxiosError<ValidationError<UpdateProfileError> | BaseError>>;
-  updateEmailMutation: UseMutateFunction<
+  updateProfileMutation: UseMutateFunction<
     Optional<BaseResponse>,
     AxiosError<ValidationError<UpdateProfileError> | BaseError>,
     UpdateProfileBody,
@@ -67,7 +69,7 @@ export function useUpdateProfile(): UseUpdateProfile {
     isPending,
     data,
     error,
-    mutate: updateEmailMutation,
+    mutate: updateProfileMutation,
   } = useMutation<
     Optional<BaseResponse>,
     AxiosError<ValidationError<UpdateProfileError> | BaseError>,
@@ -92,5 +94,5 @@ export function useUpdateProfile(): UseUpdateProfile {
     },
   });
 
-  return { isPending, data, error, updateEmailMutation };
+  return { isPending, data, error, updateProfileMutation };
 }

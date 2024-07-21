@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 import Backdrop from '../Backdrop/Backdrop';
 import ModalWrapper from './ModalWrapper';
@@ -8,7 +8,15 @@ type Props = {
   children: ReactNode;
   onClick: () => void;
 };
-export function Modal({ children, onClick }: Props) {
+function Modal({ children, onClick }: Props) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
     <>
       {ReactDOM.createPortal(
@@ -22,3 +30,5 @@ export function Modal({ children, onClick }: Props) {
     </>
   );
 }
+
+export default Modal;

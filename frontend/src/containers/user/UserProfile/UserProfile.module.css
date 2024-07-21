@@ -20,16 +20,24 @@
   flex-direction: column;
   color: var(--color-text);
   font-size: var(--font-p-18);
+  gap: var(--space-4);
 
   & span {
     margin-left: var(--space-16);
     font-weight: var(--weight-600);
   }
-}
 
-.controls {
-  display: flex;
-  gap: var(--space-24);
+  & p {
+    display: flex;
+    align-items: center;
+  }
+
+  & svg {
+    width: 18px;
+    height: 18px;
+    margin-right: var(--space-8);
+    color: var(--color-element-icon);
+  }
 }
 
 .hr {

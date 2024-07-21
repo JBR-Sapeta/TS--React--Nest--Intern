@@ -1,5 +1,8 @@
-import { isNotEmptyString, isSameString } from '@Common/validation';
 import { isEmpty } from 'ramda';
+import { MdLock } from 'react-icons/md';
+import type { IconType } from 'react-icons';
+
+import { isNotEmptyString, isSameString } from '@Common/validation';
 
 type FormFields = {
   name: 'password' | 'confirmPassword';
@@ -7,6 +10,7 @@ type FormFields = {
   label: { id: string; text: string };
   placeholder: string;
   required: boolean;
+  Icon: IconType;
 };
 
 export const FORM_FIELDS: FormFields[] = [
@@ -16,6 +20,7 @@ export const FORM_FIELDS: FormFields[] = [
     label: { id: '1-password', text: 'Hasło' },
     placeholder: '',
     required: true,
+    Icon: MdLock,
   },
   {
     name: 'confirmPassword',
@@ -23,15 +28,18 @@ export const FORM_FIELDS: FormFields[] = [
     label: { id: '2-password', text: 'Powtórz hasło' },
     placeholder: '',
     required: true,
+    Icon: MdLock,
   },
 ];
-
-export type ResetFormData = {
+export type DeleteProfilFormData = {
   password: string;
   confirmPassword: string;
 };
 
-export function validateFormData({ password, confirmPassword }: ResetFormData) {
+export function validateFormData({
+  password,
+  confirmPassword,
+}: DeleteProfilFormData) {
   const passwordMsg = isNotEmptyString(password, 'Wprowadź hasło.');
   const confirmPasswordMsg = isSameString(
     password,

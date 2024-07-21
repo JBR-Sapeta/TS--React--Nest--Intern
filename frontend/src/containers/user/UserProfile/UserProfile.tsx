@@ -1,11 +1,14 @@
 import { ReactElement } from 'react';
 import { isNil } from 'ramda';
+import { FaPhoneAlt } from 'react-icons/fa';
+import { MdEmail } from 'react-icons/md';
 
 import { Nullable } from '@Common/types';
-import { BaseButton, Hr } from '@Components/shared';
-import { useGetUserProfile } from '@Data/auth';
+import { Hr } from '@Components/shared';
+import { useGetUserProfile } from '@Data/user';
 
 import styles from './UserProfile.module.css';
+import ProfileControls from '../ProfileControls/ProfileControls';
 
 function UserProfile(): Nullable<ReactElement> {
   const { userProfile } = useGetUserProfile();
@@ -29,30 +32,14 @@ function UserProfile(): Nullable<ReactElement> {
       </div>
       <div className={styles.data}>
         <p>
-          Telefon:<span>{phoneNumber || ' -'}</span>
+          <FaPhoneAlt /> Telefon:<span>{phoneNumber || ' -'}</span>
         </p>
         <p>
-          Email:<span>{email}</span>
+          <MdEmail /> Email:<span>{email}</span>
         </p>
       </div>
       <Hr className={styles.hr} />
-      <div className={styles.controls}>
-        <BaseButton size="medium" color="plain">
-          Edutuj
-        </BaseButton>
-        <BaseButton size="medium" color="plain">
-          Zmień hasło
-        </BaseButton>
-        <BaseButton size="medium" color="plain">
-          Zmień email
-        </BaseButton>
-        <BaseButton size="medium" color="red">
-          Zmień email
-        </BaseButton>
-        <BaseButton size="medium" color="green">
-          Nowa firma
-        </BaseButton>
-      </div>
+      <ProfileControls userProfile={userProfile} />
     </section>
   );
 }

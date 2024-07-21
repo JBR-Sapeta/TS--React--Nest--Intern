@@ -1,0 +1,56 @@
+.form {
+  position: relative;
+  max-width: 336px;
+  min-height: 492px;
+  width: 100%;
+  padding: var(--space-32);
+  border-radius: var(--radius-8);
+  background: var(--color-bcg-main);
+
+  & h2 {
+    margin-bottom: var(--space-16);
+    text-align: center;
+    font-size: var(--font-h-24);
+    color: var(--color-header);
+  }
+}
+
+.inputs {
+  margin: var(--space-48) 0 var(--space-40) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.button {
+  margin: 0 auto;
+}
+
+.close {
+  position: absolute;
+  top: var(--space-24);
+  right: var(--space-24);
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  & svg {
+    width: 21px;
+    height: 21px;
+    color: var(--color-header);
+  }
+}
+
+.message {
+  min-height: 21px;
+  text-align: center;
+  font-size: var(--font-p-14);
+}
+
+.error {
+  color: var(--color-red);
+}
+
+.success {
+  color: var(--color-green);
+}

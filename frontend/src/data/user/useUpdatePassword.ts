@@ -44,7 +44,7 @@ type UseUpdatePassword = {
   isPending: boolean;
   data?: BaseResponse;
   error: Nullable<AxiosError<ValidationError<UpdatePasswordError> | BaseError>>;
-  updateEmailMutation: UseMutateFunction<
+  updatePasswordMutation: UseMutateFunction<
     Optional<BaseResponse>,
     AxiosError<ValidationError<UpdatePasswordError> | BaseError>,
     UpdatePasswordBody,
@@ -61,7 +61,7 @@ export function useUpdatePassword(): UseUpdatePassword {
     isPending,
     data,
     error,
-    mutate: updateEmailMutation,
+    mutate: updatePasswordMutation,
   } = useMutation<
     Optional<BaseResponse>,
     AxiosError<ValidationError<UpdatePasswordError> | BaseError>,
@@ -85,5 +85,5 @@ export function useUpdatePassword(): UseUpdatePassword {
     },
   });
 
-  return { isPending, data, error, updateEmailMutation };
+  return { isPending, data, error, updatePasswordMutation };
 }

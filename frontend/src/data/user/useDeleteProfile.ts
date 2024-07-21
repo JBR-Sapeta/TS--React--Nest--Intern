@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import {
   UseMutateFunction,
   useMutation,
@@ -5,10 +6,12 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+import { isNil } from 'ramda';
 
 import { convertStringToBase64 } from '@Common/functions';
-import type { Nullable } from '@Common/types';
+import type { Nullable, Optional } from '@Common/types';
 import { QUERY_KEY } from '@Data/constant';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import type {
   BaseError,
@@ -21,11 +24,18 @@ import {
   tokenDataStorage,
   profileDataStorage,
 } from '../utils';
+import { useGetUserProfile } from './useGetUserProfile';
 
-async function deleteProfile(body: DeleteProfileBody): Promise<BaseResponse> {
-  const { userId, email, password } = body;
+async function deleteProfile(
+  body: DeleteProfileBody,
+  userId?: string,
+  email?: string
+): Promise<Optional<BaseResponse>> {
+  if (isNil(userId) || isNil(email)) {
+    return undefined;
+  }
 
-  const credentials = convertStringToBase64(`${email}:${password}`);
+  const credentials = convertStringToBase64(`${email}:${body.password}`);
 
   const { data } = await axios.delete<TokensResponse>(
     `${import.meta.env.VITE_API_URL}/users/${userId}/delete`,
@@ -43,8 +53,8 @@ type UseDeleteProfil = {
   isPending: boolean;
   data?: BaseResponse;
   error: Nullable<AxiosError<BaseError>>;
-  updateEmailMutation: UseMutateFunction<
-    BaseResponse,
+  deleteProfilMutation: UseMutateFunction<
+    Optional<BaseResponse>,
     AxiosError<BaseError>,
     DeleteProfileBody,
     unknown
@@ -53,29 +63,35 @@ type UseDeleteProfil = {
 
 export function useDeleteProfil(): UseDeleteProfil {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const { userProfile } = useGetUserProfile();
 
   const {
     isPending,
     data,
     error,
-    mutate: updateEmailMutation,
+    mutate: deleteProfilMutation,
   } = useMutation<
-    BaseResponse,
+    Optional<BaseResponse>,
     AxiosError<BaseError>,
     DeleteProfileBody,
     unknown
   >({
-    mutationFn: (body) => deleteProfile(body),
+    mutationFn: (body) =>
+      deleteProfile(body, userProfile?.id, userProfile?.email),
     onSuccess: (res) => {
-      tokenDataStorage.removeTokens();
-      profileDataStorage.removeProfile();
-      queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], null);
-      queryClient.setQueryData([QUERY_KEY.USER_PROFILE], null);
-      enqueueSnackbar({
-        message: res.message,
-        variant: 'success',
-      });
+      if (res) {
+        tokenDataStorage.removeTokens();
+        profileDataStorage.removeProfile();
+        queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], null);
+        queryClient.setQueryData([QUERY_KEY.USER_PROFILE], null);
+        navigate(ROUTER_PATHS.OFFERS);
+        enqueueSnackbar({
+          message: res.message,
+          variant: 'success',
+        });
+      }
     },
     onError: (res) => {
       enqueueSnackbar({
@@ -85,5 +101,5 @@ export function useDeleteProfil(): UseDeleteProfil {
     },
   });
 
-  return { isPending, data, error, updateEmailMutation };
+  return { isPending, data, error, deleteProfilMutation };
 }

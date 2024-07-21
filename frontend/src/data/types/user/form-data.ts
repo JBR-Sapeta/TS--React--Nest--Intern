@@ -1,6 +1,4 @@
 export type DeleteProfileBody = {
-  userId: string;
-  email: string;
   password: string;
 };
 
