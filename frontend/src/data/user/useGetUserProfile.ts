@@ -7,11 +7,7 @@ import type { Nullable } from '@Common/types';
 import { profileDataStorage } from '@Data/utils';
 
 import { QUERY_KEY } from '../constant';
-import type {
-  ResponseWithData,
-  UserProfile,
-  UserProfileResponse,
-} from '../types';
+import type { UserProfile, UserProfileResponse } from '../types';
 import { useGetAccessToken } from '../auth/useGetAccessToken';
 
 export async function getUserProfile(
@@ -19,7 +15,7 @@ export async function getUserProfile(
 ): Promise<Nullable<UserProfileResponse>> {
   if (isNil(accessToken)) return null;
 
-  const { data } = await axios.get<ResponseWithData<UserProfile>>(
+  const { data } = await axios.get<UserProfileResponse>(
     `${import.meta.env.VITE_API_URL}/users/me`,
     {
       headers: {
