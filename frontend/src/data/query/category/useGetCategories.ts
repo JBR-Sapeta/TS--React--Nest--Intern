@@ -3,8 +3,8 @@ import axios from 'axios';
 
 import type { Nullable } from '@Common/types';
 
-import { QUERY_KEY } from '../constant';
-import type { Category, CategoryResponse } from '../types';
+import { QUERY_KEY } from '../../constant';
+import type { Category, CategoryResponse } from '../../types';
 
 export async function getCategories(): Promise<CategoryResponse> {
   const { data } = await axios.get<CategoryResponse>(

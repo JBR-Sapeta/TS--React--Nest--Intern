@@ -9,7 +9,6 @@ import { isNil } from 'ramda';
 
 import { Nullable, Optional } from '@Common/types';
 
-import { useGetAccessToken } from '../../auth';
 import { QUERY_KEY } from '../../constant';
 import type {
   BaseError,
@@ -19,6 +18,7 @@ import type {
   ResetCompanyImagesError,
 } from '../../types';
 import { getErrorMessages } from '../../utils';
+import { useGetAccessToken } from '../auth';
 
 async function resetCompanyImage(
   body: ResetCompanyImagesBody,

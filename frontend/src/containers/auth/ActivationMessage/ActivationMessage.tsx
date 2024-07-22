@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { MdKeyboardArrowRight } from 'react-icons/md';
 
 import { BaseLink, PlainSpinner } from '@Components/shared';
-import { useAccountActivation } from '@Data/auth';
+import { useAccountActivation } from '@Data/query/auth';
 import { getErrorMessages } from '@Data/utils';
 import { QUERY_PARAMS, ROUTER_PATHS } from '@Router/constants';
 

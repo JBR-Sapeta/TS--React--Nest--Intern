@@ -18,12 +18,12 @@ import type {
   BaseResponse,
   TokensResponse,
   DeleteProfileBody,
-} from '../types';
+} from '../../types';
 import {
   getErrorMessages,
   tokenDataStorage,
   profileDataStorage,
-} from '../utils';
+} from '../../utils';
 import { useGetUserProfile } from './useGetUserProfile';
 
 async function deleteProfile(

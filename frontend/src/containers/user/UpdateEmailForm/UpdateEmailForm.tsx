@@ -4,7 +4,7 @@ import { VscChromeClose } from 'react-icons/vsc';
 import { isNil } from 'ramda';
 
 import { BaseButton, BaseInput, Hr } from '@Components/shared';
-import { useUpdateEmail } from '@Data/user';
+import { useUpdateEmail } from '@Data/query/user';
 import { getErrorMessages } from '@Data/utils';
 import { UpdateEmailBody } from '@Data/types';
 

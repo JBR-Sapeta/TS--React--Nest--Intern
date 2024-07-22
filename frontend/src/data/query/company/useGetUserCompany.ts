@@ -1,16 +1,26 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { isNil } from 'ramda';
 
 import type { Nullable } from '@Common/types';
 
 import { QUERY_KEY } from '../../constant';
 import type { FullCompanyData, FullCompanyDataResponse } from '../../types';
+import { useGetAccessToken } from '../auth';
 
 export async function getUserCompany(
-  userId: string
-): Promise<FullCompanyDataResponse> {
+  userId: string,
+  accessToken?: string
+): Promise<Nullable<FullCompanyDataResponse>> {
+  if (isNil(accessToken)) return null;
+
   const { data } = await axios.get<FullCompanyDataResponse>(
-    `${import.meta.env.VITE_API_URL}/companies/users/${userId}`
+    `${import.meta.env.VITE_API_URL}/companies/users/${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
   return data;
@@ -29,10 +39,12 @@ type UseGetUserCompany = {
 export function useGetUserCompany({
   userId,
 }: UseGetUserCompanyProps): UseGetUserCompany {
+  const { accessToken } = useGetAccessToken();
+
   const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.USER_COMPANY],
-    queryFn: async (): Promise<FullCompanyDataResponse> =>
-      getUserCompany(userId),
+    queryFn: async (): Promise<Nullable<FullCompanyDataResponse>> =>
+      getUserCompany(userId, accessToken),
     refetchOnMount: false,
   });
 

@@ -5,9 +5,9 @@ import axios, { AxiosError } from 'axios';
 import { HttpStatusCode } from '@Common/enums';
 import { Nullable } from '@Common/types';
 
-import { QUERY_KEY } from '../constant';
-import { AccessTokenResponse, BaseError } from '../types';
-import { profileDataStorage, tokenDataStorage } from '../utils';
+import { QUERY_KEY } from '../../constant';
+import { AccessTokenResponse, BaseError } from '../../types';
+import { profileDataStorage, tokenDataStorage } from '../../utils';
 
 async function refreshAccessToken(): Promise<Nullable<AccessTokenResponse>> {
   const refreshToken = tokenDataStorage.getRefreshToken();

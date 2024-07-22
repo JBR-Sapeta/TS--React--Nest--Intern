@@ -10,15 +10,15 @@ import { useSnackbar } from 'notistack';
 import { Nullable } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
-import { QUERY_KEY } from '../constant';
+import { QUERY_KEY } from '../../constant';
 import type {
   BaseError,
   SignInBody,
   SignInError,
   TokensResponse,
   ValidationError,
-} from '../types';
-import { getErrorMessages, tokenDataStorage } from '../utils';
+} from '../../types';
+import { getErrorMessages, tokenDataStorage } from '../../utils';
 
 async function signIn(body: SignInBody): Promise<TokensResponse> {
   const { data } = await axios.post<TokensResponse>(

@@ -5,7 +5,7 @@ import { MdEmail } from 'react-icons/md';
 
 import { Nullable } from '@Common/types';
 import { Hr } from '@Components/shared';
-import { useGetUserProfile } from '@Data/user';
+import { useGetUserProfile } from '@Data/query/user';
 
 import styles from './UserProfile.module.css';
 import ProfileControls from '../ProfileControls/ProfileControls';

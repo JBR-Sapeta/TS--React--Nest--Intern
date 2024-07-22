@@ -1,30 +1,24 @@
-import {
-  UseMutateFunction,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { UseMutateFunction, useMutation } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
 import { isNil } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
-import { useGetAccessToken } from '@Data/auth';
 
-import { QUERY_KEY } from '../constant';
 import type {
   BaseError,
   BaseResponse,
   TokensResponse,
-  UpdateEmailBody,
-  UpdateEmailError,
+  UpdatePasswordError,
+  UpdatePasswordBody,
   ValidationError,
-} from '../types';
-import { getErrorMessages } from '../utils';
-
+} from '../../types';
+import { getErrorMessages } from '../../utils';
+import { useGetAccessToken } from '../auth/useGetAccessToken';
 import { useGetUserProfile } from './useGetUserProfile';
 
-async function updateEmail(
-  body: UpdateEmailBody,
+async function updatePassword(
+  body: UpdatePasswordBody,
   userId?: string,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
@@ -33,7 +27,7 @@ async function updateEmail(
   }
 
   const { data } = await axios.put<TokensResponse>(
-    `${import.meta.env.VITE_API_URL}/users/${userId}/email`,
+    `${import.meta.env.VITE_API_URL}/users/${userId}/password`,
     body,
     {
       headers: {
@@ -45,20 +39,19 @@ async function updateEmail(
   return data;
 }
 
-type UseUpdateEmail = {
+type UseUpdatePassword = {
   isPending: boolean;
   data?: BaseResponse;
-  error: Nullable<AxiosError<ValidationError<UpdateEmailError> | BaseError>>;
-  updateEmailMutation: UseMutateFunction<
+  error: Nullable<AxiosError<ValidationError<UpdatePasswordError> | BaseError>>;
+  updatePasswordMutation: UseMutateFunction<
     Optional<BaseResponse>,
-    AxiosError<ValidationError<UpdateEmailError> | BaseError>,
-    UpdateEmailBody,
+    AxiosError<ValidationError<UpdatePasswordError> | BaseError>,
+    UpdatePasswordBody,
     unknown
   >;
 };
 
-export function useUpdateEmail(): UseUpdateEmail {
-  const queryClient = useQueryClient();
+export function useUpdatePassword(): UseUpdatePassword {
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
   const { userProfile } = useGetUserProfile();
@@ -67,17 +60,16 @@ export function useUpdateEmail(): UseUpdateEmail {
     isPending,
     data,
     error,
-    mutate: updateEmailMutation,
+    mutate: updatePasswordMutation,
   } = useMutation<
     Optional<BaseResponse>,
-    AxiosError<ValidationError<UpdateEmailError> | BaseError>,
-    UpdateEmailBody,
+    AxiosError<ValidationError<UpdatePasswordError> | BaseError>,
+    UpdatePasswordBody,
     unknown
   >({
-    mutationFn: (body) => updateEmail(body, userProfile?.id, accessToken),
+    mutationFn: (body) => updatePassword(body, userProfile?.id, accessToken),
     onSuccess: (res) => {
       if (res) {
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
         enqueueSnackbar({
           message: res.message,
           variant: 'success',
@@ -92,5 +84,5 @@ export function useUpdateEmail(): UseUpdateEmail {
     },
   });
 
-  return { isPending, data, error, updateEmailMutation };
+  return { isPending, data, error, updatePasswordMutation };
 }

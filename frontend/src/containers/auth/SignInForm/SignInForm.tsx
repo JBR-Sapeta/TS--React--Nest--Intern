@@ -4,7 +4,7 @@ import { isNil } from 'ramda';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
-import { useSignIn } from '@Data/auth';
+import { useSignIn } from '@Data/query/auth';
 import { extractValidationError } from '@Data/utils';
 import { SignInBody, SignInError } from '@Data/types';
 

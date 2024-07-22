@@ -7,8 +7,8 @@ import {
 import { createBrowserRouter, Route } from 'react-router-dom';
 
 import { Layout } from '@Containers/layout';
-import { useStorageSynchronize } from '@Data/auth';
-import { useGetUserProfile } from '@Data/user';
+import { useStorageSynchronize } from '@Data/query/auth';
+import { useGetUserProfile } from '@Data/query/user';
 import {
   ActivationView,
   PostRegistrationView,

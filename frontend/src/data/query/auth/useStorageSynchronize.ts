@@ -8,7 +8,7 @@ import {
   getTokenExpirationTime,
   profileDataStorage,
   tokenDataStorage,
-} from '../utils';
+} from '../../utils';
 
 export function useStorageSynchronize(userProfile?: UserProfile) {
   const queryClient = useQueryClient();

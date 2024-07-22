@@ -4,7 +4,7 @@ import { isNil } from 'ramda';
 
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
-import { useAccountRecovery } from '@Data/auth';
+import { useAccountRecovery } from '@Data/query/auth';
 import { extractValidationError } from '@Data/utils';
 import { AccountRecoveryBody, AccountRecoveryError } from '@Data/types';
 

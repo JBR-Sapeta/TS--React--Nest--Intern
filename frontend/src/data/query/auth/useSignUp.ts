@@ -4,39 +4,40 @@ import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
 
 import { Nullable } from '@Common/types';
-import { getErrorMessages } from '@Data/utils';
 import { ROUTER_PATHS } from '@Router/constants';
 
 import type {
   BaseError,
   BaseResponse,
-  ResetPasswordBody,
-  ResetPasswordError,
+  SignUpBody,
+  SignUpError,
+  TokensResponse,
   ValidationError,
-} from '../types';
+} from '../../types';
+import { getErrorMessages } from '../../utils';
 
-async function resetPassword(body: ResetPasswordBody): Promise<BaseResponse> {
-  const { data } = await axios.post<BaseResponse>(
-    `${import.meta.env.VITE_API_URL}/auth/reset-password`,
+async function signUp(body: SignUpBody): Promise<TokensResponse> {
+  const { data } = await axios.post<TokensResponse>(
+    `${import.meta.env.VITE_API_URL}/auth/signup`,
     body
   );
 
   return data;
 }
 
-type UseResetPassword = {
+type UseSignUp = {
   isPending: boolean;
   data?: BaseResponse;
-  error: Nullable<AxiosError<ValidationError<ResetPasswordError> | BaseError>>;
-  resetPasswordMutation: UseMutateFunction<
+  error: Nullable<AxiosError<ValidationError<SignUpError> | BaseError>>;
+  signUpMutation: UseMutateFunction<
     BaseResponse,
-    AxiosError<ValidationError<ResetPasswordError> | BaseError>,
-    ResetPasswordBody,
+    AxiosError<ValidationError<SignUpError> | BaseError>,
+    SignUpBody,
     unknown
   >;
 };
 
-export function useResetPassword(): UseResetPassword {
+export function useSignUp(): UseSignUp {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -44,20 +45,20 @@ export function useResetPassword(): UseResetPassword {
     isPending,
     data,
     error,
-    mutate: resetPasswordMutation,
+    mutate: signUpMutation,
   } = useMutation<
     BaseResponse,
-    AxiosError<ValidationError<ResetPasswordError> | BaseError>,
-    ResetPasswordBody,
+    AxiosError<ValidationError<SignUpError> | BaseError>,
+    SignUpBody,
     unknown
   >({
-    mutationFn: (body) => resetPassword(body),
+    mutationFn: (body) => signUp(body),
     onSuccess: (res) => {
       enqueueSnackbar({
         message: res.message,
         variant: 'success',
       });
-      navigate(ROUTER_PATHS.AUTH);
+      navigate(ROUTER_PATHS.POST_AUTH);
     },
     onError: (res) => {
       enqueueSnackbar({
@@ -67,5 +68,5 @@ export function useResetPassword(): UseResetPassword {
     },
   });
 
-  return { isPending, data, error, resetPasswordMutation };
+  return { isPending, data, error, signUpMutation };
 }

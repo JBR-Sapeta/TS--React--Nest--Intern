@@ -13,12 +13,12 @@ import { Nullable, Nullish, Optional } from '@Common/types';
 import { QUERY_KEY } from '@Data/constant';
 import { ROUTER_PATHS } from '@Router/constants';
 
-import type { BaseError, BaseResponse, TokensResponse } from '../types';
+import type { BaseError, BaseResponse, TokensResponse } from '../../types';
 import {
   getErrorMessages,
   profileDataStorage,
   tokenDataStorage,
-} from '../utils';
+} from '../../utils';
 
 import { useGetAccessToken } from './useGetAccessToken';
 

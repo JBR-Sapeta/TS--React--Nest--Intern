@@ -11,7 +11,7 @@ import { isNil } from 'ramda';
 import { Nullable, Optional } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
-import { useGetAccessToken } from '../../auth';
+import { useGetAccessToken } from '../auth';
 import { QUERY_KEY } from '../../constant';
 import type {
   BaseError,

@@ -4,7 +4,7 @@ import { VscChromeClose } from 'react-icons/vsc';
 import { isNil } from 'ramda';
 
 import { BaseButton, BaseInput, Hr } from '@Components/shared';
-import { useUpdatePassword } from '@Data/user';
+import { useUpdatePassword } from '@Data/query/user';
 import { getErrorMessages } from '@Data/utils';
 
 import { FORM_FIELDS, validateFormData } from './data';

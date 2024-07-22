@@ -11,7 +11,7 @@ import type {
   BaseError,
   BaseResponse,
   ValidationError,
-} from '../types';
+} from '../../types';
 
 async function accountRecovery(
   body: AccountRecoveryBody

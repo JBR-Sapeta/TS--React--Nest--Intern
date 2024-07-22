@@ -6,7 +6,7 @@ import { isNil } from 'ramda';
 import { ROUTER_PATHS, QUERY_PARAMS } from '@Router/constants';
 import { AuthHeader, AuthSideCard } from '@Components/base';
 import { BaseButton, BaseInput } from '@Components/shared';
-import { useResetPassword } from '@Data/auth';
+import { useResetPassword } from '@Data/query/auth';
 import { getErrorMessages } from '@Data/utils';
 
 import { FORM_FIELDS, ResetFormData, validateFormData } from './data';

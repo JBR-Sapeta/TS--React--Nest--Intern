@@ -5,38 +5,35 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
-import { filter, isEmpty, isNil, isNotEmpty } from 'ramda';
+import { isNil } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
-import { useGetAccessToken } from '@Data/auth';
 
-import { QUERY_KEY } from '../constant';
+import { QUERY_KEY } from '../../constant';
 import type {
   BaseError,
   BaseResponse,
   TokensResponse,
-  UpdateProfileBody,
-  UpdateProfileError,
+  UpdateEmailBody,
+  UpdateEmailError,
   ValidationError,
-} from '../types';
-import { getErrorMessages } from '../utils';
-
+} from '../../types';
+import { getErrorMessages } from '../../utils';
+import { useGetAccessToken } from '../auth/useGetAccessToken';
 import { useGetUserProfile } from './useGetUserProfile';
 
-async function updateProfile(
-  body: UpdateProfileBody,
+async function updateEmail(
+  body: UpdateEmailBody,
   userId?: string,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
-  const reqBody = filter((val) => isNotEmpty(val), body);
-
-  if (isNil(userId) || isNil(accessToken) || isEmpty(reqBody)) {
+  if (isNil(userId) || isNil(accessToken)) {
     return undefined;
   }
 
   const { data } = await axios.put<TokensResponse>(
-    `${import.meta.env.VITE_API_URL}/users/${userId}/update`,
-    reqBody,
+    `${import.meta.env.VITE_API_URL}/users/${userId}/email`,
+    body,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -47,19 +44,19 @@ async function updateProfile(
   return data;
 }
 
-type UseUpdateProfile = {
+type UseUpdateEmail = {
   isPending: boolean;
   data?: BaseResponse;
-  error: Nullable<AxiosError<ValidationError<UpdateProfileError> | BaseError>>;
-  updateProfileMutation: UseMutateFunction<
+  error: Nullable<AxiosError<ValidationError<UpdateEmailError> | BaseError>>;
+  updateEmailMutation: UseMutateFunction<
     Optional<BaseResponse>,
-    AxiosError<ValidationError<UpdateProfileError> | BaseError>,
-    UpdateProfileBody,
+    AxiosError<ValidationError<UpdateEmailError> | BaseError>,
+    UpdateEmailBody,
     unknown
   >;
 };
 
-export function useUpdateProfile(): UseUpdateProfile {
+export function useUpdateEmail(): UseUpdateEmail {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
@@ -69,14 +66,14 @@ export function useUpdateProfile(): UseUpdateProfile {
     isPending,
     data,
     error,
-    mutate: updateProfileMutation,
+    mutate: updateEmailMutation,
   } = useMutation<
     Optional<BaseResponse>,
-    AxiosError<ValidationError<UpdateProfileError> | BaseError>,
-    UpdateProfileBody,
+    AxiosError<ValidationError<UpdateEmailError> | BaseError>,
+    UpdateEmailBody,
     unknown
   >({
-    mutationFn: (body) => updateProfile(body, userProfile?.id, accessToken),
+    mutationFn: (body) => updateEmail(body, userProfile?.id, accessToken),
     onSuccess: (res) => {
       if (res) {
         queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
@@ -94,5 +91,5 @@ export function useUpdateProfile(): UseUpdateProfile {
     },
   });
 
-  return { isPending, data, error, updateProfileMutation };
+  return { isPending, data, error, updateEmailMutation };
 }

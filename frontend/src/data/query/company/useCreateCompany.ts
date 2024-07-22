@@ -11,7 +11,6 @@ import { isNil } from 'ramda';
 import { Nullable, Optional } from '@Common/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
-import { useGetAccessToken } from '../../auth';
 import { QUERY_KEY } from '../../constant';
 import type {
   BaseError,
@@ -21,6 +20,7 @@ import type {
   CreateCompanyError,
 } from '../../types';
 import { getErrorMessages } from '../../utils';
+import { useGetAccessToken } from '../auth';
 
 async function createCompany(
   body: CreateCompanyBody,

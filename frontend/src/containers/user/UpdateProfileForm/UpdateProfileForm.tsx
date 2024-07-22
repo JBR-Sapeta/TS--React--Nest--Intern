@@ -4,7 +4,7 @@ import { VscChromeClose } from 'react-icons/vsc';
 
 import type { Nullable } from '@Common/types';
 import { BaseButton, BaseInput, Hr } from '@Components/shared';
-import { useUpdateProfile } from '@Data/user';
+import { useUpdateProfile } from '@Data/query/user';
 import { getErrorMessages } from '@Data/utils';
 import type { UpdateProfileBody } from '@Data/types';
 

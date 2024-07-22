@@ -6,8 +6,9 @@ import { isNil } from 'ramda';
 import type { Nullable } from '@Common/types';
 import { profileDataStorage } from '@Data/utils';
 
-import { QUERY_KEY } from '../constant';
-import type { UserProfile, UserProfileResponse } from '../types';
+import { QUERY_KEY } from '../../constant';
+import type { UserProfile, UserProfileResponse } from '../../types';
+
 import { useGetAccessToken } from '../auth/useGetAccessToken';
 
 export async function getUserProfile(
