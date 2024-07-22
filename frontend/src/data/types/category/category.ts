@@ -14,3 +14,8 @@ type SubCategory = {
   parentId: number;
   children: SubCategory[];
 };
+
+export type CategoryPreview = {
+  id: number;
+  name: string;
+};
