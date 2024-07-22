@@ -22,7 +22,7 @@ type UseGetCategories = {
 
 export function useGetCategories(): UseGetCategories {
   const { isLoading, data, error } = useQuery({
-    queryKey: [QUERY_KEY.USER_PROFILE],
+    queryKey: [QUERY_KEY.CATEGORIES],
     queryFn: async (): Promise<CategoryResponse> => getCategories(),
     refetchOnMount: false,
     refetchOnReconnect: false,
