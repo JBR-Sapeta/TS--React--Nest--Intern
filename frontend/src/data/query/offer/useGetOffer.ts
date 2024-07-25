@@ -24,7 +24,7 @@ type UseGetOfferProps = {
 
 type UseGetOffer = {
   isLoading: boolean;
-  company?: OfferData;
+  offer?: OfferData;
   error: Nullable<Error>;
 };
 
@@ -41,7 +41,7 @@ export function useGetOffer({
 
   return {
     isLoading,
-    company: data ? data.data : undefined,
+    offer: data ? data.data : undefined,
     error,
   };
 }

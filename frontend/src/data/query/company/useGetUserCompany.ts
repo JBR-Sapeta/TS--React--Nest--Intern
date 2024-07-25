@@ -46,6 +46,7 @@ export function useGetUserCompany({
     queryFn: async (): Promise<Nullable<FullCompanyDataResponse>> =>
       getUserCompany(userId, accessToken),
     refetchOnMount: false,
+    enabled: !!accessToken,
   });
 
   return {

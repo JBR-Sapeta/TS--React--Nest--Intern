@@ -14,7 +14,7 @@ export async function getOffers(
   const query = convertToQueryParams(params);
 
   const { data } = await axios.get<OfferPreviewsResponse>(
-    `${import.meta.env.VITE_API_URL}/offers?${query}}`
+    `${import.meta.env.VITE_API_URL}/offers?${query}`
   );
 
   return data;
@@ -26,7 +26,7 @@ type UseGetOffersProps = {
 
 type UseGetOffers = {
   isLoading: boolean;
-  company?: OfferPreviewsResponse;
+  offers?: OfferPreviewsResponse;
   error: Nullable<Error>;
 };
 
@@ -39,7 +39,7 @@ export function useGetOffers({ params }: UseGetOffersProps): UseGetOffers {
 
   return {
     isLoading,
-    company: data,
+    offers: data,
     error,
   };
 }

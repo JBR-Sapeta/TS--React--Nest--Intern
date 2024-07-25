@@ -6,15 +6,15 @@ import type { Nullable } from '@Common/types';
 
 import { isNotNil } from 'ramda';
 import { QUERY_KEY } from '../../constant';
-import type { CompanySearchParams, CompaniesResponse } from '../../types';
+import type { CompanySearchParams, CompanyPrewievsResponse } from '../../types';
 
 export async function getCompanies(
   params: CompanySearchParams
-): Promise<CompaniesResponse> {
+): Promise<CompanyPrewievsResponse> {
   const query = convertToQueryParams(params);
 
-  const { data } = await axios.get<CompaniesResponse>(
-    `${import.meta.env.VITE_API_URL}/companies?${query}}`
+  const { data } = await axios.get<CompanyPrewievsResponse>(
+    `${import.meta.env.VITE_API_URL}/companies?${query}`
   );
 
   return data;
@@ -26,7 +26,7 @@ type UseGetCompaniesProps = {
 
 type UseGetCompanies = {
   isLoading: boolean;
-  company?: CompaniesResponse;
+  companies?: CompanyPrewievsResponse;
   error: Nullable<Error>;
 };
 
@@ -36,12 +36,12 @@ export function useGetCompanies({
   const keys = Object.values(params).filter((val) => isNotNil(val));
   const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.COMPANIES, ...keys],
-    queryFn: async (): Promise<CompaniesResponse> => getCompanies(params),
+    queryFn: async (): Promise<CompanyPrewievsResponse> => getCompanies(params),
   });
 
   return {
     isLoading,
-    company: data,
+    companies: data,
     error,
   };
 }

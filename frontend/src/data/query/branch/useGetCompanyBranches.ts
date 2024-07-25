@@ -22,7 +22,7 @@ type UseGetCompanyBranchesProps = {
 
 type UseGetCompanyBranches = {
   isLoading: boolean;
-  company?: Branch[];
+  branches?: Branch[];
   error: Nullable<Error>;
 };
 
@@ -38,7 +38,7 @@ export function useGetCompanyBranches({
 
   return {
     isLoading,
-    company: data ? data.data : undefined,
+    branches: data ? data.data : undefined,
     error,
   };
 }

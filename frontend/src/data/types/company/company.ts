@@ -46,7 +46,7 @@ export type CompanyData = {
   categories: CategoryPreview[];
 };
 
-export type CompaniesResponse = ResponseWithPagination<CompanyPrewiev[]>;
+export type CompanyPrewievsResponse = ResponseWithPagination<CompanyPrewiev[]>;
 export type CompanyPrewiev = {
   id: string;
   name: string;

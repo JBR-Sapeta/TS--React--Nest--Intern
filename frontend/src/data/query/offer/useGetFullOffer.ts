@@ -36,7 +36,7 @@ type UseGetFullOfferProps = {
 
 type UseGetFullOffer = {
   isLoading: boolean;
-  company?: FullOfferData;
+  offer?: FullOfferData;
   error: Nullable<Error>;
 };
 
@@ -55,7 +55,7 @@ export function useGetFullOffer({
 
   return {
     isLoading,
-    company: data ? data.data : undefined,
+    offer: data ? data.data : undefined,
     error,
   };
 }
