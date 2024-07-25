@@ -4,6 +4,7 @@ export * from './auth/tokens';
 export * from './branch';
 export * from './category';
 export * from './company';
+export * from './offer';
 export * from './user/error-data';
 export * from './user/form-data';
 export * from './user/profile';
