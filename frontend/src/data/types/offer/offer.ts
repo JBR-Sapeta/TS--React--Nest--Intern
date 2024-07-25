@@ -67,3 +67,13 @@ export type OfferPreview = {
   categories: CategoryPreview[];
   company: BaseCompanyData;
 };
+
+export type BaseOfferData = {
+  id: string;
+  title: string;
+  position: string;
+  companyId: string;
+  companyName: string;
+  logoUrl: string;
+  isActive: boolean;
+};

@@ -14,3 +14,10 @@ export type UserProfile = {
   applications: string[];
   createdAt: string;
 };
+
+export type UserPreview = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+};
