@@ -2,6 +2,7 @@ import { Nullable } from '@Common/types';
 import { Branch } from '../branch';
 import { CategoryPreview } from '../category';
 import { ResponseWithData, ResponseWithPagination } from '../utils';
+import { UserAdminPreview } from '../user';
 
 export type CompanySearchParams = {
   pageNumber?: number;
@@ -46,7 +47,20 @@ export type CompanyData = {
   categories: CategoryPreview[];
 };
 
-export type CompanyPrewievsResponse = ResponseWithPagination<CompanyPrewiev[]>;
+export type CompanyAdminPrewievsResponse =
+  ResponseWithPagination<CompanyAdminPrewiev>;
+export type CompanyAdminPrewiev = {
+  id: string;
+  name: string;
+  slug: string;
+  email: string;
+  logoUrl: Nullable<string>;
+  size: number;
+  isVerified: boolean;
+  owner: Nullable<UserAdminPreview>;
+};
+
+export type CompanyPrewievsResponse = ResponseWithPagination<CompanyPrewiev>;
 export type CompanyPrewiev = {
   id: string;
   name: string;
