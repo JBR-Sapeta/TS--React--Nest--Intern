@@ -20,11 +20,11 @@ export async function getCompanies(
   return data;
 }
 
-type UseGetUserCompanyProps = {
+type UseGetCompaniesProps = {
   params: CompanySearchParams;
 };
 
-type UseGetUserCompany = {
+type UseGetCompanies = {
   isLoading: boolean;
   company?: CompaniesResponse;
   error: Nullable<Error>;
@@ -32,7 +32,7 @@ type UseGetUserCompany = {
 
 export function useGetCompanies({
   params,
-}: UseGetUserCompanyProps): UseGetUserCompany {
+}: UseGetCompaniesProps): UseGetCompanies {
   const keys = Object.values(params).filter((val) => isNotNil(val));
   const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.COMPANIES, ...keys],

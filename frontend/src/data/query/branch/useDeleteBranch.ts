@@ -24,7 +24,7 @@ async function deleteBranch(
   }
 
   const { data } = await axios.delete<BaseResponse>(
-    `${import.meta.env.VITE_API_URL}/${comapnyId}/${branchId}/delete`,
+    `${import.meta.env.VITE_API_URL}/branches/${comapnyId}/${branchId}/delete`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,

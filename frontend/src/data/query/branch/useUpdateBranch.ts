@@ -31,7 +31,7 @@ async function updateBranch(
   }
 
   const { data } = await axios.put<BaseResponse>(
-    `${import.meta.env.VITE_API_URL}/${companyId}/${branchId}/update`,
+    `${import.meta.env.VITE_API_URL}/branches/${companyId}/${branchId}/update`,
     body,
     {
       headers: {
