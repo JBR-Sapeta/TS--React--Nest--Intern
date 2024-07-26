@@ -25,9 +25,9 @@ async function resetCompanyImage(
   companyId: string,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
-  const { logoFile, mainPhotoFile } = body;
+  const { logoUrl, mainPhotoUrl } = body;
 
-  if (isNil(accessToken) || (!logoFile && !mainPhotoFile)) {
+  if (isNil(accessToken) || (!logoUrl && !mainPhotoUrl)) {
     return undefined;
   }
 

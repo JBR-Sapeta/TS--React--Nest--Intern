@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 import { FaEnvelope, FaUsers, FaPen, FaTrash } from 'react-icons/fa';
-import { FaPhone, FaImage } from 'react-icons/fa6';
+import { FaPhone, FaImage, FaUpload } from 'react-icons/fa6';
 import { IoMdSettings } from 'react-icons/io';
 
 import { CompanyLogo, MainPhoto, VerifiedLabel } from '@Components/base';
@@ -11,10 +11,21 @@ import { ROUTER_PATHS } from '@Router/constants';
 
 import { CategoryTags } from '../../category';
 import { DeleteCompoanyForm } from '../DeletCompanyForm/DeletCompanyForm';
+import { ResetImagesForm } from '../ResteImagesForm/ResetImagesForm';
 
 import styles from './UserCompany.module.css';
 
 type Props = Omit<FullCompanyData, 'createdAt'>;
+
+const INITIAL_STATE = {
+  delete: false,
+  resetImages: false,
+};
+
+enum ModalType {
+  RESET_IMAGES = 'resetImages',
+  DELETE = 'delete',
+}
 
 export function UserCompany({
   id,
@@ -28,13 +39,15 @@ export function UserCompany({
   categories,
   isVerified,
 }: Props): ReactElement {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(INITIAL_STATE);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const openModal = (field: ModalType) => {
+    setIsModalOpen((state) => {
+      return { ...state, [field]: true };
+    });
   };
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsModalOpen(INITIAL_STATE);
   };
 
   return (
@@ -63,10 +76,19 @@ export function UserCompany({
                 Zaktualizuj dane
               </DropdownItem>
               <DropdownItem path={ROUTER_PATHS.COMPANY_UPLOAD} isLink>
-                <FaImage />
+                <FaUpload />
                 Zaktualizuj zdjęcia
               </DropdownItem>
-              <DropdownItem onClick={openModal} isLink={false}>
+              <DropdownItem
+                onClick={() => openModal(ModalType.RESET_IMAGES)}
+                isLink={false}
+              >
+                <FaImage /> Usuń Zdjęcia
+              </DropdownItem>
+              <DropdownItem
+                onClick={() => openModal(ModalType.DELETE)}
+                isLink={false}
+              >
                 <FaTrash /> Usuń Konto
               </DropdownItem>
             </DropdownMenu>
@@ -96,9 +118,14 @@ export function UserCompany({
           </div>
         </div>
       </div>
-      {isModalOpen && (
+      {isModalOpen.delete && (
         <Modal onClick={closeModal}>
           <DeleteCompoanyForm companyId={id} closeModal={closeModal} />
+        </Modal>
+      )}
+      {isModalOpen.resetImages && (
+        <Modal onClick={closeModal}>
+          <ResetImagesForm companyId={id} closeModal={closeModal} />
         </Modal>
       )}
     </>

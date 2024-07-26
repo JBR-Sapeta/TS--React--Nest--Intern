@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import {
   UseMutateFunction,
   useMutation,
@@ -9,7 +8,6 @@ import { useSnackbar } from 'notistack';
 import { isNil } from 'ramda';
 
 import { Nullable, Optional } from '@Common/types';
-import { ROUTER_PATHS } from '@Router/constants';
 
 import { useGetAccessToken } from '../auth';
 import { QUERY_KEY } from '../../constant';
@@ -78,7 +76,6 @@ type UseUploadCompanyImages = {
 export function useUploadCompanyImages({
   companyId,
 }: UseUploadCompanyImagesProps): UseUploadCompanyImages {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
@@ -102,7 +99,6 @@ export function useUploadCompanyImages({
           message: res.message,
           variant: 'success',
         });
-        navigate(ROUTER_PATHS.COMPANY);
       }
     },
     onError: (res) => {

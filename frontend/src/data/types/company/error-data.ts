@@ -22,6 +22,6 @@ export type UploadCompanyImagesError = {
 };
 
 export type ResetCompanyImagesError = {
-  logoFile?: string;
-  mainPhotoFile?: string;
+  logoUrl?: string;
+  mainPhotoUrl?: string;
 };

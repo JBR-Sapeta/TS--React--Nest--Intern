@@ -24,6 +24,6 @@ export type UploadCompanyImagesBody = {
 };
 
 export type ResetCompanyImagesBody = {
-  logoFile: boolean;
-  mainPhotoFile: boolean;
+  logoUrl: boolean;
+  mainPhotoUrl: boolean;
 };
