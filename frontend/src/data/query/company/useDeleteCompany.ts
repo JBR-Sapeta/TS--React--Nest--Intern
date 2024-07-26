@@ -36,10 +36,6 @@ async function deleteCompany(
   return data;
 }
 
-type UseDeleteCompanyProps = {
-  companyId: string;
-};
-
 type UseDeleteCompany = {
   isPending: boolean;
   data?: Optional<BaseResponse>;
@@ -47,14 +43,12 @@ type UseDeleteCompany = {
   deleteCompanyMutation: UseMutateFunction<
     Optional<BaseResponse>,
     AxiosError<BaseError>,
-    null,
+    string,
     unknown
   >;
 };
 
-export function useDeleteCompany({
-  companyId,
-}: UseDeleteCompanyProps): UseDeleteCompany {
+export function useDeleteCompany(): UseDeleteCompany {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -65,28 +59,31 @@ export function useDeleteCompany({
     data,
     error,
     mutate: deleteCompanyMutation,
-  } = useMutation<Optional<BaseResponse>, AxiosError<BaseError>, null, unknown>(
-    {
-      mutationFn: () => deleteCompany(companyId, accessToken),
-      onSuccess: (res) => {
-        if (res) {
-          queryClient.setQueryData([QUERY_KEY.USER_COMPANY], null);
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
-          enqueueSnackbar({
-            message: res.message,
-            variant: 'success',
-          });
-          navigate(ROUTER_PATHS.OFFERS);
-        }
-      },
-      onError: (res) => {
+  } = useMutation<
+    Optional<BaseResponse>,
+    AxiosError<BaseError>,
+    string,
+    unknown
+  >({
+    mutationFn: (companyId) => deleteCompany(companyId, accessToken),
+    onSuccess: (res) => {
+      if (res) {
+        queryClient.setQueryData([QUERY_KEY.USER_COMPANY], null);
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
         enqueueSnackbar({
-          message: getErrorMessages(res),
-          variant: 'error',
+          message: res.message,
+          variant: 'success',
         });
-      },
-    }
-  );
+        navigate(ROUTER_PATHS.OFFERS);
+      }
+    },
+    onError: (res) => {
+      enqueueSnackbar({
+        message: getErrorMessages(res),
+        variant: 'error',
+      });
+    },
+  });
 
   return { isPending, data, error, deleteCompanyMutation };
 }

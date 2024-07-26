@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { ReactElement } from 'react';
 import { FaEnvelope, FaUsers, FaPen, FaTrash } from 'react-icons/fa';
 import { FaPhone, FaImage } from 'react-icons/fa6';
@@ -7,23 +8,32 @@ import { isNil } from 'ramda';
 
 import type { Nullable } from '@Common/types';
 import { CompanyLogo, MainPhoto, VerifiedLabel } from '@Components/base';
-import { DropdownItem, DropdownMenu } from '@Components/shared';
+import { DropdownItem, DropdownMenu, Modal } from '@Components/shared';
 import { useGetUserCompany } from '@Data/query/company';
 
 import { CategoryTags } from '../../category';
 
 import styles from './UserCompany.module.css';
+import { DeleteCompoanyForm } from '../DeletCompanyForm/DeletCompanyForm';
 
 type Props = {
   userId: string;
 };
 
 export function UserCompany({ userId }: Props): Nullable<ReactElement> {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { company } = useGetUserCompany({ userId });
 
   if (isNil(company)) return null;
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   const {
+    id,
     name,
     logoUrl,
     mainPhotoUrl,
@@ -36,62 +46,69 @@ export function UserCompany({ userId }: Props): Nullable<ReactElement> {
   } = company;
 
   return (
-    <div className={styles.container}>
-      <div className={styles.headerContainer}>
-        <MainPhoto url={mainPhotoUrl} />
-        <div className={styles.companyLogo}>
-          <CompanyLogo
-            url={logoUrl}
-            type="small"
-            name={name}
-            hasPadding
-            hasRadius
-          />
-          <VerifiedLabel isVerified={isVerified} />
+    <>
+      <div className={styles.container}>
+        <div className={styles.headerContainer}>
+          <MainPhoto url={mainPhotoUrl} />
+          <div className={styles.companyLogo}>
+            <CompanyLogo
+              url={logoUrl}
+              type="small"
+              name={name}
+              hasPadding
+              hasRadius
+            />
+            <VerifiedLabel isVerified={isVerified} />
+          </div>
+          <div className={styles.controls}>
+            <DropdownMenu
+              LeftIcon={IoMdSettings}
+              label="Zarządzaj profilem"
+              isBottom
+            >
+              <DropdownItem path="/profile" isLink>
+                <FaPen />
+                Zaktualizuj dane
+              </DropdownItem>
+              <DropdownItem path="/company" isLink>
+                <FaImage />
+                Zakyualizuj zdjęcia
+              </DropdownItem>
+              <DropdownItem onClick={openModal} isLink={false}>
+                <FaTrash /> Usuń Konto
+              </DropdownItem>
+            </DropdownMenu>
+          </div>
         </div>
-        <div className={styles.controls}>
-          <DropdownMenu
-            LeftIcon={IoMdSettings}
-            label="Zarządzaj profilem"
-            isBottom
-          >
-            <DropdownItem path="/profile" isLink>
-              <FaPen />
-              Zaktualizuj dane
-            </DropdownItem>
-            <DropdownItem path="/company" isLink>
-              <FaImage />
-              Zakyualizuj zdjęcia
-            </DropdownItem>
-            <DropdownItem onClick={() => {}} isLink={false}>
-              <FaTrash /> Usuń Konto
-            </DropdownItem>
-          </DropdownMenu>
-        </div>
-      </div>
 
-      <div className={styles.content}>
-        <h3>O nas</h3>
-        <p>{description}</p>
-        <p className={styles.workers}>
-          <FaUsers />
-          Liczba pracowników - {size}
-        </p>
-        <CategoryTags categories={categories} className={styles.tags} />
-      </div>
-      <div className={styles.content}>
-        <h3>Kontakt</h3>
-        <div className={styles.contact}>
-          <p>
-            <FaEnvelope /> {email}
+        <div className={styles.companyData}>
+          <h3>O nas</h3>
+          <p>{description}</p>
+          <p className={styles.workers}>
+            <FaUsers />
+            Liczba pracowników - {size}
           </p>
-          {phoneNumber && (
+          <CategoryTags categories={categories} className={styles.tags} />
+        </div>
+        <div className={styles.companyData}>
+          <h3>Kontakt</h3>
+          <div className={styles.contact}>
             <p>
-              <FaPhone /> {phoneNumber}
+              <FaEnvelope /> {email}
             </p>
-          )}
+            {phoneNumber && (
+              <p>
+                <FaPhone /> {phoneNumber}
+              </p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+      {isModalOpen && (
+        <Modal onClick={closeModal}>
+          <DeleteCompoanyForm companyId={id} closeModal={closeModal} />
+        </Modal>
+      )}
+    </>
   );
 }

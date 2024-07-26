@@ -1,9 +1,9 @@
 .container {
   width: 952px;
-  overflow: hidden;
   border-radius: var(--radius-8);
   background-color: var(--color-bcg-main);
   box-shadow: var(--shadow-l);
+  overflow: hidden;
 }
 
 .headerContainer {
@@ -17,17 +17,17 @@
   left: 16px;
   display: flex;
   flex-direction: column;
-  gap:var(--space-16)
+  gap: var(--space-16);
 }
 
-.controls{
+.controls {
   position: absolute;
   bottom: 16px;
   right: 16px;
 }
 
-.content {
-  padding: var(--space-40);
+.companyData {
+  margin: var(--space-48)  var(--space-40);
 
   & h3 {
     margin-bottom: var(--space-16);

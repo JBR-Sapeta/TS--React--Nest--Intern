@@ -1,0 +1,30 @@
+.container {
+  width: 340px;
+  padding: var(--space-32);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: var(--radius-8);
+  background-color: var(--color-bcg-main);
+
+  & h3 {
+    font-size: var(--font-h-24);
+  }
+
+  & p{
+    text-align: center;
+    font-size: var(--font-p-16);
+  }
+}
+
+.hr {
+  width: 100%;
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.controls {
+    margin-top: var(--space-40);
+  display: flex;
+  gap: var(--space-24);
+}
