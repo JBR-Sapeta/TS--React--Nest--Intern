@@ -9,6 +9,7 @@ import { createBrowserRouter, Route } from 'react-router-dom';
 import { Layout } from '@Containers/layout';
 import { useStorageSynchronize } from '@Data/query/auth';
 import { useGetUserProfile } from '@Data/query/user';
+
 import {
   ActivationView,
   PostRegistrationView,
@@ -16,6 +17,7 @@ import {
   SignInView,
 } from '@Views/auth';
 import { CompanyListingView } from '@Views/companies';
+import { CreateCompanyView } from '@Views/company';
 import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
 import { ProfileView } from '@Views/user';
@@ -42,6 +44,7 @@ const ROUTER = createBrowserRouter(
         path={`${ROUTER_PATHS.OFFERS}/:offerId`}
         element={<CompanyListingView />}
       />
+
       <Route element={<PublicRoute />}>
         <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />
         <Route
@@ -55,6 +58,10 @@ const ROUTER = createBrowserRouter(
         <Route path={ROUTER_PATHS.PROFILE} element={<ProfileView />} />
       </Route>
       <Route element={<UserRouteGuard />}>
+        <Route
+          path={ROUTER_PATHS.CREATE_COMPANY}
+          element={<CreateCompanyView />}
+        />
         <Route
           path={ROUTER_PATHS.APPLICATIONS}
           element={<PostRegistrationView />}

@@ -4,6 +4,7 @@ export const ROUTER_PATHS = {
   AUTH: '/auth',
   COMPANIES: '/companies',
   COMPANY: '/company',
+  CREATE_COMPANY: '/create-company',
   OFFERS: '/offers',
   USERS: '/USERS',
   POST_AUTH: '/post-auth',

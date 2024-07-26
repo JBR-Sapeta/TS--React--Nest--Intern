@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
 
-import { BaseButton, Modal } from '@Components/shared';
-import { UserProfile } from '@Data/types';
+import { UserRole } from '@Common/enums';
+import { hasRoles } from '@Common/functions';
+import { BaseButton, BaseLink, Modal } from '@Components/shared';
+import type { UserProfile } from '@Data/types';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import UpdateEamilForm from '../UpdateEmailForm/UpdateEmailForm';
 import UpdateProfilForm from '../UpdateProfileForm/UpdateProfileForm';
@@ -16,7 +19,6 @@ const INITIAL_STATE = {
   password: false,
   email: false,
   delete: false,
-  company: false,
 };
 
 enum ModalType {
@@ -24,7 +26,6 @@ enum ModalType {
   PASSWORD = 'password',
   EMAIL = 'email',
   DELETE = 'delete',
-  COMPANY = 'company',
 }
 
 type Props = {
@@ -43,7 +44,9 @@ function ProfileControls({ userProfile }: Props): ReactElement {
     setIsModalOpen(INITIAL_STATE);
   };
 
-  const { firstName, lastName, phoneNumber } = userProfile;
+  const { firstName, lastName, phoneNumber, roles } = userProfile;
+
+  const showCompanyButton = hasRoles(roles, [UserRole.USER]);
 
   return (
     <>
@@ -76,13 +79,15 @@ function ProfileControls({ userProfile }: Props): ReactElement {
         >
           Usuń konto
         </BaseButton>
-        <BaseButton
-          size="medium"
-          color="green"
-          onClick={() => openModal(ModalType.COMPANY)}
-        >
-          Nowa firma
-        </BaseButton>
+        {showCompanyButton && (
+          <BaseLink
+            size="medium"
+            color="green"
+            path={ROUTER_PATHS.CREATE_COMPANY}
+          >
+            Nowa firma
+          </BaseLink>
+        )}
       </div>
       {isModalOpen.informations && (
         <Modal onClick={closeModal}>
@@ -105,11 +110,6 @@ function ProfileControls({ userProfile }: Props): ReactElement {
         </Modal>
       )}
       {isModalOpen.delete && (
-        <Modal onClick={closeModal}>
-          <DeleteProfileForm closeModal={closeModal} />
-        </Modal>
-      )}
-      {isModalOpen.company && (
         <Modal onClick={closeModal}>
           <DeleteProfileForm closeModal={closeModal} />
         </Modal>

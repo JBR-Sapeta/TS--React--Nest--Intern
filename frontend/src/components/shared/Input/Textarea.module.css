@@ -1,0 +1,91 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  & svg {
+    margin-right: var(--space-8);
+    color: var(--color-element-icon);
+  }
+
+  & label {
+    color: var(--color-text);
+  }
+
+  & textarea {
+    width: 100%;
+    border: 1px solid var(--color-gray-700);
+    border-radius: var(--radius-4);
+    background-color: var(--color-bcg-secondary);
+    outline: none;
+    resize: none;
+    color: var(--color-text);
+    font-family: var(--font-family);
+  }
+}
+
+.small {
+  & svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  & label {
+    font-size: var(--font-p-16);
+  }
+
+  & textarea {
+    padding: var(--space-4) var(--space-16);
+    font-size: var(--font-p-16);
+    line-height: 1.5;
+  }
+}
+
+.medium {
+  & svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  & label {
+    font-size: var(--font-p-18);
+  }
+
+  & textarea {
+    padding: 6px var(--space-16);
+    font-size: var(--font-p-18);
+    line-height: 1.5;
+  }
+}
+
+.active {
+  & input {
+    border: 1px solid var(--color-green);
+  }
+
+  & svg {
+    color: var(--color-green);
+  }
+}
+
+.error {
+  & textarea {
+    border: 1px solid var(--color-red);
+  }
+
+  & svg {
+    color: var(--color-red);
+  }
+}
+
+.container input:focus {
+  outline: none;
+}
+
+.message {
+  min-height: 18px;
+  width: 100%;
+  padding-left: var(--space-4);
+  color: var(--color-red);
+  font-size: var(--font-p-12);
+}

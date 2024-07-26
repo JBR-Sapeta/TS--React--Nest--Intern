@@ -4,29 +4,27 @@ import type { IconType } from 'react-icons';
 import clsx from 'clsx';
 import { isEmpty } from 'ramda';
 
-import styles from './BaseInput.module.css';
+import styles from './Textarea.module.css';
 
 type Props = {
   inputSize: 'small' | 'medium';
   name: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   label: { id: string; text: string };
   error?: string;
   Icon?: IconType;
-} & Partial<HTMLInputElement>;
+} & Partial<HTMLTextAreaElement>;
 
-function BaseInput({
+export function Textarea({
   inputSize,
   value,
   name,
   className,
   onChange,
-  type,
   placeholder,
   label,
   Icon,
   error = '',
-  min,
 }: Props): ReactElement {
   const [focused, setFocused] = useState<boolean>(false);
   const onFocus = () => setFocused(true);
@@ -48,13 +46,11 @@ function BaseInput({
     <div className={containerClassName}>
       {Icon && <Icon />}
       {label && <label htmlFor={label.id}>{label.text}</label>}
-      <input
+      <textarea
         id={label.id}
-        type={type}
         name={name}
         placeholder={placeholder}
         value={value}
-        min={min}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -63,5 +59,3 @@ function BaseInput({
     </div>
   );
 }
-
-export default BaseInput;

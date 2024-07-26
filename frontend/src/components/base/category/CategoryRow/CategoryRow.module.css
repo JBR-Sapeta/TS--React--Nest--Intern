@@ -1,0 +1,12 @@
+.open {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background-color: var(--color-bcg-main);
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}

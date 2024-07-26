@@ -8,7 +8,7 @@ export type Category = {
   children: SubCategory[];
 };
 
-type SubCategory = {
+export type SubCategory = {
   id: number;
   name: string;
   parentId: number;

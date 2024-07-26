@@ -1,0 +1,27 @@
+.container {
+  width: 220px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  border: 2px solid var(--color-element-border);
+  border-radius: var(--radius-4);
+  background-color: var(--color-bcg-secondary);
+}
+
+.button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: var(--font-p-14);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.selectedContainer {
+  border: 2px solid var(--color-green);
+}
+
+.selectedButton {
+  color: var(--color-green);
+}

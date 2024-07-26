@@ -1,0 +1,37 @@
+.container {
+  width: 220px;
+  height: 72px;
+  padding: var(--space-8) var(--space-24);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-24);
+  border: 2px solid var(--color-element-border);
+  border-radius: var(--radius-4);
+  background-color: var(--color-bcg-secondary);
+}
+
+.categorybutton,
+.subCategories {
+  padding: var(--space-16) var(--space-4);
+  border: none;
+  background-color: transparent;
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.selectedContainer {
+  border: 2px solid var(--color-green);
+}
+
+.selectedButton {
+  color: var(--color-green);
+}
+
+.openContainer {
+  border: 2px solid var(--color-blue);
+}
+
+.openButton {
+  color: var(--color-blue);
+}
