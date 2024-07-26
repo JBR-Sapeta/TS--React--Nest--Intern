@@ -1,0 +1,78 @@
+.dropdown {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  z-index: 4;
+}
+
+.dropdownActive {
+  z-index: 5;
+}
+
+.dropdownButton {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  color: var(--color-element-icon);
+
+  & > svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.dropdownList {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-element-dropdown);
+  border-radius: var(--radius-4);
+  overflow: hidden;
+}
+
+.bottomList {
+  width: 56px;
+  top: 30px;
+  right: 0;
+  align-items: center;
+}
+
+.dropdownLabelButton {
+  height: 37px;
+  width: auto;
+  border-radius: var(--radius-4);
+  background-color: var(--color-green-300);
+}
+
+.labelButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-24);
+  font-size: var(--font-p-16);
+  color: var(--color-strict-white);
+
+  & > svg {
+    width: 21px;
+    height: 21px;
+  }
+}
+
+.labelList {
+  width: fit-content;
+  top: 39px;
+  left: 0;
+}
+
+:global(body.dark) .dropdownList {
+  border: 1px solid var(--color-gray-700);
+}

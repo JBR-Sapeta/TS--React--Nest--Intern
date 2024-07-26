@@ -17,7 +17,7 @@ import {
   SignInView,
 } from '@Views/auth';
 import { CompanyListingView } from '@Views/companies';
-import { CreateCompanyView } from '@Views/company';
+import { CreateCompanyView, UserCompanyView } from '@Views/company';
 import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
 import { ProfileView } from '@Views/user';
@@ -68,7 +68,7 @@ const ROUTER = createBrowserRouter(
         />
       </Route>
       <Route element={<CompanyRouteGuard />}>
-        <Route path={ROUTER_PATHS.COMPANY} element={<PostRegistrationView />} />
+        <Route path={ROUTER_PATHS.COMPANY} element={<UserCompanyView />} />
       </Route>
       <Route element={<CompanyRouteGuard />}>
         <Route path={ROUTER_PATHS.USERS} element={<PostRegistrationView />} />

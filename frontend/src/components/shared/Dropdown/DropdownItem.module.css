@@ -1,0 +1,30 @@
+.dropdownItem {
+  width: 100%;
+  min-width: 56px;
+  height: 36px;
+  margin: 0;
+  padding: 0 var(--space-16);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  border: none;
+  background-color: var(--color-element-dropdown);
+  color: var(--color-text);
+  font-size: var(--font-p-16);
+  cursor: pointer;
+
+  & > svg {
+    width: 16px;
+    height: 16px;
+    margin-right: var(--space-16);
+    color: var(--color-element-icon);
+  }
+
+  &:hover {
+    background-color: var(--color-gray-light);
+  }
+
+  &:hover > svg {
+    color: var(--color-black);
+  }
+}

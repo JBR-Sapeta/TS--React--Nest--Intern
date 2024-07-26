@@ -98,6 +98,7 @@ body {
   --color-element-hr: var(--color-gray-400);
   --color-element-border: var(--color-gray-500);
   --color-element-icon: var(--color-gray-700);
+  --color-element-dropdown: var(--color-gray-100);
 
   /* COLORS */
   --color-red: var(--color-red-400);
@@ -132,6 +133,7 @@ body.dark {
   --color-element-hr: var(--color-gray-700);
   --color-element-border: var(--color-gray-700);
   --color-element-icon: var(--color-gray-500);
+  --color-element-dropdown: var(--color-gray-900);
 
   /* COLORS */
   --color-red: var(--color-red-300);
