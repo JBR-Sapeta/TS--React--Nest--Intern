@@ -33,12 +33,23 @@ async function uploadCompanyImage(
     return undefined;
   }
 
+  const formData = new FormData();
+
+  if (logoFile) {
+    formData.append('logoFile', logoFile);
+  }
+
+  if (mainPhotoFile) {
+    formData.append('mainPhotoFile', mainPhotoFile);
+  }
+
   const { data } = await axios.put<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/companies/${companyId}/upload-images`,
     body,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
       },
     }
   );

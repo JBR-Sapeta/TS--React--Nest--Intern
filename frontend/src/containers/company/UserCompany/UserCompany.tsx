@@ -62,9 +62,9 @@ export function UserCompany({
                 <FaPen />
                 Zaktualizuj dane
               </DropdownItem>
-              <DropdownItem path={ROUTER_PATHS.COMPANY_UPDATE} isLink>
+              <DropdownItem path={ROUTER_PATHS.COMPANY_UPLOAD} isLink>
                 <FaImage />
-                Zakyualizuj zdjęcia
+                Zaktualizuj zdjęcia
               </DropdownItem>
               <DropdownItem onClick={openModal} isLink={false}>
                 <FaTrash /> Usuń Konto

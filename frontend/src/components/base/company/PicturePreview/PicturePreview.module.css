@@ -1,0 +1,14 @@
+.container {
+  overflow: hidden;
+}
+
+.imagePicture {
+  width: 100%;
+  height: 100%;
+}
+
+.imageImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

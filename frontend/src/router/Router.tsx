@@ -20,6 +20,7 @@ import { CompanyListingView } from '@Views/companies';
 import {
   CreateCompanyView,
   UpdateCompanyView,
+  UploadImagesView,
   UserCompanyView,
 } from '@Views/company';
 import { NotFoundView } from '@Views/errors';
@@ -80,6 +81,10 @@ const ROUTER = createBrowserRouter(
         <Route
           path={ROUTER_PATHS.COMPANY_UPDATE}
           element={<UpdateCompanyView />}
+        />
+        <Route
+          path={ROUTER_PATHS.COMPANY_UPLOAD}
+          element={<UploadImagesView />}
         />
       </Route>
 
