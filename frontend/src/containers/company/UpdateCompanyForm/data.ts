@@ -22,15 +22,6 @@ type FormFields = {
   min?: string;
 };
 
-export type CreateCompanyFromData = {
-  name: string;
-  slug: string;
-  email: string;
-  description: string;
-  size: string;
-  categories: number[];
-};
-
 export const FORM_FIELDS: FormFields[] = [
   {
     name: 'name',

@@ -4,27 +4,31 @@ import { FaEnvelope, FaUsers, FaPen, FaTrash } from 'react-icons/fa';
 import { FaPhone, FaImage } from 'react-icons/fa6';
 import { IoMdSettings } from 'react-icons/io';
 
-import { isNil } from 'ramda';
-
-import type { Nullable } from '@Common/types';
 import { CompanyLogo, MainPhoto, VerifiedLabel } from '@Components/base';
 import { DropdownItem, DropdownMenu, Modal } from '@Components/shared';
-import { useGetUserCompany } from '@Data/query/company';
+import type { FullCompanyData } from '@Data/types';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import { CategoryTags } from '../../category';
-
-import styles from './UserCompany.module.css';
 import { DeleteCompoanyForm } from '../DeletCompanyForm/DeletCompanyForm';
 
-type Props = {
-  userId: string;
-};
+import styles from './UserCompany.module.css';
 
-export function UserCompany({ userId }: Props): Nullable<ReactElement> {
+type Props = Omit<FullCompanyData, 'createdAt'>;
+
+export function UserCompany({
+  id,
+  name,
+  size,
+  email,
+  phoneNumber,
+  description,
+  logoUrl,
+  mainPhotoUrl,
+  categories,
+  isVerified,
+}: Props): ReactElement {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { company } = useGetUserCompany({ userId });
-
-  if (isNil(company)) return null;
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -32,18 +36,6 @@ export function UserCompany({ userId }: Props): Nullable<ReactElement> {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const {
-    id,
-    name,
-    logoUrl,
-    mainPhotoUrl,
-    description,
-    size,
-    categories,
-    email,
-    phoneNumber,
-    isVerified,
-  } = company;
 
   return (
     <>
@@ -66,11 +58,11 @@ export function UserCompany({ userId }: Props): Nullable<ReactElement> {
               label="Zarządzaj profilem"
               isBottom
             >
-              <DropdownItem path="/profile" isLink>
+              <DropdownItem path={ROUTER_PATHS.COMPANY_UPDATE} isLink>
                 <FaPen />
                 Zaktualizuj dane
               </DropdownItem>
-              <DropdownItem path="/company" isLink>
+              <DropdownItem path={ROUTER_PATHS.COMPANY_UPDATE} isLink>
                 <FaImage />
                 Zakyualizuj zdjęcia
               </DropdownItem>

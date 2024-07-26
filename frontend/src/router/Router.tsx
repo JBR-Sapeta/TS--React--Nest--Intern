@@ -17,13 +17,18 @@ import {
   SignInView,
 } from '@Views/auth';
 import { CompanyListingView } from '@Views/companies';
-import { CreateCompanyView, UserCompanyView } from '@Views/company';
+import {
+  CreateCompanyView,
+  UpdateCompanyView,
+  UserCompanyView,
+} from '@Views/company';
 import { NotFoundView } from '@Views/errors';
 import { OfferListingView } from '@Views/offers';
 import { ProfileView } from '@Views/user';
 
 import { ROUTER_PATHS } from './constants';
 import {
+  AdminRouteGuard,
   CompanyRouteGuard,
   ProtectedRoute,
   PublicRoute,
@@ -54,9 +59,11 @@ const ROUTER = createBrowserRouter(
         <Route path={ROUTER_PATHS.ACTIVATION} element={<ActivationView />} />
         <Route path={ROUTER_PATHS.RESET} element={<ResetView />} />
       </Route>
+
       <Route element={<ProtectedRoute />}>
         <Route path={ROUTER_PATHS.PROFILE} element={<ProfileView />} />
       </Route>
+
       <Route element={<UserRouteGuard />}>
         <Route
           path={ROUTER_PATHS.CREATE_COMPANY}
@@ -67,10 +74,16 @@ const ROUTER = createBrowserRouter(
           element={<PostRegistrationView />}
         />
       </Route>
+
       <Route element={<CompanyRouteGuard />}>
         <Route path={ROUTER_PATHS.COMPANY} element={<UserCompanyView />} />
+        <Route
+          path={ROUTER_PATHS.COMPANY_UPDATE}
+          element={<UpdateCompanyView />}
+        />
       </Route>
-      <Route element={<CompanyRouteGuard />}>
+
+      <Route element={<AdminRouteGuard />}>
         <Route path={ROUTER_PATHS.USERS} element={<PostRegistrationView />} />
       </Route>
     </Route>

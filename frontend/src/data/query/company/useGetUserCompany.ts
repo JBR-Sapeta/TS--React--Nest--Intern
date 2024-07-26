@@ -9,10 +9,10 @@ import type { FullCompanyData, FullCompanyDataResponse } from '../../types';
 import { useGetAccessToken } from '../auth';
 
 export async function getUserCompany(
-  userId: string,
+  userId?: string,
   accessToken?: string
 ): Promise<Nullable<FullCompanyDataResponse>> {
-  if (isNil(accessToken)) return null;
+  if (isNil(accessToken) || isNil(userId)) return null;
 
   const { data } = await axios.get<FullCompanyDataResponse>(
     `${import.meta.env.VITE_API_URL}/companies/users/${userId}`,
@@ -27,7 +27,7 @@ export async function getUserCompany(
 }
 
 type UseGetUserCompanyProps = {
-  userId: string;
+  userId?: string;
 };
 
 type UseGetUserCompany = {
@@ -46,7 +46,7 @@ export function useGetUserCompany({
     queryFn: async (): Promise<Nullable<FullCompanyDataResponse>> =>
       getUserCompany(userId, accessToken),
     refetchOnMount: false,
-    enabled: !!accessToken,
+    enabled: !!accessToken && !!userId,
   });
 
   return {
