@@ -16,7 +16,7 @@ import { useGetAccessToken } from '../auth';
 
 async function deleteBranch(
   comapnyId: string,
-  branchId: string,
+  branchId: number,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
   if (isNil(accessToken)) {
@@ -35,9 +35,9 @@ async function deleteBranch(
   return data;
 }
 
-type UseDeleteBranchProps = {
+type MutationParams = {
   companyId: string;
-  branchId: string;
+  branchId: number;
 };
 
 type UseDeleteBranch = {
@@ -47,15 +47,12 @@ type UseDeleteBranch = {
   deleteBranchMutation: UseMutateFunction<
     Optional<BaseResponse>,
     AxiosError<BaseError>,
-    null,
+    MutationParams,
     unknown
   >;
 };
 
-export function useDeleteBranch({
-  companyId,
-  branchId,
-}: UseDeleteBranchProps): UseDeleteBranch {
+export function useDeleteBranch(): UseDeleteBranch {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
@@ -65,26 +62,30 @@ export function useDeleteBranch({
     data,
     error,
     mutate: deleteBranchMutation,
-  } = useMutation<Optional<BaseResponse>, AxiosError<BaseError>, null, unknown>(
-    {
-      mutationFn: () => deleteBranch(companyId, branchId, accessToken),
-      onSuccess: (res) => {
-        if (res) {
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_COMPANY] });
-          enqueueSnackbar({
-            message: res.message,
-            variant: 'success',
-          });
-        }
-      },
-      onError: (res) => {
+  } = useMutation<
+    Optional<BaseResponse>,
+    AxiosError<BaseError>,
+    MutationParams,
+    unknown
+  >({
+    mutationFn: ({ companyId, branchId }) =>
+      deleteBranch(companyId, branchId, accessToken),
+    onSuccess: (res) => {
+      if (res) {
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_COMPANY] });
         enqueueSnackbar({
-          message: getErrorMessages(res),
-          variant: 'error',
+          message: res.message,
+          variant: 'success',
         });
-      },
-    }
-  );
+      }
+    },
+    onError: (res) => {
+      enqueueSnackbar({
+        message: getErrorMessages(res),
+        variant: 'error',
+      });
+    },
+  });
 
   return { isPending, data, error, deleteBranchMutation };
 }

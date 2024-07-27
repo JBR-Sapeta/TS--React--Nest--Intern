@@ -56,3 +56,13 @@
   border: none;
   cursor: pointer;
 }
+
+.selectedContainer {
+  border: 2px solid var(--color-green);
+}
+
+.selectedAddress {
+  & svg {
+    color: var(--color-green);
+  }
+}

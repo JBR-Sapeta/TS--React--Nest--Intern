@@ -119,7 +119,7 @@ export function UserCompany({
             )}
           </div>
         </div>
-        <BranchSection branches={branches} isOwner />
+        <BranchSection branches={branches} companyId={id} isOwner />
       </div>
       {isModalOpen.delete && (
         <Modal onClick={closeModal}>

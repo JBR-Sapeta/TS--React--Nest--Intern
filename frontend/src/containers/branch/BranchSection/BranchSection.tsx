@@ -9,10 +9,15 @@ import styles from './BranchSection.module.css';
 
 type Props = {
   branches: Branch[];
+  companyId: string;
   isOwner?: boolean;
 };
 
-export function BranchSection({ branches, isOwner }: Props): ReactElement {
+export function BranchSection({
+  branches,
+  companyId,
+  isOwner,
+}: Props): ReactElement {
   const [selectedBranch, setSelectedBranch] = useState(branches[0]);
 
   return (
@@ -20,7 +25,9 @@ export function BranchSection({ branches, isOwner }: Props): ReactElement {
       <h3 className={styles.h3}>Lokalizacje</h3>
       <BranchMap currentBranch={selectedBranch} branches={branches} />
       <BranchList
+        companyId={companyId}
         branches={branches}
+        selectedBranchId={selectedBranch.id}
         isOwner={isOwner}
         changeBranch={setSelectedBranch}
       />

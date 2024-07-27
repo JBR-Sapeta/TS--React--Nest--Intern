@@ -25,7 +25,7 @@ export function DeleteCompoanyForm({
       <h3>Usuń konto</h3>
       <Hr className={styles.hr} />
       <p>
-        Usunięcie konta f irmowego spowoduje usunięcie wszytskich ofert oraz
+        Usunięcie konta firmowego spowoduje usunięcie wszytskich ofert oraz
         zgłoszeń kandydatów. Czy jesteś pewien, że chcesz usunąć konto firmowe ?
       </p>
       <div className={styles.controls}>

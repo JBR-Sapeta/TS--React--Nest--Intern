@@ -1,20 +1,24 @@
 import type { Dispatch, ReactElement, SetStateAction } from 'react';
 
 import { Branch } from '@Data/types';
-import { BranchItem } from '@Components/base';
+import { AddBranchLink, BranchItem } from '@Components/base';
 
 import styles from './BranchList.module.css';
 
 type Props = {
+  companyId: string;
   branches: Branch[];
+  selectedBranchId: number;
   changeBranch: Dispatch<SetStateAction<Branch>>;
   isOwner?: boolean;
 };
 
 export function BranchList({
+  companyId,
   branches,
-  isOwner,
+  selectedBranchId,
   changeBranch,
+  isOwner,
 }: Props): ReactElement {
   const onClick = (id: number) => {
     const branch = branches.find((val) => val.id === id);
@@ -29,10 +33,13 @@ export function BranchList({
         <BranchItem
           key={branch.id}
           {...branch}
-          isOwner={isOwner}
+          companyId={companyId}
+          isSelected={selectedBranchId === branch.id}
           onClick={onClick}
+          isOwner={isOwner}
         />
       ))}
+      {isOwner && <AddBranchLink />}
     </div>
   );
 }
