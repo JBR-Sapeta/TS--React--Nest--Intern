@@ -12,36 +12,40 @@ import { Branch } from '@Data/types';
 import styles from './BranchItem.module.css';
 
 type Props = Branch & {
+  onClick: (id: number) => void;
   isOwner?: boolean;
 };
 
 export function BranchItem({
+  id,
   name,
   address,
+  onClick,
   isOwner = false,
 }: Props): ReactElement {
   const { region, postcode, city, streetName, houseNumber } = address;
 
   const regionShort = region.split(' ')[1];
 
-  return (
+  return isOwner ? (
     <article className={styles.container}>
       <div className={styles.header}>
         <h4>{name}</h4>
-        {isOwner && (
-          <DropdownMenu
-            LeftIcon={IoMdSettings}
-            listClassName={styles.dropdownList}
-            isBottom
-          >
-            <DropdownItem onClick={() => {}} isLink={false}>
-              <FaPen /> Zaktualizuj dane
-            </DropdownItem>
-            <DropdownItem onClick={() => {}} isLink={false}>
-              <FaTrash /> Usuń oddział
-            </DropdownItem>
-          </DropdownMenu>
-        )}
+        <DropdownMenu
+          LeftIcon={IoMdSettings}
+          listClassName={styles.dropdownList}
+          isBottom
+        >
+          <DropdownItem onClick={() => onClick(id)} isLink={false}>
+            <MdLocationOn /> Wycentruj mape
+          </DropdownItem>
+          <DropdownItem onClick={() => {}} isLink={false}>
+            <FaPen /> Zaktualizuj dane
+          </DropdownItem>
+          <DropdownItem onClick={() => {}} isLink={false}>
+            <FaTrash /> Usuń oddział
+          </DropdownItem>
+        </DropdownMenu>
       </div>
       <div className={styles.address}>
         <p className={styles.region}>
@@ -57,6 +61,32 @@ export function BranchItem({
           {`${streetName} ${houseNumber}`}
         </p>
       </div>
+    </article>
+  ) : (
+    <article className={styles.container}>
+      <button
+        type="button"
+        onClick={() => onClick(id)}
+        className={styles.button}
+      >
+        <div className={styles.header}>
+          <h4>{name}</h4>
+        </div>
+        <div className={styles.address}>
+          <p className={styles.region}>
+            <PiMountainsFill />
+            {capitalize(regionShort)}
+          </p>
+          <p className={styles.city}>
+            <MdLocationOn />
+            {`${city} ${postcode}`}
+          </p>
+          <p className={styles.street}>
+            <BsMailbox2 />
+            {`${streetName} ${houseNumber}`}
+          </p>
+        </div>
+      </button>
     </article>
   );
 }

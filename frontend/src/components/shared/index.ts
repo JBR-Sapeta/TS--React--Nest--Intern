@@ -5,6 +5,7 @@ export { default as BaseInput } from './Input/BaseInput';
 export { default as LogoSpinner } from './LoadingSpinner/LogoSpinner';
 export { default as PlainSpinner } from './LoadingSpinner/PlainSpinner';
 export { default as Modal } from './Modal/Modal';
+export { MapCenterPosition } from './MapCenterPosition/MapCenterPosition';
 export { DropdownItem } from './Dropdown/DropdownItem';
 export { DropdownMenu } from './Dropdown/DropdownMenu';
 export { Textarea } from './Input/Textarea';

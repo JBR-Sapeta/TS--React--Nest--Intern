@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import type { ReactElement } from 'react';
 
+import { BranchMap } from '@Components/base';
 import { Branch } from '@Data/types';
 
 import { BranchList } from '../BranchList/BranchList';
@@ -11,10 +13,17 @@ type Props = {
 };
 
 export function BranchSection({ branches, isOwner }: Props): ReactElement {
+  const [selectedBranch, setSelectedBranch] = useState(branches[0]);
+
   return (
     <section className={styles.section}>
       <h3 className={styles.h3}>Lokalizacje</h3>
-      <BranchList branches={branches} isOwner={isOwner} />
+      <BranchMap currentBranch={selectedBranch} branches={branches} />
+      <BranchList
+        branches={branches}
+        isOwner={isOwner}
+        changeBranch={setSelectedBranch}
+      />
     </section>
   );
 }
