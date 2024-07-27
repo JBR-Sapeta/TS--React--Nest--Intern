@@ -8,6 +8,7 @@ import { PiMountainsFill } from 'react-icons/pi';
 import { DropdownItem, DropdownMenu } from '@Components/shared';
 import { capitalize } from '@Common/functions';
 import { Branch } from '@Data/types';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import styles from './BranchItem.module.css';
 
@@ -39,7 +40,10 @@ export function BranchItem({
           <DropdownItem onClick={() => onClick(id)} isLink={false}>
             <MdLocationOn /> Wycentruj mape
           </DropdownItem>
-          <DropdownItem onClick={() => {}} isLink={false}>
+          <DropdownItem
+            path={`${ROUTER_PATHS.UPDATE_BRANCH}/${id}/update`}
+            isLink
+          >
             <FaPen /> Zaktualizuj dane
           </DropdownItem>
           <DropdownItem onClick={() => {}} isLink={false}>

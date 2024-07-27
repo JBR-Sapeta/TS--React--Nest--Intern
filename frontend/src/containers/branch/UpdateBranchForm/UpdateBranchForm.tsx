@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
-import { isNil } from 'ramda';
+import { isNil, omit } from 'ramda';
 
 import { BaseButton, BaseInput, Hr } from '@Components/shared';
 import { getErrorMessages } from '@Data/utils';
-import { useCreateBranch } from '@Data/query/branch';
+import { Branch } from '@Data/types';
+import { useUpdateBranch } from '@Data/query/branch';
 
 import {
   ADDRESS_FORM_FIELDS,
@@ -15,7 +16,7 @@ import {
   validateBranchFormData,
 } from './data';
 
-import styles from './CreateBranchForm.module.css';
+import styles from './UpdateBranchForm.module.css';
 
 const BRANCH_INITIAL_STATE: BranchFormData = {
   name: '',
@@ -34,15 +35,23 @@ const ADDRESS_INITIAL_STATE: AddressFromData = {
 
 type Props = {
   companyId: string;
+  branch: Branch;
 };
 
-export function CreateBranchForm({ companyId }: Props): ReactElement {
-  const { isPending, error, createBranchMutation } = useCreateBranch({
-    companyId,
+export function UpdateBranchForm({ branch, companyId }: Props): ReactElement {
+  const { id: branchId, name, address } = branch;
+  const addressData = omit(['id'], {
+    ...address,
+    lat: String(address.lat),
+    long: String(address.long),
   });
-  const [branchValues, setBranchValues] = useState(BRANCH_INITIAL_STATE);
+  const { isPending, error, updateBranchMutation } = useUpdateBranch({
+    companyId,
+    branchId,
+  });
+  const [branchValues, setBranchValues] = useState({ name });
   const [branchErrors, setBranchErrors] = useState(BRANCH_INITIAL_STATE);
-  const [addressValues, setAddressValues] = useState(ADDRESS_INITIAL_STATE);
+  const [addressValues, setAddressValues] = useState(addressData);
   const [addressErrors, setAddressErrors] = useState(ADDRESS_INITIAL_STATE);
 
   const onBranchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +79,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
     }
 
     if (isNil(addressValidationErrors) && isNil(branchValidationErrors)) {
-      createBranchMutation({
+      updateBranchMutation({
         name: branchValues.name,
         address: {
           ...addressValues,
@@ -82,7 +91,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
   };
   return (
     <section className={styles.section}>
-      <h3>Dodaj oddział</h3>
+      <h3>Zaktualizuj oddział</h3>
       <Hr />
       <form onSubmit={onSubmit}>
         <div className={styles.inputs}>
@@ -116,7 +125,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
           className={styles.button}
           disabled={isPending}
         >
-          Stwórz oddział
+          Zaktualizuj
         </BaseButton>
       </form>
     </section>

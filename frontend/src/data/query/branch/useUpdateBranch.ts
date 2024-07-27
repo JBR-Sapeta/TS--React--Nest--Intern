@@ -25,7 +25,7 @@ import { useGetAccessToken } from '../auth';
 async function updateBranch(
   body: UpdateBranchBody,
   companyId: string,
-  branchId: string,
+  branchId: number,
   accessToken?: string
 ): Promise<Optional<BaseResponse>> {
   if (isNil(accessToken) || isEmpty(body)) {
@@ -47,7 +47,7 @@ async function updateBranch(
 
 type UseUpdateBranchProps = {
   companyId: string;
-  branchId: string;
+  branchId: number;
 };
 
 type UseUpdateBranch = {

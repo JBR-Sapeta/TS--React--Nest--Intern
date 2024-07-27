@@ -16,7 +16,7 @@ import {
   ResetView,
   SignInView,
 } from '@Views/auth';
-import { CreateBranchView } from '@Views/branch';
+import { CreateBranchView, UpdateBranchView } from '@Views/branch';
 import { CompanyListingView } from '@Views/companies';
 import {
   CreateCompanyView,
@@ -90,6 +90,10 @@ const ROUTER = createBrowserRouter(
         <Route
           path={ROUTER_PATHS.CREATE_BRANCH}
           element={<CreateBranchView />}
+        />
+        <Route
+          path={`${ROUTER_PATHS.UPDATE_BRANCH}/:branchId/update`}
+          element={<UpdateBranchView />}
         />
       </Route>
 
