@@ -1,0 +1,9 @@
+.section {
+  margin: var(--space-40);
+}
+
+h3 {
+  margin-bottom: var(--space-16);
+  font-size: var(--font-h-24);
+  color: var(--color-header);
+}

@@ -11,6 +11,9 @@ type Props = {
   LeftIcon?: IconType;
   RightIcon?: IconType;
   isBottom?: boolean;
+  dropdownClassName?: string;
+  buttonClassName?: string;
+  listClassName?: string;
 };
 
 export function DropdownMenu({
@@ -19,6 +22,9 @@ export function DropdownMenu({
   RightIcon,
   label = '',
   isBottom = false,
+  dropdownClassName,
+  buttonClassName,
+  listClassName,
 }: Props): ReactElement {
   const dropdownElement = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -39,16 +45,16 @@ export function DropdownMenu({
     return () => document.removeEventListener('click', handler);
   }, [setIsOpen]);
 
-  const dropdownClassnames = clsx(styles.dropdown, {
+  const dropdownClassnames = clsx(styles.dropdown, dropdownClassName, {
     [styles.dropdownActive]: isOpen,
     [styles.dropdownLabelButton]: label,
   });
 
-  const buttonClassNames = clsx(styles.dropdownButton, {
+  const buttonClassNames = clsx(styles.dropdownButton, buttonClassName, {
     [styles.labelButton]: label,
   });
 
-  const listClassNames = clsx(styles.dropdownList, {
+  const listClassNames = clsx(styles.dropdownList, listClassName, {
     [styles.bottomList]: isBottom,
     [styles.labelList]: label,
   });

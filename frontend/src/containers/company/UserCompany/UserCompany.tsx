@@ -10,6 +10,7 @@ import type { FullCompanyData } from '@Data/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
 import { CategoryTags } from '../../category';
+import { BranchSection } from '../../branch';
 import { DeleteCompoanyForm } from '../DeletCompanyForm/DeletCompanyForm';
 import { ResetImagesForm } from '../ResteImagesForm/ResetImagesForm';
 
@@ -38,6 +39,7 @@ export function UserCompany({
   mainPhotoUrl,
   categories,
   isVerified,
+  branches,
 }: Props): ReactElement {
   const [isModalOpen, setIsModalOpen] = useState(INITIAL_STATE);
 
@@ -117,6 +119,7 @@ export function UserCompany({
             )}
           </div>
         </div>
+        <BranchSection branches={branches} isOwner />
       </div>
       {isModalOpen.delete && (
         <Modal onClick={closeModal}>
