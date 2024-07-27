@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import {
   UseMutateFunction,
   useMutation,
@@ -8,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import { isNil } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import { QUERY_KEY } from '../../constant';
 import type {
@@ -61,6 +63,7 @@ type UseCreateBranch = {
 export function useCreateBranch({
   companyId,
 }: UseCreateBranchProps): UseCreateBranch {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
@@ -86,6 +89,7 @@ export function useCreateBranch({
           message: res.message,
           variant: 'success',
         });
+        navigate(ROUTER_PATHS.COMPANY);
       }
     },
     onError: (res) => {

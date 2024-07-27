@@ -27,6 +27,10 @@ function BaseInput({
   Icon,
   error = '',
   min,
+  max,
+  required,
+  readOnly,
+  step,
 }: Props): ReactElement {
   const [focused, setFocused] = useState<boolean>(false);
   const onFocus = () => setFocused(true);
@@ -55,9 +59,13 @@ function BaseInput({
         placeholder={placeholder}
         value={value}
         min={min}
+        max={max}
+        step={step}
         onChange={onChange}
         onFocus={onFocus}
         onBlur={onBlur}
+        readOnly={readOnly}
+        required={required}
       />
       <span className={styles.message}>{showError && error}</span>
     </div>

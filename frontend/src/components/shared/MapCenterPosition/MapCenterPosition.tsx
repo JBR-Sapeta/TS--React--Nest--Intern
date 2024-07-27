@@ -1,11 +1,11 @@
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-type ChangeMapCenterProps = {
+type Props = {
   position: [number, number];
 };
 
-export function MapCenterPosition({ position }: ChangeMapCenterProps): null {
+export function MapCenterPosition({ position }: Props): null {
   const map = useMap();
 
   const closeAllPopups = () => {

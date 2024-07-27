@@ -1,4 +1,5 @@
 export { hasLength } from './has-lenght';
+export { isInRange } from './is-in-range';
 export { isLargerThan } from './is-larger-than';
 export { isNotEmptyArray } from './is-not-empty-array';
 export { isNotEmptyString } from './is-not-empty-string';
