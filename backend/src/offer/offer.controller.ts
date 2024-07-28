@@ -22,9 +22,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { AccessTokenGuard } from '../auth/guards';
+import { AccessTokenGuard, RolesGuard } from '../auth/guards';
 import { GetAccessTokenPayload } from '../auth/decorators';
 import { SuccessMessageDto } from '../common/classes';
+
 import {
   AddressParams,
   CategoriesParams,
@@ -32,11 +33,13 @@ import {
   PaginationParams,
 } from '../common/classes/params';
 import { HEADER } from '../common/docs';
+import { Roles } from '../common/enums';
 import { JwtPayload } from '../common/types';
 
 import { OfferService } from './offer.service';
 import { CreateOfferDto, UpdateOfferDto } from './dto/request';
 import {
+  CompanyOffersResponseDto,
   FullOfferResponseDto,
   OfferPreviewsResponseDto,
   PartialOfferResponseDto,
@@ -87,6 +90,28 @@ export class OfferController {
       locationParams,
       categoreisParams,
     );
+  }
+
+  @Get('/:companyId')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RolesGuard(Roles.COMPANY))
+  @UseGuards(AccessTokenGuard)
+  @ApiOperation(OPERATION.GET_COMPANY_OFFERS)
+  @ApiBearerAuth()
+  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiParam(PARAM.COMPANY_ID)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.OK)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.UNAUTHORIZED)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.BAD_REQUEST_PARAMS)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.NOT_FOUND)
+  @ApiResponse(RES.GET_COMPANY_OFFERS.INTERNAL_SERVER_ERROR)
+  getCompanyOffers(
+    @Param('companyId', ParseUUIDPipe) companyId: string,
+    @GetAccessTokenPayload() { userId }: JwtPayload,
+  ): Promise<CompanyOffersResponseDto> {
+    console.log(companyId, userId);
+    return this.offerService.getCompanyOffers(companyId, userId);
   }
 
   @Get('/:companyId/:offerId/partial')

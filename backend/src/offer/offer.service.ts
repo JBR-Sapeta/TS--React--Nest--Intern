@@ -34,6 +34,7 @@ import { CacheService } from '../cache/cache.service';
 import { S3Service } from '../s3/s3.service';
 
 import {
+  CompanyOffersResponseDto,
   FullOfferResponseDto,
   OfferPreviewsResponseDto,
   PartialOfferResponseDto,
@@ -160,6 +161,31 @@ export class OfferService {
     );
 
     return new OfferPreviewsResponseDto({ ...paginationParams, count }, offers);
+  }
+
+  public async getCompanyOffers(
+    companyId: string,
+    userId: string,
+  ): Promise<CompanyOffersResponseDto> {
+    const company = await this.companyRepository.getCompanyById({
+      companyId,
+    });
+
+    if (isNil(company)) {
+      throw new NotFoundException(PL_ERRORS.NOT_FUOND_COMPANY);
+    }
+
+    if (company.userId !== userId) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
+    }
+
+    const offers = await this.offerRepository.getCompanyOffers({
+      companyId,
+      branches: true,
+      company: true,
+    });
+
+    return new CompanyOffersResponseDto({}, offers);
   }
 
   // ----------------------------------------------------------------------- \\

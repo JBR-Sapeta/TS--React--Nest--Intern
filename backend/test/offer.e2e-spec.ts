@@ -115,11 +115,8 @@ describe('OfferController (e2e)', () => {
     });
     user.activationToken = null;
     user.isActive = true;
+
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login({
-      email: userData.email,
-      password: userData.password,
-    });
 
     await companyService.createCompany(updatedUser, companyData);
     const company = await companyRepository.getCompanyBySlug(companyData.slug);
@@ -142,9 +139,16 @@ describe('OfferController (e2e)', () => {
       branches = createdBranches;
     }
 
+    const {
+      data: { accessToken },
+    } = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
     return {
       user: updatedUser,
-      accessToken: tokens.data.accessToken,
+      accessToken,
       companyId: company.id,
       branches,
     };
@@ -164,10 +168,6 @@ describe('OfferController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login({
-      email: userData.email,
-      password: userData.password,
-    });
 
     await companyService.createCompany(updatedUser, companyData);
     const company = await companyRepository.getCompanyBySlug(companyData.slug);
@@ -197,8 +197,15 @@ describe('OfferController (e2e)', () => {
       where: { companyId: company.id },
     });
 
+    const {
+      data: { accessToken },
+    } = await authService.login({
+      email: userData.email,
+      password: userData.password,
+    });
+
     return {
-      accessToken: tokens.data.accessToken,
+      accessToken,
       companyId: company.id,
       offers,
     };
@@ -239,6 +246,17 @@ describe('OfferController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get(`/offers?${queryParams.join('')}`)
+      .send();
+    return response;
+  };
+
+  const sendGetCompanyOffersRequest = async (
+    companyId: string,
+    token: string,
+  ) => {
+    const response = await request(app.getHttpServer())
+      .get(`/offers/${companyId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send();
     return response;
   };
@@ -868,6 +886,153 @@ describe('OfferController (e2e)', () => {
         expect(response.status).toBe(400);
       },
     );
+  });
+
+  // ------------------------- GET COMPANY OFFERS - Valid Request ------------------------ \\
+
+  describe('/offers/:companyID (GET) - Valid Request', () => {
+    fit('returns 200 status code', async () => {
+      const { accessToken, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        companyId,
+        accessToken,
+      );
+
+      console.log(response.body);
+
+      expect(response.status).toBe(200);
+    });
+
+    fit('returns proper success response object with payload', async () => {
+      const { accessToken, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        companyId,
+        accessToken,
+      );
+
+      expect(Object.keys(response.body)).toEqual([
+        'statusCode',
+        'message',
+        'error',
+        'data',
+      ]);
+    });
+
+    fit('returns array of offers as data', async () => {
+      const { accessToken, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        companyId,
+        accessToken,
+      );
+
+      expect(response.body.data.length).toBe(2);
+      expect(Object.keys(response.body.data[0])).toEqual([
+        'id',
+        'title',
+        'position',
+        'isPaid',
+        'isActive',
+        'createdAt',
+        'employmentTypeId',
+        'operatingModeId',
+        'locations',
+        'categories',
+        'company',
+      ]);
+    });
+  });
+
+  // ------------------------ GET COMPANY OFFERS - Invalid Request ----------------------- \\
+
+  describe('/offers/:companyID (GET) - Inalid Request', () => {
+    fit('returns 400 status code when invalid param is provided', async () => {
+      const { accessToken } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        'companyId',
+        accessToken,
+      );
+
+      expect(response.status).toBe(400);
+    });
+
+    fit('returns 401 status code when when access token is invalid', async () => {
+      const { companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        companyId,
+        INVALID_ACCESS_TOKEN,
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    fit('returns 403 status code when company does not belongs to user', async () => {
+      const { companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const { accessToken } = await createUserAndCompanyWithOffers(
+        USER_TWO,
+        COMPANY_TWO,
+        COMPANY_TWO_BRANCHES,
+        COMPANY_TWO_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        companyId,
+        accessToken,
+      );
+
+      expect(response.status).toBe(403);
+    });
+
+    fit('returns 404 when company with given id does not exist', async () => {
+      const { accessToken } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
+
+      const response = await sendGetCompanyOffersRequest(
+        INVALID_COMPANY_ID,
+        accessToken,
+      );
+
+      expect(response.status).toBe(404);
+    });
   });
 
   // -------------------------- GET PARTIAL OFFER - Valid Request ------------------------ \\
