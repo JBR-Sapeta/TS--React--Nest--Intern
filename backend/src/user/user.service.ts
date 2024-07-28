@@ -110,14 +110,14 @@ export class UserService {
   public async deleteUserProfile(
     email: string,
     password: string,
-    userId: string,
+    userIdParam: string,
   ): Promise<SuccessMessageDto> {
     const user = await this.authService.validateUserCredentials(
       email,
       password,
     );
 
-    if (user.id !== userId) {
+    if (user.id !== userIdParam) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
@@ -125,7 +125,7 @@ export class UserService {
 
     if (userRoles.includes(Roles.COMPANY)) {
       const company = await this.companyRepository.getCompanyByUserId({
-        userId,
+        userId: user.id,
       });
 
       const offers = await this.offeryRepository.getCompanyOffers({
@@ -133,7 +133,7 @@ export class UserService {
         applications: true,
       });
 
-      await this.userRepository.deleteUser(userId);
+      await this.userRepository.deleteUser(user.id);
 
       const applications = offers.flatMap((offer) => offer.applications);
 
@@ -165,9 +165,9 @@ export class UserService {
 
     if (userRoles.includes(Roles.USER)) {
       const [userApplications] =
-        await this.applicationRepository.getAllUserApplications(userId);
+        await this.applicationRepository.getAllUserApplications(user.id);
 
-      await this.userRepository.deleteUser(userId);
+      await this.userRepository.deleteUser(user.id);
 
       for (const { fileKey } of userApplications) {
         try {
@@ -184,7 +184,7 @@ export class UserService {
       userRoles.includes(Roles.ADMIN) ||
       userRoles.includes(Roles.MODERATOR)
     ) {
-      await this.userRepository.deleteUser(userId);
+      await this.userRepository.deleteUser(user.id);
     }
 
     return new SuccessMessageDto({ message: PL_MESSAGES.USER_DELETE_ACCOUNT });

@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
+import { convertStringToBase64 } from '../src/common/functions';
 import { OfferEntity } from './../src/entities';
 
 import {
@@ -43,6 +44,7 @@ import {
   COMPANY_ONE,
   COMPANY_ONE_LOGO_URL,
   COMPANY_ONE_MAIN_PHOTO_URL,
+  INVALID_COMPANY_ID,
 } from './helpers/company-data';
 import { COMPANY_ONE_BRANCHES } from './helpers/branch-data';
 import { COMPANY_ONE_OFFERS } from './helpers/offer-data';
@@ -345,14 +347,16 @@ describe('UserController (e2e)', () => {
   };
 
   const sendDeleteUserAccountRequest = async (
-    token: string,
+    email: string,
+    password: string,
     userId: string,
-    data: any,
   ) => {
+    const credentials = convertStringToBase64(`${email}:${password}`);
+
     const response = await request(app.getHttpServer())
       .delete(`/users/${userId}/delete`)
-      .set('Authorization', `Bearer ${token}`)
-      .send(data);
+      .set('Authorization', `Basic ${credentials}`)
+      .send();
     return response;
   };
 
@@ -766,31 +770,31 @@ describe('UserController (e2e)', () => {
 
   describe('/users/:userId/delete (DELETE) - Valid Request', () => {
     it('returns 200 status code', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
+      const { user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        accessToken,
+        USER_ONE.email,
+        USER_ONE.password,
         user.id,
-        { password: USER_ONE.password },
       );
       expect(response.status).toBe(200);
     });
 
     it('returns success message', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
+      const { user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        accessToken,
+        USER_ONE.email,
+        USER_ONE.password,
         user.id,
-        { password: USER_ONE.password },
       );
       expect(response.body.message).toBeTruthy();
     });
 
     it('returns proper success response object', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
+      const { user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        accessToken,
+        USER_ONE.email,
+        USER_ONE.password,
         user.id,
-        { password: USER_ONE.password },
       );
       expect(Object.keys(response.body)).toEqual([
         'statusCode',
@@ -800,10 +804,12 @@ describe('UserController (e2e)', () => {
     });
 
     it('removes user from database', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      const { user } = await createActiveUser(USER_ONE);
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
       const userInDB = await getUserFromDB(USER_ONE.email);
       expect(userInDB).toEqual(null);
     });
@@ -816,16 +822,15 @@ describe('UserController (e2e)', () => {
         COMPANY_ONE_OFFERS,
       );
 
-      const { accessToken, user } = await createUserWithApplications(
-        USER_TWO,
-        offers,
-      );
+      const { user } = await createUserWithApplications(USER_TWO, offers);
 
       const applicationsBefore = await getUserApplicationsFromDB(user.id);
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_TWO.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_TWO.email,
+        USER_TWO.password,
+        user.id,
+      );
 
       const applicationsAfter = await getUserApplicationsFromDB(user.id);
 
@@ -841,22 +846,21 @@ describe('UserController (e2e)', () => {
         COMPANY_ONE_OFFERS,
       );
 
-      const { accessToken, user } = await createUserWithApplications(
-        USER_TWO,
-        offers,
-      );
+      const { user } = await createUserWithApplications(USER_TWO, offers);
 
       const deleteImageFile = jest.spyOn(s3Service, 'deleteApplicationFile');
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_TWO.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_TWO.email,
+        USER_TWO.password,
+        user.id,
+      );
 
       expect(deleteImageFile).toHaveBeenCalledTimes(2);
     });
 
     it('removes company from the database when user has one', async () => {
-      const { accessToken, user } = await createUserAndCompanyWithOffers(
+      const { user } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
         [],
@@ -865,9 +869,11 @@ describe('UserController (e2e)', () => {
 
       const companyBefore = await getUserCompanyFromDB(user.id);
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       const companyAfter = await getUserCompanyFromDB(user.id);
 
@@ -876,19 +882,20 @@ describe('UserController (e2e)', () => {
     });
 
     it('removes company branches from the database when user has one', async () => {
-      const { accessToken, user, companyId } =
-        await createUserAndCompanyWithOffers(
-          USER_ONE,
-          COMPANY_ONE,
-          COMPANY_ONE_BRANCHES,
-          [],
-        );
+      const { user, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        [],
+      );
 
       const branchesBefore = await getCompanyBranchesFromDB(companyId);
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       const branchesAfter = await getUserApplicationsFromDB(companyId);
 
@@ -897,19 +904,20 @@ describe('UserController (e2e)', () => {
     });
 
     it('removes company offers from the database when user has one', async () => {
-      const { accessToken, user, companyId } =
-        await createUserAndCompanyWithOffers(
-          USER_ONE,
-          COMPANY_ONE,
-          COMPANY_ONE_BRANCHES,
-          COMPANY_ONE_OFFERS,
-        );
+      const { user, companyId } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
 
       const offersBefore = await getCompanyOffersFromDB(companyId);
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       const offersAfter = await getUserApplicationsFromDB(companyId);
 
@@ -918,13 +926,12 @@ describe('UserController (e2e)', () => {
     });
 
     it('removes applications associated with user company from the database', async () => {
-      const { accessToken, user, offers } =
-        await createUserAndCompanyWithOffers(
-          USER_ONE,
-          COMPANY_ONE,
-          COMPANY_ONE_BRANCHES,
-          COMPANY_ONE_OFFERS,
-        );
+      const { user, offers } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
 
       const { user: applicationsOwner } = await createUserWithApplications(
         USER_TWO,
@@ -935,9 +942,11 @@ describe('UserController (e2e)', () => {
         applicationsOwner.id,
       );
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       const applicationsAfter = await getUserApplicationsFromDB(
         applicationsOwner.id,
@@ -948,7 +957,7 @@ describe('UserController (e2e)', () => {
     });
 
     it('calls s3 service to delete image files associated with user company ', async () => {
-      const { accessToken, user } = await createUserWithCompany(
+      const { user } = await createUserWithCompany(
         USER_ONE,
         COMPANY_ONE,
         true,
@@ -956,29 +965,32 @@ describe('UserController (e2e)', () => {
       );
       const deleteImageFile = jest.spyOn(s3Service, 'deleteImageFile');
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       expect(deleteImageFile).toHaveBeenCalledTimes(2);
     });
 
     it("calls the S3 service to delete application files associated with the user's company.", async () => {
-      const { accessToken, user, offers } =
-        await createUserAndCompanyWithOffers(
-          USER_ONE,
-          COMPANY_ONE,
-          COMPANY_ONE_BRANCHES,
-          COMPANY_ONE_OFFERS,
-        );
+      const { user, offers } = await createUserAndCompanyWithOffers(
+        USER_ONE,
+        COMPANY_ONE,
+        COMPANY_ONE_BRANCHES,
+        COMPANY_ONE_OFFERS,
+      );
 
       await createUserWithApplications(USER_TWO, offers);
 
       const deleteImageFile = jest.spyOn(s3Service, 'deleteApplicationFile');
 
-      await sendDeleteUserAccountRequest(accessToken, user.id, {
-        password: USER_ONE.password,
-      });
+      await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        user.id,
+      );
 
       expect(deleteImageFile).toHaveBeenCalledTimes(2);
     });
@@ -987,34 +999,44 @@ describe('UserController (e2e)', () => {
   // ------------------------------ Delete Account - Invalid Request ------------------------------ \\
 
   describe('/users/:userId/delete (DELETE) - Invalid Request', () => {
-    it('returns 400 status code when current password is not provided', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
+    it('returns 400 status code when invalid userID is provided as a param', async () => {
+      await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        accessToken,
-        user.id,
-        { password: '' },
+        USER_ONE.email,
+        USER_ONE.password,
+        'INVALID_ID',
       );
       expect(response.status).toBe(400);
     });
 
     it('returns 401 status code when invalid password is provided', async () => {
-      const { accessToken, user } = await createActiveUser(USER_ONE);
+      const { user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        accessToken,
+        USER_ONE.email,
+        'INVALID_PASSWORD',
         user.id,
-        { password: 'INVALID_PASSWORD' },
       );
       expect(response.status).toBe(401);
     });
 
-    it('returns 401 status code when invalid access token is provided', async () => {
+    it('returns 401 status code when invalid email is provided', async () => {
       const { user } = await createActiveUser(USER_ONE);
       const response = await sendDeleteUserAccountRequest(
-        INVALID_ACCESS_TOKEN,
+        'INVALID_EMAIL',
+        USER_ONE.password,
         user.id,
-        { password: USER_ONE.password },
       );
       expect(response.status).toBe(401);
+    });
+
+    it('returns 403 status code when invalid userID is provided as a param', async () => {
+      await createActiveUser(USER_ONE);
+      const response = await sendDeleteUserAccountRequest(
+        USER_ONE.email,
+        USER_ONE.password,
+        INVALID_COMPANY_ID,
+      );
+      expect(response.status).toBe(403);
     });
   });
 });
