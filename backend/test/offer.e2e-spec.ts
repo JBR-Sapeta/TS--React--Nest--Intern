@@ -272,7 +272,7 @@ describe('OfferController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/offers/${companyId}/${offerId}/update`)
+      .patch(`/offers/${companyId}/${offerId}/update`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;

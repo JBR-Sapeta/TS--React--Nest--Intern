@@ -228,7 +228,7 @@ describe('BranchController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/branches/${companyId}/${branchId}/update`)
+      .patch(`/branches/${companyId}/${branchId}/update`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;

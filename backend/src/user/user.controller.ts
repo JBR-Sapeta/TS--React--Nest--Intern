@@ -4,7 +4,7 @@ import {
   UseGuards,
   Controller,
   HttpStatus,
-  Put,
+  Patch,
   Body,
   Delete,
   Param,
@@ -57,7 +57,7 @@ export class UserController {
     return this.userService.getUserProfile(userId);
   }
 
-  @Put('/:userId/update')
+  @Patch('/:userId/update')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.UPDATE)
@@ -81,7 +81,7 @@ export class UserController {
     );
   }
 
-  @Put('/:userId/email')
+  @Patch('/:userId/email')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.EMAIL)
@@ -102,7 +102,7 @@ export class UserController {
     return this.userService.updateEmail(userId, userIdParam, updateEmailDto);
   }
 
-  @Put('/:userId/password')
+  @Patch('/:userId/password')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.PASSWORD)

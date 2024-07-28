@@ -8,8 +8,8 @@ import {
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -79,7 +79,7 @@ export class BranchController {
     return this.branchService.createBranch(companyId, user, createBranchDto);
   }
 
-  @Put('/:companyId/:branchId/update')
+  @Patch('/:companyId/:branchId/update')
   @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.UPDATE)

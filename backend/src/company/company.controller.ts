@@ -8,7 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Put,
+  Patch,
   Query,
   UploadedFiles,
   UseGuards,
@@ -134,7 +134,7 @@ export class CompanyController {
     return this.companyService.getUserCompany(userId, usersIdParam);
   }
 
-  @Put('/:companyId/update')
+  @Patch('/:companyId/update')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
@@ -160,7 +160,7 @@ export class CompanyController {
     );
   }
 
-  @Put('/:companyId/upload-images')
+  @Patch('/:companyId/upload-images')
   @UseGuards(AccessTokenGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -197,7 +197,7 @@ export class CompanyController {
     return this.companyService.uploadCompanyImages(companyId, userId, files);
   }
 
-  @Put('/:companyId/reset-images')
+  @Patch('/:companyId/reset-images')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.RESET_IMAGES)

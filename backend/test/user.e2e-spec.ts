@@ -314,7 +314,7 @@ describe('UserController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/users/${userId}/update`)
+      .patch(`/users/${userId}/update`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;
@@ -326,7 +326,7 @@ describe('UserController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/users/${userId}/email`)
+      .patch(`/users/${userId}/email`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;
@@ -338,7 +338,7 @@ describe('UserController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/users/${userId}/password`)
+      .patch(`/users/${userId}/password`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;

@@ -216,7 +216,7 @@ describe('AppController (e2e)', () => {
     companyId: number | string,
   ) => {
     const response = await request(app.getHttpServer())
-      .post(`/admin/companies/${companyId}/is-verified`)
+      .patch(`/admin/companies/${companyId}/is-verified`)
       .set('Authorization', `Bearer ${token}`)
       .send();
 
@@ -228,7 +228,7 @@ describe('AppController (e2e)', () => {
     companyId: number | string,
   ) => {
     const response = await request(app.getHttpServer())
-      .post(`/admin/users/${companyId}/has-ban`)
+      .patch(`/admin/users/${companyId}/has-ban`)
       .set('Authorization', `Bearer ${token}`)
       .send();
 

@@ -344,7 +344,7 @@ describe('CompanyController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/companies/${comapnyId}/update`)
+      .patch(`/companies/${comapnyId}/update`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;
@@ -357,7 +357,7 @@ describe('CompanyController (e2e)', () => {
     mainPhoto: string,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/companies/${comapnyId}/upload-images`)
+      .patch(`/companies/${comapnyId}/upload-images`)
       .set('Authorization', `Bearer ${token}`)
       .attach('logoFile', path.join('.', 'test', 'resources', logoFile))
       .attach('mainPhotoFile', path.join('.', 'test', 'resources', mainPhoto));
@@ -373,7 +373,7 @@ describe('CompanyController (e2e)', () => {
   ) => {
     if (fileKey && fileName) {
       const response = await request(app.getHttpServer())
-        .put(`/companies/${comapnyId}/upload-images`)
+        .patch(`/companies/${comapnyId}/upload-images`)
         .set('Authorization', `Bearer ${token}`)
         .attach(fileKey, path.join('.', 'test', 'resources', fileName));
 
@@ -381,7 +381,7 @@ describe('CompanyController (e2e)', () => {
     }
 
     const response = await request(app.getHttpServer())
-      .put(`/companies/${comapnyId}/upload-images`)
+      .patch(`/companies/${comapnyId}/upload-images`)
       .set('Authorization', `Bearer ${token}`)
       .send();
 

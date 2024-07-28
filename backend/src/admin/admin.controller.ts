@@ -5,7 +5,7 @@ import {
   HttpStatus,
   Param,
   ParseUUIDPipe,
-  Post,
+  Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -108,7 +108,7 @@ export class AdminController {
     return this.adminService.getUsers(userParams, paginationParams, user);
   }
 
-  @Post('/companies/:companyId/is-verified')
+  @Patch('/companies/:companyId/is-verified')
   @UseGuards(RolesGuard(Roles.ADMIN))
   @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -129,7 +129,7 @@ export class AdminController {
     return this.adminService.toggleIsVerified(companyId, user);
   }
 
-  @Post('/users/:userId/has-ban')
+  @Patch('/users/:userId/has-ban')
   @UseGuards(RolesGuard(Roles.ADMIN))
   @UseGuards(ExtendedAccessTokenGuard)
   @HttpCode(HttpStatus.OK)

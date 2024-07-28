@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
-  Put,
+  Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -127,7 +127,7 @@ export class OfferController {
     return this.offerService.getFullOffer(companyId, offerId, userId);
   }
 
-  @Put('/:companyId/:offerId/update')
+  @Patch('/:companyId/:offerId/update')
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
