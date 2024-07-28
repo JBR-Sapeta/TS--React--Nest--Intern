@@ -15,13 +15,8 @@ export class BranchesDto
   @Expose()
   data: BranchPreviewDto[];
 
-  @ApiProperty()
-  @Expose()
-  count: number;
-
-  constructor(args: SuccessMessageArgs, data: BranchEntity[], count: number) {
+  constructor(args: SuccessMessageArgs, data: BranchEntity[]) {
     super(args);
-    this.count = count;
     this.data = data.map((branch) => new BranchPreviewDto(branch));
   }
 }

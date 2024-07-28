@@ -502,7 +502,6 @@ describe('BranchController (e2e)', () => {
         'message',
         'error',
         'data',
-        'count',
       ]);
     });
 

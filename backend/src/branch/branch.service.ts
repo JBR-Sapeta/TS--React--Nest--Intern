@@ -96,10 +96,9 @@ export class BranchService {
 
   // ----------------------------------------------------------------------- \\
   public async getCompanyBranches(companyId: string): Promise<BranchesDto> {
-    const [data, count] =
-      await this.branchRepository.getCompanyBranches(companyId);
+    const [data] = await this.branchRepository.getCompanyBranches(companyId);
 
-    return new BranchesDto({}, data, count);
+    return new BranchesDto({}, data);
   }
 
   // ----------------------------------------------------------------------- \\
