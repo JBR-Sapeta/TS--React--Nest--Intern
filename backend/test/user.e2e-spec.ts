@@ -422,7 +422,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update - Valid Request ------------------------------ \\
 
-  describe('/users/:userId/update (PUT) - Valid Request', () => {
+  describe('/users/:userId/update (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserProfileRequest(
@@ -493,7 +493,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update - Invalid Request ------------------------------ \\
 
-  describe('/users/:userId/update (PUT) - Inalid Request', () => {
+  describe('/users/:userId/update (PATCH) - Inalid Request', () => {
     it('returns 400 status code when validation fails', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserProfileRequest(
@@ -547,7 +547,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update Email - Valid Request ------------------------------ \\
 
-  describe('/users/:userId/email (PUT) - Valid Request', () => {
+  describe('/users/:userId/email (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserEmailRequest(accessToken, user.id, {
@@ -592,7 +592,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update Email - Invalid Request ------------------------------ \\
 
-  describe('/users/:userId/email (PUT) - Invalid Request', () => {
+  describe('/users/:userId/email (PATCH) - Invalid Request', () => {
     it('returns 400 status code when invalid email address is provided', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserEmailRequest(accessToken, user.id, {
@@ -655,7 +655,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update Password - Valid Request ------------------------------ \\
 
-  describe('/users/:userId/password (PUT) - Valid Request', () => {
+  describe('/users/:userId/password (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserPasswordRequest(
@@ -712,7 +712,7 @@ describe('UserController (e2e)', () => {
 
   // ------------------------------ Update Password - Invalid Request ------------------------------ \\
 
-  describe('/users/:userId/password (PUT) - Invalid Request', () => {
+  describe('/users/:userId/password (PATCH) - Invalid Request', () => {
     it('returns 400 status code when new password validation fails', async () => {
       const { user, accessToken } = await createActiveUser(USER_ONE);
       const response = await sendUpdateUserPasswordRequest(

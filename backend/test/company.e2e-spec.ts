@@ -394,7 +394,7 @@ describe('CompanyController (e2e)', () => {
     data: any,
   ) => {
     const response = await request(app.getHttpServer())
-      .put(`/companies/${comapnyId}/reset-images`)
+      .patch(`/companies/${comapnyId}/reset-images`)
       .set('Authorization', `Bearer ${token}`)
       .send(data);
     return response;
@@ -991,7 +991,7 @@ describe('CompanyController (e2e)', () => {
 
   // ------------------------------- UPDATE - Valid Request ------------------------------ \\
 
-  describe('/companies/:companyId/update (PUT) - Valid Request', () => {
+  describe('/companies/:companyId/update (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
@@ -1044,7 +1044,7 @@ describe('CompanyController (e2e)', () => {
 
   // ------------------------------ UPDATE - Invalid Request ----------------------------- \\
 
-  describe('/companies/:companyId/update (PUT) - Invalid Request', () => {
+  describe('/companies/:companyId/update (PATCH) - Invalid Request', () => {
     it('returns 400 status code when validation fails', async () => {
       const { accessToken } = await createActiveUser(USER_ONE);
       await sendCreateCompanyRequest(accessToken, COMPANY_ONE);
@@ -1163,7 +1163,7 @@ describe('CompanyController (e2e)', () => {
 
   // --------------------------- UPLOAD IMAGES - Valid Request --------------------------- \\
 
-  describe('/companies/:companyId/upload-images (PUT) - Valid Request', () => {
+  describe('/companies/:companyId/upload-images (PATCH) - Valid Request', () => {
     it('returns 200 status code when request contains multiple images', async () => {
       const { accessToken, companyId } = await createUserWithCompany(
         USER_ONE,
@@ -1288,7 +1288,7 @@ describe('CompanyController (e2e)', () => {
 
   // -------------------------- UPLOAD IMAGES - Invalid Request -------------------------- \\
 
-  describe('/companies/:companyId/upload-images (PUT) - Invalid Request', () => {
+  describe('/companies/:companyId/upload-images (PATCH) - Invalid Request', () => {
     it('returns 400 status code when query param is invalid', async () => {
       const { accessToken } = await createUserWithCompany(
         USER_ONE,
@@ -1444,7 +1444,7 @@ describe('CompanyController (e2e)', () => {
 
   // ---------------------------- RESET IMAGES - Valid Request --------------------------- \\
 
-  describe('/companies/:companyId/reset-images (PUT) - Valid Request', () => {
+  describe('/companies/:companyId/reset-images (PATCH) - Valid Request', () => {
     it('returns 200 status code when request contains two image fields', async () => {
       const { accessToken, companyId } = await createUserWithCompany(
         USER_ONE,
@@ -1612,7 +1612,7 @@ describe('CompanyController (e2e)', () => {
 
   // --------------------------- RESET IMAGES - Invalid Request -------------------------- \\
 
-  describe('/companies/:companyId/reset-images (PUT) - Invalid Request', () => {
+  describe('/companies/:companyId/reset-images (PATCH) - Invalid Request', () => {
     it('returns 400 status code when query param is invalid', async () => {
       const { accessToken } = await createUserWithCompany(
         USER_ONE,

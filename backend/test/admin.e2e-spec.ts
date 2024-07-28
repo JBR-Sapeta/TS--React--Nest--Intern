@@ -680,7 +680,7 @@ describe('AppController (e2e)', () => {
 
   // -------------------------- VERIFY COMPANY - Valid Request --------------------------- \\
 
-  describe('/companies/:companyId/is-verified (POST) - Valid Request', () => {
+  describe('/companies/:companyId/is-verified (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken } = await createActiveUser(USER_ONE, true);
       const { company } = await createUserAndCompany(
@@ -762,7 +762,7 @@ describe('AppController (e2e)', () => {
 
   // ------------------------- VERIFY COMPANY - Invalid Request -------------------------- \\
 
-  describe('/companies/:companyId/is-verified (POST) - Valid Request', () => {
+  describe('/companies/:companyId/is-verified (PATCH) - Valid Request', () => {
     it('returns 400 status code when companyId  param is invalid', async () => {
       const { accessToken } = await createActiveUser(USER_ONE, true);
       await createUserAndCompany(
@@ -843,7 +843,7 @@ describe('AppController (e2e)', () => {
 
   // ----------------------------- BAN USER - Valid Request ------------------------------ \\
 
-  describe('/users/:companyId/is-verified (POST) - Valid Request', () => {
+  describe('/users/:companyId/is-verified (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken } = await createActiveUser(USER_ONE, true);
       const { user } = await createActiveUser(USER_TWO);
@@ -902,7 +902,7 @@ describe('AppController (e2e)', () => {
 
   // ---------------------------- BAN USER - Invalid Request ----------------------------- \\
 
-  describe('/companies/:companyId/is-verified (POST) - Valid Request', () => {
+  describe('/companies/:companyId/is-verified (PATCH) - Valid Request', () => {
     it('returns 400 status code when companyId  param is invalid', async () => {
       const { accessToken } = await createActiveUser(USER_ONE, true);
       await createActiveUser(USER_TWO);

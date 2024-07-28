@@ -1162,7 +1162,7 @@ describe('OfferController (e2e)', () => {
   });
 
   // ------------------------------- UPDATE - Valid Request ------------------------------ \\
-  describe('/offers/:companyId/:offerId/update (PUT) - Valid Request', () => {
+  describe('/offers/:companyId/:offerId/update (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken, companyId, offers } =
         await createUserAndCompanyWithOffers(
@@ -1253,7 +1253,7 @@ describe('OfferController (e2e)', () => {
   });
 
   // ------------------------------ UPDATE - Invalid Request ----------------------------- \\
-  describe('/offers/:companyId/:offerId/update (PUT) - Invalid Request', () => {
+  describe('/offers/:companyId/:offerId/update (PATCH) - Invalid Request', () => {
     it('returns 400 status code when validation fails', async () => {
       const { accessToken, companyId, offers } =
         await createUserAndCompanyWithOffers(

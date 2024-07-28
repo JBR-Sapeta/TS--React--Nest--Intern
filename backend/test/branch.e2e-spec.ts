@@ -567,7 +567,7 @@ describe('BranchController (e2e)', () => {
 
   // ------------------------------- UPDATE - Valid Request ------------------------------ \\
 
-  describe('/branches/:companyId/:branchId/update (PUT) - Valid Request', () => {
+  describe('/branches/:companyId/:branchId/update (PATCH) - Valid Request', () => {
     it('returns 200 status code', async () => {
       const { accessToken, companyId } = await createActiveUserAndCompany(
         USER_ONE,
@@ -660,7 +660,7 @@ describe('BranchController (e2e)', () => {
 
   // ------------------------------ UPDATE - Invalid Request ----------------------------- \\
 
-  describe('/branches/:companyId/:branchId/update (PUT) - Invalid Request', () => {
+  describe('/branches/:companyId/:branchId/update (PATCH) - Invalid Request', () => {
     it('returns 400 status code when validation fails', async () => {
       const { accessToken, companyId } = await createActiveUserAndCompany(
         USER_ONE,
