@@ -54,11 +54,10 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_OFFER_CATEGORIES:
     'Nieprawidłowa wartość. Wymagana tablica liczb całkowitych.',
   VALIDATION_OFFER_DESCRIPTION:
-    'Opis ogłoszenia powinien składać się z 24 do 3072 znaków.',
+    'Opis ogłoszenia powinien składać się minimum z 24 znaków i maksymalnie 3072 znaków.',
   VALIDATION_OFFER_EMPLOYMENT_TYPE:
-    'Nieprawidłowa wartość. Wprowadź liczbę całkowitą z przedziałuod 1 do 5.',
-  VALIDATION_OFFER_EXPIRATION_TIME:
-    'Wartość pola powinna być liczbą całkowitą z przedziału od 7 do 42.',
+    'Wprowadź liczbę całkowitą z przedziałuod 1 do 5.',
+  VALIDATION_OFFER_EXPIRATION_TIME: 'Wprowaź datę z przedziału od 7 do 42 dni.',
   VALIDATION_OFFER_IS_PAID:
     'Nieprawidłowa wartość. Wprowadź wartośc typu boolean.',
   VALIDATION_OFFER_IS_ACTIVE:
@@ -66,7 +65,7 @@ export const PL_ERRORS: ErrorTranslations = {
   VALIDATION_OFFER_POSITION:
     'Nazwa stanowiska powinna składać się z 2 do 64 znaków.',
   VALIDATION_OFFER_OPERATING_MODE:
-    'Nieprawidłowa wartość. Wprowadź liczbę całkowitą z przedziałuod 1 do 3.',
+    'Wprowadź liczbę całkowitą z przedziałuod 1 do 3.',
   VALIDATION_OFFER_TITLE:
     'Tytuł ogłoszenia powinien składać się z 4 do 64 znaków.',
   UNAUTHORIZED: 'Nieprawidłowe dane uwierzytelniające.',
