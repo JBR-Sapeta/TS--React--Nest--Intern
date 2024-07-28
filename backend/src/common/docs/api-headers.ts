@@ -7,4 +7,8 @@ export const HEADER = {
     name: 'Refresh Token',
     description: 'Authorization with refresh token',
   },
+  BASIC: {
+    name: 'Basic authorizzation',
+    description: 'Authorization with email and password.',
+  },
 };

@@ -24,7 +24,6 @@ import { S3Service } from '../s3/s3.service';
 
 import { ProfileDto } from './dto/response';
 import {
-  DeleteUserDto,
   UpdateEmailDto,
   UpdatePasswordDto,
   UpdateUserDto,
@@ -109,14 +108,18 @@ export class UserService {
 
   // ----------------------------------------------------------------------- \\\
   public async deleteUserProfile(
+    email: string,
+    password: string,
     userId: string,
-    userIdParam: string,
-    { password }: DeleteUserDto,
   ): Promise<SuccessMessageDto> {
-    if (userId !== userIdParam) {
+    const user = await this.authService.validateUserCredentials(
+      email,
+      password,
+    );
+
+    if (user.id !== userId) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
-    const user = await this.authService.validateUserPassword(userId, password);
 
     const userRoles = user.roles.map((role) => role.id);
 

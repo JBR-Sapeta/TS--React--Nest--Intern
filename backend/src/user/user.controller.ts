@@ -4,6 +4,7 @@ import {
   UseGuards,
   Controller,
   HttpStatus,
+  Headers,
   Patch,
   Body,
   Delete,
@@ -20,6 +21,7 @@ import {
 } from '@nestjs/swagger';
 
 import { SuccessMessageDto } from '../common/classes';
+import { convertBase64ToUtf8 } from '../common/functions';
 import { HEADER } from '../common/docs';
 import { JwtPayload } from '../common/types';
 
@@ -29,7 +31,6 @@ import { GetAccessTokenPayload } from '../auth/decorators';
 import { UserService } from './user.service';
 import { ProfileDto } from './dto/response';
 import {
-  DeleteUserDto,
   UpdateEmailDto,
   UpdatePasswordDto,
   UpdateUserDto,
@@ -127,10 +128,8 @@ export class UserController {
 
   @Delete('/:userId/delete')
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AccessTokenGuard)
   @ApiOperation(OPERATION.DELETE)
-  @ApiBearerAuth()
-  @ApiHeader(HEADER.ACCESS_TOKEN)
+  @ApiHeader(HEADER.BASIC)
   @ApiParam(PARAM.USER_ID)
   @ApiResponse(RES.DELETE.OK)
   @ApiResponse(RES.DELETE.BAD_REQUEST)
@@ -138,13 +137,11 @@ export class UserController {
   @ApiResponse(RES.DELETE.INTERNAL_SERVER_ERROR)
   delteUserAccount(
     @Param('userId', ParseUUIDPipe) userIdParam: string,
-    @GetAccessTokenPayload() { userId }: JwtPayload,
-    @Body() deleteUserDto: DeleteUserDto,
+    @Headers('authorization') authHeader: string,
   ): Promise<SuccessMessageDto> {
-    return this.userService.deleteUserProfile(
-      userId,
-      userIdParam,
-      deleteUserDto,
-    );
+    const headerData = convertBase64ToUtf8(authHeader.split(' ')[1]);
+    const [email, password] = headerData.split(':');
+
+    return this.userService.deleteUserProfile(email, password, userIdParam);
   }
 }

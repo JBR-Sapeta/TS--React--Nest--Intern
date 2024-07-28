@@ -1,6 +1,8 @@
 export { applicationFileFilter } from './application-file-filter';
 export { applicationFileValidator } from './application-file-validator';
 export { calculateDate } from './calculate-date';
+export { convertBase64ToUtf8 } from './convert-base64-to-utf';
+export { convertStringToBase64 } from './convert-string-to-base64';
 export { exceptionFactory } from './exception-factory';
 export { imageFileFilter } from './image-file-filter';
 export { imageFileValidator } from './image-file-validator';
