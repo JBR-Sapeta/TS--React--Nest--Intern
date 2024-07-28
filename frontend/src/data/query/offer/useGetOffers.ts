@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { isNotNil } from 'ramda';
 
 import { convertToQueryParams } from '@Common/functions';
 import type { Nullable } from '@Common/types';
 
-import { isNotNil } from 'ramda';
 import { QUERY_KEY } from '../../constant';
 import type { OfferPreviewsResponse, OfferSearchParams } from '../../types';
 

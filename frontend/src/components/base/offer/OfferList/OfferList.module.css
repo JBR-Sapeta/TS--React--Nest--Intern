@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.empty {
+  width: 952px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-bcg-main);
+
+  & p {
+    width: 100%;
+    text-align: center;
+    font-size: var(--font-h-24);
+    color: var(--color-header);
+  }
+}

@@ -3,3 +3,4 @@ export * from './branch';
 export * from './category';
 export * from './company';
 export * from './layout';
+export * from './offer';

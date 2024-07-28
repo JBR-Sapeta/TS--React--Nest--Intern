@@ -53,6 +53,7 @@ export type OfferData = {
   company: BaseCompanyData;
 };
 
+export type CompanyOffersResponse = ResponseWithData<OfferPreview[]>;
 export type OfferPreviewsResponse = ResponseWithPagination<OfferPreview[]>;
 export type OfferPreview = {
   id: number;

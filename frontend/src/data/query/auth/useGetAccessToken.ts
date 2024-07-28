@@ -46,7 +46,7 @@ export function useGetAccessToken(): UseGetAccessToken {
     refetchInterval: 840000,
     refetchIntervalInBackground: true,
     refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     retry: false,
   });
 

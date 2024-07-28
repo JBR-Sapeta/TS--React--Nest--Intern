@@ -12,6 +12,7 @@ type Props = {
   url: Nullable<string>;
   hasPadding?: boolean;
   hasRadius?: boolean;
+  hasWhiteBackground?: boolean;
   name?: string;
 };
 
@@ -20,6 +21,7 @@ export function CompanyLogo({
   url,
   hasPadding = false,
   hasRadius = false,
+  hasWhiteBackground = false,
   name,
 }: Props): ReactElement {
   const containerClassName = clsx(styles.container, {
@@ -27,6 +29,7 @@ export function CompanyLogo({
     [styles.radiusMD]: hasRadius && type === 'medium',
     [styles.paddingSM]: hasPadding && type === 'small',
     [styles.paddingMD]: hasPadding && type === 'medium',
+    [styles.whiteBackground]: hasWhiteBackground,
   });
   const wrapperClassName = clsx(styles.wrapper, styles[type], {
     [styles.radiusSM]: hasRadius && type === 'small',

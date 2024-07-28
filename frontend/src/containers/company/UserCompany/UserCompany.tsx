@@ -64,6 +64,7 @@ export function UserCompany({
               name={name}
               hasPadding
               hasRadius
+              hasWhiteBackground
             />
             <VerifiedLabel isVerified={isVerified} />
           </div>

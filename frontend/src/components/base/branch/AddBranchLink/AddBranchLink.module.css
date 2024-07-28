@@ -9,4 +9,9 @@
   background-color: var(--color-bcg-input);
   font-size: 48px;
   color: var(--color-gray-600);
+
+  &:hover {
+    border: 2px solid var(--color-gray-dark);
+    color: var(--color-gray-dark);
+  }
 }
