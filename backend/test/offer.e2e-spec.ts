@@ -891,7 +891,7 @@ describe('OfferController (e2e)', () => {
   // ------------------------- GET COMPANY OFFERS - Valid Request ------------------------ \\
 
   describe('/offers/:companyID (GET) - Valid Request', () => {
-    fit('returns 200 status code', async () => {
+    it('returns 200 status code', async () => {
       const { accessToken, companyId } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -909,7 +909,7 @@ describe('OfferController (e2e)', () => {
       expect(response.status).toBe(200);
     });
 
-    fit('returns proper success response object with payload', async () => {
+    it('returns proper success response object with payload', async () => {
       const { accessToken, companyId } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -930,7 +930,7 @@ describe('OfferController (e2e)', () => {
       ]);
     });
 
-    fit('returns array of offers as data', async () => {
+    it('returns array of offers as data', async () => {
       const { accessToken, companyId } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -963,7 +963,7 @@ describe('OfferController (e2e)', () => {
   // ------------------------ GET COMPANY OFFERS - Invalid Request ----------------------- \\
 
   describe('/offers/:companyID (GET) - Inalid Request', () => {
-    fit('returns 400 status code when invalid param is provided', async () => {
+    it('returns 400 status code when invalid param is provided', async () => {
       const { accessToken } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -979,7 +979,7 @@ describe('OfferController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
-    fit('returns 401 status code when when access token is invalid', async () => {
+    it('returns 401 status code when when access token is invalid', async () => {
       const { companyId } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -995,7 +995,7 @@ describe('OfferController (e2e)', () => {
       expect(response.status).toBe(401);
     });
 
-    fit('returns 403 status code when company does not belongs to user', async () => {
+    it('returns 403 status code when company does not belongs to user', async () => {
       const { companyId } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
@@ -1018,7 +1018,7 @@ describe('OfferController (e2e)', () => {
       expect(response.status).toBe(403);
     });
 
-    fit('returns 404 when company with given id does not exist', async () => {
+    it('returns 404 when company with given id does not exist', async () => {
       const { accessToken } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
