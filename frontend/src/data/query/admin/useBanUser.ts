@@ -26,7 +26,7 @@ async function banUser(
     return undefined;
   }
 
-  const { data } = await axios.post<BaseResponse>(
+  const { data } = await axios.patch<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/admin/users/${userId}/has-ban`,
     {
       headers: {

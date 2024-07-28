@@ -41,7 +41,7 @@ async function deleteProfile(
     `${import.meta.env.VITE_API_URL}/users/${userId}/delete`,
     {
       headers: {
-        Authorization: `Basic  ${credentials}`,
+        Authorization: `Basic ${credentials}`,
       },
     }
   );

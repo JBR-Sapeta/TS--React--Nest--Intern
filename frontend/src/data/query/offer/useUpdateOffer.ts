@@ -30,7 +30,7 @@ async function updateOffer(
     return undefined;
   }
 
-  const { data } = await axios.put<BaseResponse>(
+  const { data } = await axios.patch<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/offers/${companyId}/${offerId}/update`,
     body,
     {

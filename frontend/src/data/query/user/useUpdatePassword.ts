@@ -26,7 +26,7 @@ async function updatePassword(
     return undefined;
   }
 
-  const { data } = await axios.put<TokensResponse>(
+  const { data } = await axios.patch<TokensResponse>(
     `${import.meta.env.VITE_API_URL}/users/${userId}/password`,
     body,
     {
