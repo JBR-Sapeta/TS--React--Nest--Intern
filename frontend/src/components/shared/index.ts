@@ -1,11 +1,13 @@
 export { default as BaseButton } from './Button/BaseButton';
 export { default as BaseLink } from './Link/BaseLink';
 export { default as Hr } from './Hr/Hr';
-export { default as BaseInput } from './Input/BaseInput';
+export { default as BaseInput } from './Input/BaseInput/BaseInput';
 export { default as LogoSpinner } from './LoadingSpinner/LogoSpinner';
 export { default as PlainSpinner } from './LoadingSpinner/PlainSpinner';
 export { default as Modal } from './Modal/Modal';
-export { MapCenterPosition } from './MapCenterPosition/MapCenterPosition';
+export { CheckboxInput } from './Input/CheckoboxInput/CheckoboxInput';
 export { DropdownItem } from './Dropdown/DropdownItem';
 export { DropdownMenu } from './Dropdown/DropdownMenu';
-export { Textarea } from './Input/Textarea';
+export { MapCenterPosition } from './MapCenterPosition/MapCenterPosition';
+export { SelectInput } from './Input/SelectInput/SelectInput';
+export { Textarea } from './Input/Textarea/Textarea';

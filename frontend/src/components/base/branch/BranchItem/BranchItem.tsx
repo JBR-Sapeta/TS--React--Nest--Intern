@@ -16,9 +16,9 @@ import { ROUTER_PATHS } from '@Router/constants';
 import styles from './BranchItem.module.css';
 
 type Props = Branch & {
-  companyId: string;
   isSelected: boolean;
   onClick: (id: number) => void;
+  companyId?: string;
   isOwner?: boolean;
 };
 
@@ -51,7 +51,7 @@ export function BranchItem({
     [styles.selectedAddress]: isSelected,
   });
 
-  return isOwner ? (
+  return isOwner && companyId ? (
     <article className={containerClassName}>
       <div className={styles.header}>
         <h4>{name}</h4>
@@ -99,12 +99,8 @@ export function BranchItem({
       )}
     </article>
   ) : (
-    <article className={containerClassName}>
-      <button
-        type="button"
-        onClick={() => onClick(id)}
-        className={styles.button}
-      >
+    <button type="button" onClick={() => onClick(id)} className={styles.button}>
+      <div className={containerClassName}>
         <div className={styles.header}>
           <h4>{name}</h4>
         </div>
@@ -122,7 +118,7 @@ export function BranchItem({
             {`${streetName} ${houseNumber}`}
           </p>
         </div>
-      </button>
-    </article>
+      </div>
+    </button>
   );
 }

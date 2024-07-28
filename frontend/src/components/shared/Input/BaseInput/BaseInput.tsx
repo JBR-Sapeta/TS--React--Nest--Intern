@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { ChangeEvent, ReactElement } from 'react';
 import type { IconType } from 'react-icons';
 import clsx from 'clsx';
-import { isEmpty } from 'ramda';
 
 import styles from './BaseInput.module.css';
 
@@ -36,14 +35,12 @@ function BaseInput({
   const onFocus = () => setFocused(true);
   const onBlur = () => setFocused(false);
 
-  const showError = !isEmpty(error);
-
   const containerClassName = clsx(
     styles.container,
     styles[inputSize],
     {
       [styles.active]: focused,
-      [styles.error]: showError,
+      [styles.error]: !!error,
     },
     className
   );
@@ -67,7 +64,7 @@ function BaseInput({
         readOnly={readOnly}
         required={required}
       />
-      <span className={styles.message}>{showError && error}</span>
+      <span className={styles.message}>{!!error && error}</span>
     </div>
   );
 }

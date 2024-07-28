@@ -25,7 +25,7 @@ import {
   UserCompanyView,
 } from '@Views/company';
 import { NotFoundView } from '@Views/errors';
-import { OfferListingView } from '@Views/offers';
+import { CreateOfferView, OfferListingView } from '@Views/offers';
 import { ProfileView } from '@Views/user';
 
 import { ROUTER_PATHS } from './constants';
@@ -86,6 +86,10 @@ const ROUTER = createBrowserRouter(
         <Route
           path={ROUTER_PATHS.COMPANY_UPLOAD}
           element={<UploadImagesView />}
+        />
+        <Route
+          path={ROUTER_PATHS.COMPANY_OFFER_CREATE}
+          element={<CreateOfferView />}
         />
         <Route
           path={ROUTER_PATHS.CREATE_BRANCH}

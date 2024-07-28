@@ -74,7 +74,7 @@ export function useCreateOffer({
     mutationFn: (body) => createOffer(body, companyId, accessToken),
     onSuccess: (res) => {
       if (res) {
-        // @ TO DO - Invalidate company offers
+        // @ TO DO - Invalidate company offers and navigate to offers
         // queryClient.invalidateQueries({
         //   queryKey: [QUERY_KEY.COMPANY_OFFERS],
         // });
