@@ -29,6 +29,7 @@ import {
   CompanyOffersView,
   CreateOfferView,
   OfferListingView,
+  UpdateOfferView,
 } from '@Views/offers';
 import { ProfileView } from '@Views/user';
 
@@ -94,6 +95,10 @@ const ROUTER = createBrowserRouter(
         <Route
           path={ROUTER_PATHS.COMPANY_CREATE_OFFERS}
           element={<CreateOfferView />}
+        />
+        <Route
+          path={ROUTER_PATHS.COMPANY_UPDATE_OFFERS}
+          element={<UpdateOfferView />}
         />
         <Route
           path={ROUTER_PATHS.COMPANY_OFFERS}

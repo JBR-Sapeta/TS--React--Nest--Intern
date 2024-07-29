@@ -1,0 +1,25 @@
+.container {
+  width: 100%;
+}
+
+.inputs {
+  margin-top: var(--space-40);
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-8) var(--space-96);
+}
+
+.checkboxes {
+  margin-top: var(--space-32);
+  display: flex;
+  gap: var(--space-96);
+}
+
+.description {
+  margin-top: var(--space-32);
+
+  & textarea {
+    height: 240px;
+  }
+}

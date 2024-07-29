@@ -6,35 +6,30 @@ import { isNil } from 'ramda';
 
 import { BaseButton, Hr } from '@Components/shared';
 import { extractValidationError } from '@Data/utils';
-import { Branch, CategoryPreview, CreateOfferError } from '@Data/types';
-import { useCreateOffer } from '@Data/query/offer';
+import {
+  Branch,
+  CategoryPreview,
+  CreateOfferError,
+  FullOfferData,
+} from '@Data/types';
+import { useUpdateOffer } from '@Data/query/offer';
 
 import { SelectCategory } from '../../category';
 import { SelectBranch } from '../../branch';
-import { CreateOfferDataForm } from '../CreateOfferDataForm/CreateOfferDataForm';
+import { UpdateOfferDataForm } from '../UpdateOfferDataForm/UpdateOfferDataForm';
+import { UpdateOfferFormErrors } from '../UpdateOfferDataForm/data';
 import {
-  CreateOfferFormErrors,
-  OfferDataFormState,
-} from '../CreateOfferDataForm/data';
-import { convertToCreateOfferBody, validateFormData } from './data';
+  convertOfferToProps,
+  convertToCreateOfferBody,
+  validateFormData,
+} from './data';
 
-import styles from './CreateOfferForm.module.css';
+import styles from './UpdateOfferForm.module.css';
 
-const BASE_DATA_INITIAL_STATE: OfferDataFormState = {
+const INITIAL_ERROR_STATE: UpdateOfferFormErrors = {
   title: '',
   position: '',
-  expirationTime: '',
-  description: '',
-  employmentType: '',
-  operatingMode: '',
-  isPaid: false,
-  isActive: false,
-};
-
-const INITIAL_ERROR_STATE: CreateOfferFormErrors = {
-  title: '',
-  position: '',
-  expirationTime: '',
+  expirationDate: '',
   description: '',
   employmentType: '',
   operatingMode: '',
@@ -45,17 +40,26 @@ const INITIAL_ERROR_STATE: CreateOfferFormErrors = {
 type Props = {
   branches: Branch[];
   companyId: string;
+  offer: FullOfferData;
 };
 
-export function CreateOfferForm({ branches, companyId }: Props): ReactElement {
-  const { isPending, error, createOfferMutation } = useCreateOffer({
+export function UpdateOfferForm({
+  branches,
+  companyId,
+  offer,
+}: Props): ReactElement {
+  const initialBaseDataState = convertOfferToProps(offer);
+  const { isPending, error, updateOfferMutation } = useUpdateOffer({
     companyId,
+    offerId: offer.id,
   });
-  const [baseData, setBaseData] = useState(BASE_DATA_INITIAL_STATE);
-  const [selectedBranches, setSelectedBranches] = useState<number[]>([]);
+  const [baseData, setBaseData] = useState(initialBaseDataState);
+  const [selectedBranches, setSelectedBranches] = useState<number[]>(
+    offer.branches.map((val) => val.id)
+  );
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryPreview[]
-  >([]);
+  >(offer.categories);
   const [errors, setErrors] = useState(INITIAL_ERROR_STATE);
 
   const onSubmit = (event: FormEvent) => {
@@ -75,7 +79,7 @@ export function CreateOfferForm({ branches, companyId }: Props): ReactElement {
         categories: categoriesIds,
       });
 
-      createOfferMutation(body);
+      updateOfferMutation(body);
     } else {
       setErrors(validationErrors);
     }
@@ -92,7 +96,8 @@ export function CreateOfferForm({ branches, companyId }: Props): ReactElement {
       <div className={styles.data}>
         <h2>Nowa oferta</h2>
         <Hr />
-        <CreateOfferDataForm
+        <UpdateOfferDataForm
+          initialState={initialBaseDataState}
           errors={errors}
           validationErrors={baseDataErrors}
           setErrors={setErrors}
@@ -130,7 +135,7 @@ export function CreateOfferForm({ branches, companyId }: Props): ReactElement {
           className={styles.button}
           disabled={isPending}
         >
-          Dodaj ofertę
+          Zapisz zmiany
         </BaseButton>
       </div>
     </form>

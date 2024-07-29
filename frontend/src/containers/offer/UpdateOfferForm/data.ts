@@ -1,36 +1,28 @@
-import { isEmpty } from 'ramda';
+import { isEmpty, omit } from 'ramda';
 
 import type { Nullable } from '@Common/types';
 import { isNotEmptyArray, isNotEmptyString } from '@Common/validation';
-import type { CreateOfferBody } from '@Data/types';
+import type { FullOfferData, UpdateOfferBody } from '@Data/types';
 
 import {
-  BaseOfferDataForm,
-  CreateOfferFormErrors,
-  OfferDataFormState,
-} from '../CreateOfferDataForm/data';
-
-const ONE_DAY = 24 * 60 * 60 * 1000;
+  UpdateOfferDataFormState,
+  UpdateOfferFormErrors,
+} from '../UpdateOfferDataForm/data';
 
 export function validateFormData({
   title,
   position,
-  expirationTime,
   description,
   employmentType,
   operatingMode,
   branches,
   categories,
-}: BaseOfferDataForm & {
+}: UpdateOfferDataFormState & {
   branches: number[];
   categories: number[];
-}): Nullable<CreateOfferFormErrors> {
+}): Nullable<UpdateOfferFormErrors> {
   const titleMsg = isNotEmptyString(title, 'Wprowadź nazwę oferty.');
   const positionMsg = isNotEmptyString(position, 'Wprowadź nazwę stanowiska.');
-  let expirationTimeMsg = isNotEmptyString(
-    expirationTime,
-    'Wprowadź datę wygasnięcia oferty.'
-  );
   const descriptionMsg = isNotEmptyString(
     description,
     'Wprowadź opis stanowiska.'
@@ -52,27 +44,14 @@ export function validateFormData({
     'Wybierz przynajmniej 1 kategorie.'
   );
 
-  if (!isEmpty(expirationTime)) {
-    const today = new Date().getTime();
-    const expirationDate = new Date(expirationTime).getTime();
-    const days = Math.ceil((expirationDate - today) / ONE_DAY);
-
-    expirationTimeMsg =
-      days < 7 ? 'Minimalny okres publikacji oferty to 7 dni' : '';
-  }
-
-  if (
-    [titleMsg, positionMsg, expirationTimeMsg, descriptionMsg].every((val) =>
-      isEmpty(val)
-    )
-  ) {
+  if ([titleMsg, positionMsg, descriptionMsg].every((val) => isEmpty(val))) {
     return null;
   }
 
   return {
     title: titleMsg,
     position: positionMsg,
-    expirationTime: expirationTimeMsg,
+    expirationDate: '',
     description: descriptionMsg,
     employmentType: employmentTypeMsg,
     operatingMode: operatingModeMsg,
@@ -82,27 +61,43 @@ export function validateFormData({
 }
 
 export function convertToCreateOfferBody(
-  data: OfferDataFormState & {
+  data: UpdateOfferDataFormState & {
     branches: number[];
     categories: number[];
   }
-): CreateOfferBody {
-  const {
-    employmentType,
-    operatingMode,
-    expirationTime: expirationDate,
-    ...validData
-  } = data;
-
-  const today = new Date().getTime();
-  const expirationTime = Math.ceil(
-    (new Date(expirationDate).getTime() - today) / ONE_DAY
+): UpdateOfferBody {
+  const { employmentType, operatingMode, ...validData } = omit(
+    ['expirationDate'],
+    data
   );
 
   return {
     ...validData,
     employmentType: +employmentType,
     operatingMode: +operatingMode,
-    expirationTime,
+  };
+}
+
+export function convertOfferToProps({
+  title,
+  position,
+  description,
+  employmentTypeId,
+  operatingModeId,
+  expirationDate,
+  isActive,
+  isPaid,
+}: FullOfferData): UpdateOfferDataFormState {
+  const initialDate = expirationDate.split('T')[0];
+
+  return {
+    title,
+    position,
+    description,
+    expirationDate: initialDate,
+    isActive,
+    isPaid,
+    operatingMode: String(operatingModeId),
+    employmentType: String(employmentTypeId),
   };
 }

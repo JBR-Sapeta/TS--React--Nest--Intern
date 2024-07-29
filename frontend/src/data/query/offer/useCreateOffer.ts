@@ -1,9 +1,16 @@
-import { UseMutateFunction, useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router';
+import {
+  UseMutateFunction,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
 import { isNil } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
+import { QUERY_KEY } from '@Data/constant';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import type {
   BaseError,
@@ -56,7 +63,8 @@ type UseCreateOffer = {
 export function useCreateOffer({
   companyId,
 }: UseCreateOfferProps): UseCreateOffer {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
 
@@ -74,14 +82,15 @@ export function useCreateOffer({
     mutationFn: (body) => createOffer(body, companyId, accessToken),
     onSuccess: (res) => {
       if (res) {
-        // @ TO DO - Invalidate company offers and navigate to offers
-        // queryClient.invalidateQueries({
-        //   queryKey: [QUERY_KEY.COMPANY_OFFERS],
-        // });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.COMPANY_OFFERS],
+        });
         enqueueSnackbar({
           message: res.message,
           variant: 'success',
         });
+
+        navigate(ROUTER_PATHS.COMPANY_OFFERS);
       }
     },
     onError: (res) => {

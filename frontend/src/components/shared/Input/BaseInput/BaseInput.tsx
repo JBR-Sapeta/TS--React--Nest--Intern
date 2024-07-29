@@ -29,6 +29,7 @@ function BaseInput({
   max,
   required,
   readOnly,
+  disabled,
   step,
 }: Props): ReactElement {
   const [focused, setFocused] = useState<boolean>(false);
@@ -63,6 +64,7 @@ function BaseInput({
         onBlur={onBlur}
         readOnly={readOnly}
         required={required}
+        disabled={disabled}
       />
       <span className={styles.message}>{!!error && error}</span>
     </div>

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router';
 import {
   UseMutateFunction,
   useMutation,
@@ -8,6 +9,7 @@ import { useSnackbar } from 'notistack';
 import { isEmpty, isNil } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import { QUERY_KEY } from '../../constant';
 import type {
@@ -65,6 +67,7 @@ export function useUpdateOffer({
   offerId,
 }: UseUpdateOfferProps): UseUpdateOffer {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
 
@@ -82,10 +85,9 @@ export function useUpdateOffer({
     mutationFn: (body) => updateOffer(body, companyId, offerId, accessToken),
     onSuccess: (res) => {
       if (res) {
-        // @ TO DO - Invalidate company offers
-        // queryClient.invalidateQueries({
-        //   queryKey: [QUERY_KEY.COMPANY_OFFERS],
-        // });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.COMPANY_OFFERS],
+        });
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEY.COMPANY_OFFER, offerId],
         });
@@ -96,6 +98,8 @@ export function useUpdateOffer({
           message: res.message,
           variant: 'success',
         });
+
+        navigate(ROUTER_PATHS.COMPANY_OFFERS);
       }
     },
     onError: (res) => {

@@ -13,43 +13,36 @@ import {
   SelectInput,
   Textarea,
 } from '@Components/shared';
-import { CreateOfferError } from '@Data/types';
 
-import styles from './OfferDataForm.module.css';
 import {
   BASE_FORM_FIELDS,
   FORM_CHECKBOX_FIELDS,
   FORM_SELECT_FIELDS,
-  OfferDataFormState,
   BaseOfferDataForm,
-  CreateOfferFormErrors,
+  UpdateOfferFormErrors,
+  UpdateOfferDataFormState,
 } from './data';
 
-const BASE_INITIAL_STATE: BaseOfferDataForm = {
-  title: '',
-  position: '',
-  expirationTime: '',
-  description: '',
-  employmentType: '',
-  operatingMode: '',
-};
+import styles from './UpdateOfferDataForm.module.css';
 
 type Props = {
+  initialState: UpdateOfferDataFormState;
   errors: BaseOfferDataForm;
-  validationErrors: Partial<CreateOfferError>;
-  setErrors: Dispatch<SetStateAction<CreateOfferFormErrors>>;
-  liftState: Dispatch<SetStateAction<OfferDataFormState>>;
+  validationErrors: Partial<UpdateOfferFormErrors>;
+  setErrors: Dispatch<SetStateAction<UpdateOfferFormErrors>>;
+  liftState: Dispatch<SetStateAction<UpdateOfferDataFormState>>;
 };
 
-export function OfferDataForm({
+export function UpdateOfferDataForm({
+  initialState,
   errors,
   validationErrors,
   setErrors,
   liftState,
 }: Props): ReactElement {
-  const [isPaidValue, setIsPaidValue] = useState(false);
-  const [isActiveValue, setIsActiveValue] = useState(false);
-  const [values, setValues] = useState(BASE_INITIAL_STATE);
+  const [isPaidValue, setIsPaidValue] = useState(initialState.isPaid);
+  const [isActiveValue, setIsActiveValue] = useState(initialState.isActive);
+  const [values, setValues] = useState(initialState);
 
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

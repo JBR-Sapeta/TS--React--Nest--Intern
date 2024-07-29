@@ -61,10 +61,16 @@ export function OfferItem({ offer, isOwner = false }: Props): ReactElement {
             listClassName={styles.dropdownList}
             isBottom
           >
-            <DropdownItem onClick={() => {}} isLink={false}>
+            <DropdownItem
+              path={`${ROUTER_PATHS.COMPANY_OFFERS}/${id}/update`}
+              isLink
+            >
               <FaDisplay /> Pełan oferta
             </DropdownItem>
-            <DropdownItem path={ROUTER_PATHS.COMPANY_CREATE_OFFERS} isLink>
+            <DropdownItem
+              path={`${ROUTER_PATHS.COMPANY_OFFERS}/${id}/update`}
+              isLink
+            >
               <FaPen /> Zaktualizuj dane
             </DropdownItem>
             <DropdownItem onClick={openModal} isLink={false}>
