@@ -57,8 +57,6 @@ export function validateFormData({
     const expirationDate = new Date(expirationTime).getTime();
     const days = Math.ceil((expirationDate - today) / ONE_DAY);
 
-    console.log(days);
-
     expirationTimeMsg =
       days < 7 ? 'Minimalny okres publikacji oferty to 7 dni' : '';
   }
