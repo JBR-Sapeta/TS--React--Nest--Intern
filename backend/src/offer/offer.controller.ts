@@ -110,7 +110,6 @@ export class OfferController {
     @Param('companyId', ParseUUIDPipe) companyId: string,
     @GetAccessTokenPayload() { userId }: JwtPayload,
   ): Promise<CompanyOffersResponseDto> {
-    console.log(companyId, userId);
     return this.offerService.getCompanyOffers(companyId, userId);
   }
 

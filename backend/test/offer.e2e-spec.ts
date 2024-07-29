@@ -904,8 +904,6 @@ describe('OfferController (e2e)', () => {
         accessToken,
       );
 
-      console.log(response.body);
-
       expect(response.status).toBe(200);
     });
 

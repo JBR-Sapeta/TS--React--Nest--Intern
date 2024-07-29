@@ -16,8 +16,6 @@ export class CompanyOffersResponseDto
   data: OfferPreviewDto[];
 
   constructor(args: SuccessMessageArgs, offers: OfferEntity[]) {
-    console.log(offers);
-
     super(args);
     this.data = offers.map(
       (offer) => new OfferPreviewDto({ ...offer, categories: [] }),
