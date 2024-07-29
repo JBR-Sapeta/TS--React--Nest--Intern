@@ -58,7 +58,7 @@ export function useSignUp(): UseSignUp {
         message: res.message,
         variant: 'success',
       });
-      navigate(ROUTER_PATHS.POST_AUTH);
+      navigate(ROUTER_PATHS.AUTH_INFO);
     },
     onError: (res) => {
       enqueueSnackbar({

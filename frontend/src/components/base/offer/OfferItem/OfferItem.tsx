@@ -64,7 +64,7 @@ export function OfferItem({ offer, isOwner = false }: Props): ReactElement {
             <DropdownItem onClick={() => {}} isLink={false}>
               <FaDisplay /> Pełan oferta
             </DropdownItem>
-            <DropdownItem path={ROUTER_PATHS.COMPANY_OFFER_CREATE} isLink>
+            <DropdownItem path={ROUTER_PATHS.COMPANY_CREATE_OFFERS} isLink>
               <FaPen /> Zaktualizuj dane
             </DropdownItem>
             <DropdownItem onClick={openModal} isLink={false}>

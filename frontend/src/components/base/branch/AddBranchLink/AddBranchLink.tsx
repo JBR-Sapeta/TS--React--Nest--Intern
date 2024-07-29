@@ -8,7 +8,7 @@ import styles from './AddBranchLink.module.css';
 
 export function AddBranchLink(): ReactElement {
   return (
-    <Link to={ROUTER_PATHS.CREATE_BRANCH} className={styles.link}>
+    <Link to={ROUTER_PATHS.COMPANY_CREATE_BRANCHES} className={styles.link}>
       <BsPlusLg />
     </Link>
   );

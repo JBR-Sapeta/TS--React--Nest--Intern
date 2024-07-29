@@ -15,8 +15,10 @@ const USER_NAVIGATION_LINKS: NavigationLink[] = [
 ];
 
 const COMPANY_NAVIGATION_LINKS: NavigationLink[] = [
+  { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Moje Oferty', path: ROUTER_PATHS.COMPANY_OFFERS },
-  { label: 'Moja firma', path: ROUTER_PATHS.COMPANY },
+  { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
+  { label: 'Moja firma', path: ROUTER_PATHS.COMPANY_VIEW },
   { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 

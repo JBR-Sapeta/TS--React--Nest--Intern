@@ -64,7 +64,7 @@ export function BranchItem({
             <MdLocationOn /> Wycentruj mape
           </DropdownItem>
           <DropdownItem
-            path={`${ROUTER_PATHS.UPDATE_BRANCH}/${id}/update`}
+            path={`${ROUTER_PATHS.COMPANY_BRANCHES}/${id}/update`}
             isLink
           >
             <FaPen /> Zaktualizuj dane

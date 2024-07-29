@@ -92,7 +92,7 @@ export function useUpdateBranch({
           message: res.message,
           variant: 'success',
         });
-        navigate(ROUTER_PATHS.COMPANY);
+        navigate(ROUTER_PATHS.COMPANY_VIEW);
       }
     },
     onError: (res) => {

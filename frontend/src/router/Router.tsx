@@ -59,7 +59,7 @@ const ROUTER = createBrowserRouter(
       <Route element={<PublicRoute />}>
         <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />
         <Route
-          path={ROUTER_PATHS.POST_AUTH}
+          path={ROUTER_PATHS.AUTH_INFO}
           element={<PostRegistrationView />}
         />
         <Route path={ROUTER_PATHS.ACTIVATION} element={<ActivationView />} />
@@ -72,17 +72,17 @@ const ROUTER = createBrowserRouter(
 
       <Route element={<UserRouteGuard />}>
         <Route
-          path={ROUTER_PATHS.CREATE_COMPANY}
+          path={ROUTER_PATHS.USER_CREATE_COMPANY}
           element={<CreateCompanyView />}
         />
         <Route
-          path={ROUTER_PATHS.APPLICATIONS}
+          path={ROUTER_PATHS.USER_APPLICATIONS}
           element={<PostRegistrationView />}
         />
       </Route>
 
       <Route element={<CompanyRouteGuard />}>
-        <Route path={ROUTER_PATHS.COMPANY} element={<UserCompanyView />} />
+        <Route path={ROUTER_PATHS.COMPANY_VIEW} element={<UserCompanyView />} />
         <Route
           path={ROUTER_PATHS.COMPANY_UPDATE}
           element={<UpdateCompanyView />}
@@ -92,7 +92,7 @@ const ROUTER = createBrowserRouter(
           element={<UploadImagesView />}
         />
         <Route
-          path={ROUTER_PATHS.COMPANY_OFFER_CREATE}
+          path={ROUTER_PATHS.COMPANY_CREATE_OFFERS}
           element={<CreateOfferView />}
         />
         <Route
@@ -100,17 +100,20 @@ const ROUTER = createBrowserRouter(
           element={<CompanyOffersView />}
         />
         <Route
-          path={ROUTER_PATHS.CREATE_BRANCH}
+          path={ROUTER_PATHS.COMPANY_CREATE_BRANCHES}
           element={<CreateBranchView />}
         />
         <Route
-          path={`${ROUTER_PATHS.UPDATE_BRANCH}/:branchId/update`}
+          path={`${ROUTER_PATHS.COMPANY_UPDATE_BRANCHES}`}
           element={<UpdateBranchView />}
         />
       </Route>
 
       <Route element={<AdminRouteGuard />}>
-        <Route path={ROUTER_PATHS.USERS} element={<PostRegistrationView />} />
+        <Route
+          path={ROUTER_PATHS.ADMIN_USERS}
+          element={<PostRegistrationView />}
+        />
       </Route>
     </Route>
   )

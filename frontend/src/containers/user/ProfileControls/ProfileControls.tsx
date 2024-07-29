@@ -83,7 +83,7 @@ function ProfileControls({ userProfile }: Props): ReactElement {
           <BaseLink
             size="medium"
             color="green"
-            path={ROUTER_PATHS.CREATE_COMPANY}
+            path={ROUTER_PATHS.USER_CREATE_COMPANY}
           >
             Nowa firma
           </BaseLink>

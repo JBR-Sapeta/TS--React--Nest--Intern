@@ -17,7 +17,7 @@ export function UpdateBranchView(): Nullable<ReactElement> {
   const numericBranchId = Number(branchId);
 
   if (Number.isNaN(numericBranchId)) {
-    navigate(ROUTER_PATHS.COMPANY);
+    navigate(ROUTER_PATHS.COMPANY_VIEW);
   }
 
   if (isNil(company)) {
@@ -28,9 +28,7 @@ export function UpdateBranchView(): Nullable<ReactElement> {
 
   return (
     <ContentRow margin="medium">
-      {company && branch && (
-        <UpdateBranchForm companyId={company.id} branch={branch} />
-      )}
+      {branch && <UpdateBranchForm companyId={company.id} branch={branch} />}
     </ContentRow>
   );
 }

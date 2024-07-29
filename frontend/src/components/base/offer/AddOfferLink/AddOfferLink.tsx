@@ -8,7 +8,7 @@ import styles from './AddOfferLink.module.css';
 
 export function AddOfferLink(): ReactElement {
   return (
-    <Link to={ROUTER_PATHS.COMPANY_OFFER_CREATE} className={styles.link}>
+    <Link to={ROUTER_PATHS.COMPANY_CREATE_OFFERS} className={styles.link}>
       <BsPlusLg /> <span>Nowa oferta</span>
     </Link>
   );
