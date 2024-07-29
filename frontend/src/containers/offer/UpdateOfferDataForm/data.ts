@@ -80,7 +80,7 @@ export const FORM_SELECT_FIELDS: SelectFormFields[] = [
     label: { id: '1-title', text: 'Rodzaj zatrudnienie' },
 
     options: [
-      { value: '', label: 'Wybierz' },
+      { value: '0', label: 'Wybierz' },
       { value: '1', label: 'Staż' },
       { value: '2', label: 'Praktyki' },
       { value: '3', label: 'Praktyki zawodowe' },
@@ -92,7 +92,7 @@ export const FORM_SELECT_FIELDS: SelectFormFields[] = [
     name: 'operatingMode',
     label: { id: '3-emapositionil', text: 'Tryb pracy' },
     options: [
-      { value: '', label: 'Wybierz' },
+      { value: '0', label: 'Wybierz' },
       { value: '1', label: 'Praca stacjonarna' },
       { value: '2', label: 'Praca zdalna' },
       { value: '3', label: 'Praca hybrydowa' },

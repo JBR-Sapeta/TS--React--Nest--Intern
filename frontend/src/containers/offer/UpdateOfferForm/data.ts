@@ -27,14 +27,16 @@ export function validateFormData({
     description,
     'Wprowadź opis stanowiska.'
   );
-  const employmentTypeMsg = isNotEmptyString(
-    employmentType,
-    'Wybierz rodzaj zatrudnienia.'
-  );
-  const operatingModeMsg = isNotEmptyString(
-    operatingMode,
-    'Wybierz tryb pracy.'
-  );
+  const employmentTypeMsg =
+    +employmentType === 0 || Number.isNaN(+employmentType)
+      ? 'Wybierz rodzaj zatrudnienia.'
+      : '';
+
+  const operatingModeMsg =
+    +operatingMode === 0 || Number.isNaN(+operatingMode)
+      ? 'Wybierz tryb pracy.'
+      : '';
+
   const branchesMsg = isNotEmptyArray(
     branches,
     'Wybierz przynajmniej 1 oddział.'

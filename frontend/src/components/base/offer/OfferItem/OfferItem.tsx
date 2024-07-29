@@ -16,18 +16,24 @@ import {
   SALARY_MAP,
 } from '@Common/maps';
 import { CompanyLogo } from '@Components/base/company';
-import { DropdownItem, DropdownMenu } from '@Components/shared';
+import { DropdownItem, DropdownMenu, Modal } from '@Components/shared';
+import { DeleteOfferForm } from '@Containers/offer';
 import { OfferPreview } from '@Data/types';
 import { ROUTER_PATHS } from '@Router/constants';
 
 import styles from './OfferItem.module.css';
 
 type Props = {
+  companyId: string;
   offer: OfferPreview;
   isOwner?: boolean;
 };
 
-export function OfferItem({ offer, isOwner = false }: Props): ReactElement {
+export function OfferItem({
+  companyId,
+  offer,
+  isOwner = false,
+}: Props): ReactElement {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -107,6 +113,15 @@ export function OfferItem({ offer, isOwner = false }: Props): ReactElement {
           </p>
         </div>
       </div>
+      {isModalOpen && (
+        <Modal onClick={closeModal}>
+          <DeleteOfferForm
+            companyId={companyId}
+            offerId={id}
+            closeModal={closeModal}
+          />
+        </Modal>
+      )}
     </article>
   ) : (
     <Link to={`${ROUTER_PATHS.OFFERS}/${id}`}>

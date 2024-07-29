@@ -7,11 +7,12 @@ import { OfferItem } from '../OfferItem/OfferItem';
 import styles from './OfferList.module.css';
 
 type Props = {
+  companyId: string;
   offers: OfferPreview[];
   isOwner?: boolean;
 };
 
-export function OfferList({ offers, isOwner }: Props): ReactElement {
+export function OfferList({ companyId, offers, isOwner }: Props): ReactElement {
   return isEmpty(offers) ? (
     <div className={styles.empty}>
       <p>Brak ofert</p>
@@ -19,7 +20,12 @@ export function OfferList({ offers, isOwner }: Props): ReactElement {
   ) : (
     <div className={styles.container}>
       {offers.map((offer) => (
-        <OfferItem key={offer.id} offer={offer} isOwner={isOwner} />
+        <OfferItem
+          key={offer.id}
+          companyId={companyId}
+          offer={offer}
+          isOwner={isOwner}
+        />
       ))}
     </div>
   );

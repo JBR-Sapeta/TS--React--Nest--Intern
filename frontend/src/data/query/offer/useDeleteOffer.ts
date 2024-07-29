@@ -70,10 +70,9 @@ export function useDeleteOffer({
       mutationFn: () => deleteOffer(companyId, offerId, accessToken),
       onSuccess: (res) => {
         if (res) {
-          // @ TO DO - Invalidate company offers
-          // queryClient.invalidateQueries({
-          //   queryKey: [QUERY_KEY.COMPANY_OFFERS],
-          // });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.COMPANY_OFFERS],
+          });
           queryClient.setQueryData([QUERY_KEY.COMPANY_OFFER, offerId], null);
           queryClient.setQueryData([QUERY_KEY.OFFER, offerId], null);
           enqueueSnackbar({
