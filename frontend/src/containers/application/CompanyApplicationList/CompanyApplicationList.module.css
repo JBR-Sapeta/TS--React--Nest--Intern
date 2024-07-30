@@ -1,0 +1,33 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.topPagination {
+  margin-bottom: var(--space-32);
+}
+
+.bottomPagination {
+  margin-top: var(--space-32);
+}
+
+.emptyList {
+  width: 952px;
+  min-height: 210px;
+  padding: var(--space-40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-24);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-bcg-main);
+  font-size: var(--font-h-20);
+  color: var(--color-text);
+}

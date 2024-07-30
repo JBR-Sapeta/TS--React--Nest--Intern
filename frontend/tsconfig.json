@@ -23,6 +23,7 @@
       "@Components/*": ["src/components/*"],
       "@Containers/*": ["src/containers/*"],
       "@Data/*": ["src/data/*"],
+      "@Hooks/*": ["src/hooks/*"],
       "@Router/*": ["src/router/*"],
       "@Styles/*": ["src/styles/*"],
       "@Views/*": ["src/views/*"]

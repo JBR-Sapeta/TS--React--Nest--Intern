@@ -39,6 +39,10 @@
   &:hover {
     color: var(--color-green);
     border: 1px var(--color-green) solid;
+
+    & svg {
+      color: var(--color-green);
+    }
   }
 
   &:active {
@@ -55,6 +59,10 @@
   &:hover {
     color: var(--color-red);
     background: transparent;
+
+    & svg {
+      color: var(--color-red);
+    }
   }
 
   &:active {
@@ -72,6 +80,10 @@
   &:hover {
     color: var(--color-orange);
     background: transparent;
+
+    & svg {
+      color: var(--color-orange);
+    }
   }
 
   &:active {
@@ -89,6 +101,10 @@
   &:hover {
     color: var(--color-blue);
     background: transparent;
+
+    & svg {
+      color: var(--color-blue);
+    }
   }
 
   &:active {
@@ -106,6 +122,10 @@
   &:hover {
     color: var(--color-green);
     background: transparent;
+
+    & svg {
+      color: var(--color-green);
+    }
   }
 
   &:active {

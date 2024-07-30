@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+import fileDownload from 'js-file-download';
 
 import type { Nullable, Optional } from '@Common/types';
 import { getErrorMessages } from '@Data/utils';
@@ -32,7 +33,8 @@ async function fetchApplicationFile(
 }
 
 type UseGetApplicationFileProps = {
-  offerId: number;
+  applicationId: number;
+  fileName: string;
 };
 
 type UseGetApplicationFile = {
@@ -42,13 +44,14 @@ type UseGetApplicationFile = {
   getApplicationFile: UseMutateFunction<
     Optional<Blob>,
     AxiosError<BaseError>,
-    number,
+    null,
     unknown
   >;
 };
 
 export function useGetApplicationFile({
-  offerId,
+  applicationId,
+  fileName,
 }: UseGetApplicationFileProps): UseGetApplicationFile {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -59,18 +62,18 @@ export function useGetApplicationFile({
     data,
     error,
     mutate: getApplicationFile,
-  } = useMutation<Optional<Blob>, AxiosError<BaseError>, number, unknown>({
-    mutationFn: (applicationId) =>
-      fetchApplicationFile(applicationId, accessToken),
+  } = useMutation<Optional<Blob>, AxiosError<BaseError>, null, unknown>({
+    mutationFn: () => fetchApplicationFile(applicationId, accessToken),
     onSuccess: (res) => {
       if (res) {
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.OFFER_APPLICATIONS, offerId],
+          queryKey: [QUERY_KEY.OFFER_APPLICATIONS, applicationId],
         });
         enqueueSnackbar({
           message: 'Pobieranie zakończone',
           variant: 'success',
         });
+        fileDownload(res, fileName);
       }
     },
     onError: (res) => {

@@ -14,7 +14,7 @@ import type {
 import { useGetAccessToken } from '../auth';
 
 async function getOfferApplications(
-  offerId: string,
+  offerId: number,
   params: ApplicationsSearchParams,
   accessToken?: string
 ): Promise<Nullable<OfferApplicationsResponse>> {
@@ -35,13 +35,15 @@ async function getOfferApplications(
 }
 
 type UseGetOfferApplicationsProps = {
-  offerId: string;
+  offerId: number;
   params: ApplicationsSearchParams;
 };
 
 type UseGetOfferApplications = {
   isLoading: boolean;
   applications?: OfferApplication[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -64,6 +66,8 @@ export function useGetOfferApplications({
   return {
     isLoading,
     applications: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }

@@ -4,5 +4,6 @@ export function convertToQueryParams<
   const queryParams = Object.entries(params).map(
     ([key, value]) => `&${key}=${value}`
   );
-  return queryParams;
+
+  return queryParams.join('');
 }
