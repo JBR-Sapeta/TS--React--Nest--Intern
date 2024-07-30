@@ -67,10 +67,7 @@ export function OfferItem({
             listClassName={styles.dropdownList}
             isBottom
           >
-            <DropdownItem
-              path={`${ROUTER_PATHS.COMPANY_OFFERS}/${id}/update`}
-              isLink
-            >
+            <DropdownItem path={`${ROUTER_PATHS.COMPANY_OFFERS}/${id}`} isLink>
               <FaDisplay /> Pełan oferta
             </DropdownItem>
             <DropdownItem

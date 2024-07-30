@@ -27,6 +27,7 @@ import {
 import { NotFoundView } from '@Views/errors';
 import {
   CompanyOffersView,
+  CompanyOfferView,
   CreateOfferView,
   OfferListingView,
   UpdateOfferView,
@@ -103,6 +104,10 @@ const ROUTER = createBrowserRouter(
         <Route
           path={ROUTER_PATHS.COMPANY_OFFERS}
           element={<CompanyOffersView />}
+        />
+        <Route
+          path={ROUTER_PATHS.COMPANY_VIEW_OFFERS}
+          element={<CompanyOfferView />}
         />
         <Route
           path={ROUTER_PATHS.COMPANY_CREATE_BRANCHES}
