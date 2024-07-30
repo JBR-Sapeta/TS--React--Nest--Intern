@@ -9,5 +9,6 @@ export { CheckboxInput } from './Input/CheckoboxInput/CheckoboxInput';
 export { DropdownItem } from './Dropdown/DropdownItem';
 export { DropdownMenu } from './Dropdown/DropdownMenu';
 export { MapCenterPosition } from './MapCenterPosition/MapCenterPosition';
+export { Pagination } from './Pagination/Pagination';
 export { SelectInput } from './Input/SelectInput/SelectInput';
 export { Textarea } from './Input/Textarea/Textarea';
