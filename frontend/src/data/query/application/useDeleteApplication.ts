@@ -10,11 +10,7 @@ import { isNil } from 'ramda';
 import { Nullable, Optional } from '@Common/types';
 
 import { QUERY_KEY } from '../../constant';
-import type {
-  ApplicationsSearchParams,
-  BaseError,
-  BaseResponse,
-} from '../../types';
+import type { BaseError, BaseResponse } from '../../types';
 import { getErrorMessages } from '../../utils';
 import { useGetAccessToken } from '../auth';
 
@@ -38,10 +34,6 @@ async function deleteApplication(
   return data;
 }
 
-type UseDeleteApplicationProps = {
-  params: ApplicationsSearchParams;
-};
-
 type UseDeleteApplication = {
   isPending: boolean;
   data?: Optional<BaseResponse>;
@@ -54,13 +46,10 @@ type UseDeleteApplication = {
   >;
 };
 
-export function useDeleteApplication({
-  params,
-}: UseDeleteApplicationProps): UseDeleteApplication {
+export function useDeleteApplication(): UseDeleteApplication {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
-  const keys = Object.values(params);
 
   const {
     isPending,
@@ -78,7 +67,7 @@ export function useDeleteApplication({
     onSuccess: (res) => {
       if (res) {
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.USER_APPLICATIONS, ...keys],
+          queryKey: [QUERY_KEY.USER_APPLICATIONS],
         });
         enqueueSnackbar({
           message: res.message,

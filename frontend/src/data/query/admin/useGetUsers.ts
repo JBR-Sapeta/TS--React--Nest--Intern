@@ -60,7 +60,7 @@ export function useGetUsers({ params }: UseGetUsersProps): UseGetUsers {
   return {
     isLoading,
     users: data ? data.data : undefined,
-    currentPage: data ? data.pageNumber : params.pageNumber || 0,
+    currentPage: data ? data.pageNumber : 0,
     totalPages: data ? data.totalPages : 1,
     error,
   };

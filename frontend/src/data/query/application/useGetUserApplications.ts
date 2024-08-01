@@ -7,9 +7,9 @@ import type { Nullable } from '@Common/types';
 
 import { QUERY_KEY } from '../../constant';
 import type {
+  UserApplication,
   ApplicationsSearchParams,
-  OfferApplication,
-  OfferApplicationsResponse,
+  UserApplicationsResponse,
 } from '../../types';
 import { useGetAccessToken } from '../auth';
 
@@ -17,12 +17,12 @@ export async function getUserApplications(
   userId: string,
   params: ApplicationsSearchParams,
   accessToken?: string
-): Promise<Nullable<OfferApplicationsResponse>> {
+): Promise<Nullable<UserApplicationsResponse>> {
   if (isNil(accessToken)) return null;
 
   const query = convertToQueryParams(params);
 
-  const { data } = await axios.get<OfferApplicationsResponse>(
+  const { data } = await axios.get<UserApplicationsResponse>(
     `${import.meta.env.VITE_API_URL}/applications/users/${userId}?${query}`,
     {
       headers: {
@@ -41,7 +41,9 @@ type UseGetUserApplicationsProps = {
 
 type UseGetUserApplications = {
   isLoading: boolean;
-  applications?: OfferApplication[];
+  applications?: UserApplication[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -54,7 +56,7 @@ export function useGetUserApplications({
 
   const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.USER_APPLICATIONS, ...keys],
-    queryFn: async (): Promise<Nullable<OfferApplicationsResponse>> =>
+    queryFn: async (): Promise<Nullable<UserApplicationsResponse>> =>
       getUserApplications(userId, params, accessToken),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
@@ -64,6 +66,8 @@ export function useGetUserApplications({
   return {
     isLoading,
     applications: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }

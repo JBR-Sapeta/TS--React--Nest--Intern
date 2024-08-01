@@ -33,7 +33,7 @@ import {
   OfferListingView,
   UpdateOfferView,
 } from '@Views/offers';
-import { ProfileView } from '@Views/user';
+import { ProfileView, UserApplications } from '@Views/user';
 
 import { ROUTER_PATHS } from './constants';
 import {
@@ -80,7 +80,7 @@ const ROUTER = createBrowserRouter(
         />
         <Route
           path={ROUTER_PATHS.USER_APPLICATIONS}
-          element={<PostRegistrationView />}
+          element={<UserApplications />}
         />
       </Route>
 

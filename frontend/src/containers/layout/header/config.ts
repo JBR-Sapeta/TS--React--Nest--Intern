@@ -11,6 +11,7 @@ const BASE_NAVIGATION_LINKS: NavigationLink[] = [
 const USER_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
+  { label: 'Aplikcaje', path: ROUTER_PATHS.USER_APPLICATIONS },
   { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 

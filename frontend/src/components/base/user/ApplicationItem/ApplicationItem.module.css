@@ -1,0 +1,84 @@
+.article {
+  width: 952px;
+  display: flex;
+  gap: var(--space-16);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-bcg-main);
+}
+
+.headerContainer {
+  width: 100%;
+  margin: var(--space-24) var(--space-24) var(--space-24) var(--space-16);
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  & h3 {
+    margin-bottom: var(--space-24);
+    font-size: var(--font-h-24);
+    font-weight: var(--weight-600);
+    color: var(--color-header);
+  }
+}
+
+.dropdownList {
+  width: 200px;
+}
+
+.company {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+
+  & span {
+    margin-left: var(--space-8);
+    font-weight: var(--weight-600);
+  }
+}
+
+.offerStatus {
+  margin-top: var(--space-16);
+  margin-bottom: var(--space-24);
+  font-size: var(--font-p-16);
+  font-weight: var(--weight-600);
+}
+
+.active {
+  color: var(--color-green);
+}
+
+.inactive {
+  color: var(--color-red);
+}
+
+.applicationStatus {
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+
+  & p {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.downloaded {
+  & svg {
+    font-size: var(--font-p-18);
+    margin-right: var(--space-8);
+    color: var(--color-green);
+  }
+}
+
+.notDownloaded {
+  & svg {
+    font-size: var(--font-p-18);
+    margin-right: var(--space-8);
+    color: var(--color-element-icon);
+  }
+}
