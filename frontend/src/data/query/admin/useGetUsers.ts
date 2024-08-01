@@ -39,7 +39,9 @@ type UseGetUsersProps = {
 
 type UseGetUsers = {
   isLoading: boolean;
-  applications?: UserAdminPreview[];
+  users?: UserAdminPreview[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -57,7 +59,9 @@ export function useGetUsers({ params }: UseGetUsersProps): UseGetUsers {
 
   return {
     isLoading,
-    applications: data ? data.data : undefined,
+    users: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : params.pageNumber || 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }

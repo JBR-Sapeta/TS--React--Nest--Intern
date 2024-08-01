@@ -1,0 +1,44 @@
+.article {
+  width: 640px;
+  padding: var(--space-40);
+  display: flex;
+  gap: var(--space-16);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-bcg-main);
+}
+
+.dataContainer {
+  width: 100%;
+  color: var(--color-text);
+}
+
+.h3 {
+  margin-bottom: var(--space-16);
+  font-size: var(--font-h-24);
+  font-weight: var(--weight-600);
+  color: var(--color-header);
+}
+
+.dropdownList {
+  width: 200px;
+}
+
+.p {
+  display: flex;
+  align-items: center;
+
+  & svg {
+    margin-right: var(--space-8);
+    color: var(--color-element-icon);
+  }
+
+  & span {
+    margin-left: var(--space-8);
+    font-weight: var(--weight-600);
+  }
+}
+
+.button {
+  align-self: flex-end;
+}

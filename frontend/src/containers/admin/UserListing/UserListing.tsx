@@ -2,36 +2,35 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { removeEmptyValues } from '@Common/functions';
-import { CompanySearchParams, VerifyCompanyItem } from '@Components/base';
+import { UserSearchParams, UserPreview } from '@Components/base';
 import { LogoSpinner, Pagination } from '@Components/shared';
-import { useGetCompanies } from '@Data/query/admin';
-import { useAdminCompanySearchParams, usePagination } from '@Hooks/index';
+import { useGetUsers } from '@Data/query/admin';
+import { usePagination, useUserSearchParams } from '@Hooks/index';
 
-import styles from './VerifyCompanyListing.module.css';
+import styles from './UserListing.module.css';
 
-export function VerifyCompanyListing(): ReactElement {
+export function UserListing(): ReactElement {
   const { pageNumber, limit, changePage } = usePagination();
-  const { values, ...functions } = useAdminCompanySearchParams();
+  const { values, ...functions } = useUserSearchParams();
   const [params, setParams] = useState(values);
-  const { isLoading, companies, error, currentPage, totalPages } =
-    useGetCompanies({
-      params: { pageNumber, limit, ...removeEmptyValues(params) },
-    });
+  const { isLoading, users, error, currentPage, totalPages } = useGetUsers({
+    params: {
+      pageNumber,
+      limit,
+      ...removeEmptyValues(params),
+    },
+  });
 
   const handlePage = (page: number) => {
     changePage(page);
   };
 
-  const showPagination = !!companies?.length;
-  const showBottomPagination = companies ? companies.length > 7 : false;
+  const showPagination = !!users?.length;
+  const showBottomPagination = users ? users.length > 6 : false;
 
   return (
     <section className={styles.section}>
-      <CompanySearchParams
-        {...functions}
-        values={values}
-        setParams={setParams}
-      />
+      <UserSearchParams {...functions} values={values} setParams={setParams} />
 
       {isLoading && <LogoSpinner size="small" />}
 
@@ -45,15 +44,14 @@ export function VerifyCompanyListing(): ReactElement {
       )}
 
       <div className={styles.list}>
-        {companies &&
-          companies.map((com) => <VerifyCompanyItem key={com.id} {...com} />)}
+        {users && users.map((user) => <UserPreview key={user.id} {...user} />)}
 
-        {companies?.length === 0 && (
+        {users?.length === 0 && (
           <div className={styles.emptyList}>
             <p>Brak wyników</p>
           </div>
         )}
-        {error && !companies && (
+        {error && !users && (
           <div className={styles.emptyList}>
             <p>{error.message}</p>
           </div>

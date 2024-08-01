@@ -31,7 +31,7 @@ export function Pagination({
 
   return (
     <div className={clsx(styles.pagination, classNames)}>
-      {!showPages && (
+      {showPages && (
         <div className={styles.paginationPageIndicator}>{`
       Strona: 
       ${currentPage + 1}/${totalPages || 1}`}</div>

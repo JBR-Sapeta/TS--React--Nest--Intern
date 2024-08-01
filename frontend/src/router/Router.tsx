@@ -10,7 +10,7 @@ import { Layout } from '@Containers/layout';
 import { useStorageSynchronize } from '@Data/query/auth';
 import { useGetUserProfile } from '@Data/query/user';
 
-import { VerifyCompanyView } from '@Views/admin';
+import { UsersView, VerifyCompanyView } from '@Views/admin';
 import {
   ActivationView,
   PostRegistrationView,
@@ -125,10 +125,7 @@ const ROUTER = createBrowserRouter(
           path={ROUTER_PATHS.ADMIN_COMPANIES}
           element={<VerifyCompanyView />}
         />
-        <Route
-          path={ROUTER_PATHS.ADMIN_USERS}
-          element={<PostRegistrationView />}
-        />
+        <Route path={ROUTER_PATHS.ADMIN_USERS} element={<UsersView />} />
       </Route>
     </Route>
   )

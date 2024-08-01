@@ -13,6 +13,6 @@ export type AdminUserSearchParams = {
   limit?: number;
   firstName?: string;
   lastName?: string;
-  email?: number;
+  email?: string;
   hasBan?: boolean;
 };
