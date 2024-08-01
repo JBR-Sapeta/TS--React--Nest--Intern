@@ -1,0 +1,12 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+

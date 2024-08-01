@@ -48,6 +48,10 @@
   &:active {
     color: var(--color-black);
     border: 1px var(--color-black) solid;
+
+    & svg {
+      color: var(--color-black);
+    }
   }
 }
 
@@ -69,6 +73,10 @@
     color: var(--color-strict-white);
     background: var(--color-red-dark);
     border: 1px var(--color-red-dark) solid;
+
+    & svg {
+      color: var(--color-strict-white);
+    }
   }
 }
 
@@ -90,6 +98,10 @@
     color: var(--color-strict-white);
     background: var(--color-orange-dark);
     border: 1px var(--color-orange-dark) solid;
+
+    & svg {
+      color: var(--color-strict-white);
+    }
   }
 }
 
@@ -111,6 +123,10 @@
     color: var(--color-strict-white);
     background: var(--color-blue-dark);
     border: 1px var(--color-blue-dark) solid;
+
+    & svg {
+      color: var(--color-strict-white);
+    }
   }
 }
 
@@ -132,6 +148,10 @@
     color: var(--color-strict-white);
     background: var(--color-green-dark);
     border: 1px var(--color-green-dark) solid;
+
+    & svg {
+      color: var(--color-strict-white);
+    }
   }
 }
 
@@ -150,5 +170,9 @@
     color: var(--color-gray);
     border: 1px var(--color-gray) solid;
     background: transparent;
+
+    & svg {
+      color: var(--color-strict-white);
+    }
   }
 }

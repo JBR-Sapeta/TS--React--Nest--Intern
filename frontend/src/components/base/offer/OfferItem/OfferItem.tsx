@@ -17,7 +17,7 @@ import {
 } from '@Common/maps';
 import { CompanyLogo } from '@Components/base/company';
 import { DropdownItem, DropdownMenu, Modal } from '@Components/shared';
-import { DeleteOfferForm } from '@Containers/offer';
+import { DeleteOfferForm } from '@Containers/offer'; // @TO-DO move to components
 import { OfferPreview } from '@Data/types';
 import { ROUTER_PATHS } from '@Router/constants';
 

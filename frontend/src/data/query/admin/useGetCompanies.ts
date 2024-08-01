@@ -39,7 +39,9 @@ type UseGetCompaniesProps = {
 
 type UseGetCompanies = {
   isLoading: boolean;
-  applications?: CompanyAdminPrewiev[];
+  companies?: CompanyAdminPrewiev[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -59,7 +61,9 @@ export function useGetCompanies({
 
   return {
     isLoading,
-    applications: data ? data.data : undefined,
+    companies: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }

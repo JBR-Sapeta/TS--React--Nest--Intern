@@ -1,0 +1,27 @@
+.p {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+
+  & span {
+    margin-left: var(--space-8);
+    font-weight: var(--weight-600);
+  }
+
+  & svg {
+    color: var(--color-element-icon);
+  }
+}
+
+.green {
+  & svg {
+    color: var(--color-green);
+  }
+}
+
+.red {
+  & svg {
+    color: var(--color-red);
+  }
+}

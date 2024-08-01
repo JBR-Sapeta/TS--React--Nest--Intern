@@ -5,16 +5,12 @@ import {
 } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
-import { isNil, isNotNil } from 'ramda';
+import { isNil } from 'ramda';
 
 import { Nullable, Optional } from '@Common/types';
 
 import { QUERY_KEY } from '../../constant';
-import type {
-  AdminCompanySearchParams,
-  BaseError,
-  BaseResponse,
-} from '../../types';
+import type { BaseError, BaseResponse } from '../../types';
 import { getErrorMessages } from '../../utils';
 import { useGetAccessToken } from '../auth';
 
@@ -28,6 +24,7 @@ async function verifyCompany(
 
   const { data } = await axios.patch<BaseResponse>(
     `${import.meta.env.VITE_API_URL}/admin/companies/${comapnyId}/is-verified`,
+    {},
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -37,10 +34,6 @@ async function verifyCompany(
 
   return data;
 }
-
-type UseVerifiyCompanyProps = {
-  params: AdminCompanySearchParams;
-};
 
 type UseVerifiyCompany = {
   isPending: boolean;
@@ -54,13 +47,10 @@ type UseVerifiyCompany = {
   >;
 };
 
-export function useVerifyCompany({
-  params,
-}: UseVerifiyCompanyProps): UseVerifiyCompany {
+export function useVerifyCompany(): UseVerifiyCompany {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { accessToken } = useGetAccessToken();
-  const keys = Object.values(params).filter((val) => isNotNil(val));
 
   const {
     isPending,
@@ -77,7 +67,7 @@ export function useVerifyCompany({
     onSuccess: (res) => {
       if (res) {
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.ADMIN_COMPANIES, ...keys],
+          queryKey: [QUERY_KEY.ADMIN_COMPANIES],
         });
         enqueueSnackbar({
           message: res.message,

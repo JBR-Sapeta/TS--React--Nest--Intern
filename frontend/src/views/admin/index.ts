@@ -1,0 +1,1 @@
+export { VerifyCompanyView } from './VerifyCompanyView';

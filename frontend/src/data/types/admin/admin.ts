@@ -3,7 +3,7 @@ export type AdminCompanySearchParams = {
   limit?: number;
   name?: string;
   slug?: string;
-  email?: number;
+  email?: string;
   owner?: boolean;
   isVerified?: boolean;
 };

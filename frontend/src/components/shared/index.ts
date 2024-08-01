@@ -11,4 +11,5 @@ export { DropdownMenu } from './Dropdown/DropdownMenu';
 export { MapCenterPosition } from './MapCenterPosition/MapCenterPosition';
 export { Pagination } from './Pagination/Pagination';
 export { SelectInput } from './Input/SelectInput/SelectInput';
+export { StatusIndicator } from './StatusIndicator/StatusIndicator';
 export { Textarea } from './Input/Textarea/Textarea';

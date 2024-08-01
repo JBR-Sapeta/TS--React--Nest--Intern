@@ -25,6 +25,7 @@ const COMPANY_NAVIGATION_LINKS: NavigationLink[] = [
 const ADMIN_NAVIGATION_LINKS: NavigationLink[] = [
   { label: 'Oferty', path: ROUTER_PATHS.OFFERS },
   { label: 'Firmy', path: ROUTER_PATHS.COMPANIES },
+  { label: 'Weryfikacja', path: ROUTER_PATHS.ADMIN_COMPANIES },
   { label: 'Profil', path: ROUTER_PATHS.PROFILE },
 ];
 
