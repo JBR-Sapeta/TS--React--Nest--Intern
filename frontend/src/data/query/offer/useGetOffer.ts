@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { isNotEmpty } from 'ramda';
 
 import type { Nullable, Optional } from '@Common/types';
 
@@ -8,7 +9,7 @@ import type { OfferData, OfferDataResponse } from '../../types';
 
 export async function getOffer(
   companyId: string,
-  offerId: number
+  offerId: string
 ): Promise<Optional<OfferDataResponse>> {
   const { data } = await axios.get<Optional<OfferDataResponse>>(
     `${import.meta.env.VITE_API_URL}/offers/${companyId}/${offerId}/partial`
@@ -19,7 +20,7 @@ export async function getOffer(
 
 type UseGetOfferProps = {
   companyId: string;
-  offerId: number;
+  offerId: string;
 };
 
 type UseGetOffer = {
@@ -37,6 +38,7 @@ export function useGetOffer({
     queryFn: async (): Promise<Optional<OfferDataResponse>> =>
       getOffer(companyId, offerId),
     refetchOnMount: false,
+    enabled: isNotEmpty(offerId) && isNotEmpty(companyId),
   });
 
   return {

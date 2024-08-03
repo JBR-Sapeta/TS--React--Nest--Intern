@@ -32,6 +32,7 @@ import {
   CompanyOfferView,
   CreateOfferView,
   OfferListingView,
+  OfferView,
   UpdateOfferView,
 } from '@Views/offers';
 import { ProfileView, UserApplications } from '@Views/user';
@@ -56,10 +57,7 @@ const ROUTER = createBrowserRouter(
       <Route path={ROUTER_PATHS.COMPANIES} element={<CompanyListingView />} />
       <Route path={ROUTER_PATHS.COMPANIES_VIEW} element={<CompanyView />} />
       <Route path={ROUTER_PATHS.OFFERS} element={<OfferListingView />} />
-      <Route
-        path={`${ROUTER_PATHS.OFFERS}/:offerId`}
-        element={<OfferListingView />}
-      />
+      <Route path={ROUTER_PATHS.OFFERS_VIEW} element={<OfferView />} />
 
       <Route element={<PublicRoute />}>
         <Route path={ROUTER_PATHS.AUTH} element={<SignInView />} />

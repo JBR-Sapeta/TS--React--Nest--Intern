@@ -1,7 +1,9 @@
 import type { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 import { LuScrollText } from 'react-icons/lu';
 import { BiCoinStack } from 'react-icons/bi';
 import { BsBriefcase } from 'react-icons/bs';
+import { HiBadgeCheck } from 'react-icons/hi';
 
 import { Nullable } from '@Common/types';
 import {
@@ -11,6 +13,7 @@ import {
 } from '@Common/maps';
 import { CompanyLogo } from '@Components/base/company';
 import { Hr } from '@Components/shared';
+import { ROUTER_PATHS } from '@Router/constants';
 
 import styles from './OfferPreviewHeader.module.css';
 
@@ -23,6 +26,8 @@ type Props = {
   operatingModeId: number;
   size: number;
   isPaid: boolean;
+  hasApplication?: boolean;
+  slug?: string;
 };
 
 export function OfferPreviewHeader({
@@ -34,6 +39,8 @@ export function OfferPreviewHeader({
   operatingModeId,
   size,
   isPaid,
+  hasApplication = false,
+  slug,
 }: Props): Nullable<ReactElement> {
   return (
     <article className={styles.container}>
@@ -41,13 +48,24 @@ export function OfferPreviewHeader({
       <div className={styles.data}>
         <div className={styles.header}>
           <h3>{title}</h3>
+          {hasApplication && <HiBadgeCheck />}
         </div>
         <div className={styles.baseInfo}>
           <p>
             Stanowisko: <span>{position}</span>
           </p>
           <p>
-            Firma: <span>{companyName}</span>
+            Firma:
+            {slug ? (
+              <Link
+                to={`${ROUTER_PATHS.COMPANIES}/${slug}`}
+                className={styles.companyLink}
+              >
+                {companyName}
+              </Link>
+            ) : (
+              <span>{companyName}</span>
+            )}
           </p>
           <p>
             Liczba pracowników: <span>~ {size}</span>

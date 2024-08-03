@@ -44,8 +44,12 @@ export function Textarea({
 
   return (
     <div className={containerClassName}>
-      {Icon && <Icon />}
-      {label && <label htmlFor={label.id}>{label.text}</label>}
+      {label && (
+        <label htmlFor={label.id}>
+          {Icon && <Icon />}
+          {label.text}
+        </label>
+      )}
       <textarea
         id={label.id}
         name={name}

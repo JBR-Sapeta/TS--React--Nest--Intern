@@ -21,6 +21,11 @@
     font-weight: var(--weight-600);
     color: var(--color-header);
   }
+
+  & svg {
+    font-size: var(--font-h-32);
+    color: var(--color-green);
+  }
 }
 
 .baseInfo {
@@ -34,6 +39,15 @@
   & span {
     margin-left: var(--space-8);
     font-weight: var(--weight-600);
+  }
+}
+
+.companyLink {
+  margin-left: var(--space-8);
+  font-weight: var(--weight-600);
+
+  &:hover{
+    color: var(--color-blue);
   }
 }
 
@@ -55,7 +69,6 @@
   }
 }
 
-
-.hr{
+.hr {
   margin-top: var(--space-24);
 }

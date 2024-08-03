@@ -1,0 +1,114 @@
+.container {
+  width: 700px;
+  padding: var(--space-32);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  border-radius: var(--radius-8);
+  box-shadow: var(--shadow-l);
+  background-color: var(--color-bcg-main);
+}
+
+.offerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoContainer {
+  display: flex;
+  gap: var(--space-16);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+
+  & h3 {
+    margin-bottom: var(--space-8);
+    font-size: var(--font-h-20);
+    color: var(--color-header);
+    font-weight: var(--weight-600);
+  }
+
+  & p {
+    margin-left: var(--space-8);
+    font-size: var(--font-p-16);
+    color: var(--color-text);
+  }
+
+  & span {
+    margin-left: var(--space-8);
+    font-weight: var(--weight-600);
+  }
+}
+
+.hr {
+    margin-top: var(--space-8);
+  width: 100%;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.textarea {
+  & textarea {
+    height: 160px;
+  }
+}
+
+.file {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  & p {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  & label {
+    height: 48px;
+    padding: var(--space-8) var(--space-24);
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    border: 1px solid var(--color-gray-700);
+    border-radius: var(--radius-4);
+    background-color: var(--color-bcg-secondary);
+    font-size: var(--font-p-14);
+    cursor: pointer;
+
+    & svg {
+      margin-right: var(--space-16);
+      font-size: var(--font-h-20);
+    }
+  }
+
+  & span {
+    margin-top: var(--space-8);
+    font-size: var(--font-p-12);
+    color: var(--color-text);
+  }
+
+  & svg {
+    color: var(--color-element-icon);
+  }
+
+  & input {
+    display: none;
+  }
+}
+
+.error {
+  color: var(--color-red) !important;
+}
+
+.controls {
+  display: flex;
+  gap: var(--space-24);
+}

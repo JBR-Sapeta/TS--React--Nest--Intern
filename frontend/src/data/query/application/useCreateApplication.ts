@@ -91,6 +91,9 @@ export function useCreateApplication({
         queryClient.invalidateQueries({
           queryKey: [QUERY_KEY.USER_APPLICATIONS],
         });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.USER_PROFILE],
+        });
         enqueueSnackbar({
           message: res.message,
           variant: 'success',

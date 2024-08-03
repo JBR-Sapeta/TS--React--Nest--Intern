@@ -55,7 +55,11 @@ export function ApplicationItem({
             listClassName={styles.dropdownList}
             isBottom
           >
-            <DropdownItem path={`${ROUTER_PATHS.OFFERS}/${offerId}`} isLink>
+            {/* TO DO - change on slug */}
+            <DropdownItem
+              path={`${ROUTER_PATHS.OFFERS}/${companyId}/${offerId}`}
+              isLink
+            >
               <FaScroll /> Oferta
             </DropdownItem>
             <DropdownItem
@@ -107,7 +111,6 @@ export function ApplicationItem({
             applicationId={applicationId}
             closeModal={closeModal}
           />
-          <div>XD</div>
         </Modal>
       )}
     </article>

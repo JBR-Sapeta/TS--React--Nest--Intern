@@ -6,7 +6,7 @@ export const ROUTER_PATHS = {
   COMPANIES: '/companies',
   COMPANIES_VIEW: '/companies/:slug',
   OFFERS: '/offers',
-  OFFERS_VIEW: '/offers/:offerId',
+  OFFERS_VIEW: '/offers/:companyId/:offerId',
   PROFILE: '/profile',
   USER_APPLICATIONS: '/aplications',
   USER_CREATE_COMPANY: '/create-company',

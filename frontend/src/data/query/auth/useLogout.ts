@@ -72,6 +72,8 @@ export function useLogout(): UseLogout {
           profileDataStorage.removeProfile();
           queryClient.setQueryData([QUERY_KEY.ACCESS_TOKEN], null);
           queryClient.setQueryData([QUERY_KEY.USER_PROFILE], null);
+          // TO DO - remove only redundant user queries
+          queryClient.removeQueries();
           enqueueSnackbar({
             message: res.message,
             variant: 'success',

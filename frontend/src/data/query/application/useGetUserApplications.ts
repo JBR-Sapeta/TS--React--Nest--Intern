@@ -59,7 +59,7 @@ export function useGetUserApplications({
     queryFn: async (): Promise<Nullable<UserApplicationsResponse>> =>
       getUserApplications(userId, params, accessToken),
     placeholderData: keepPreviousData,
-    refetchOnMount: false,
+    refetchOnMount: true,
     enabled: !!accessToken,
   });
 

@@ -29,10 +29,10 @@ export function OfferListingItem({
   company,
   hasApplication,
 }: Props): ReactElement {
-  const { logoUrl, name } = company;
+  const { id: companyId, logoUrl, name } = company;
 
   return (
-    <Link to={`${ROUTER_PATHS.OFFERS}/${id}`}>
+    <Link to={`${ROUTER_PATHS.OFFERS}/${companyId}/${id}`}>
       <article className={styles.container}>
         <CompanyLogo type="medium" url={logoUrl} hasPadding hasRadius />
         <div className={styles.data}>
