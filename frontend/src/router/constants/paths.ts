@@ -22,4 +22,6 @@ export const ROUTER_PATHS = {
   COMPANY_UPDATE_OFFERS: '/company-offers/:offerId/update',
   ADMIN_USERS: '/admin-users',
   ADMIN_COMPANIES: '/admin-companies',
+  NOT_FOUND: '/404',
+  INTERNAL_SERVER_ERROR: '/500',
 };

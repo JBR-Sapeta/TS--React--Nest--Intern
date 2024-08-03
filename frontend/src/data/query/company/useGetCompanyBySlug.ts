@@ -18,6 +18,7 @@ export async function getCompanyBySlug(
 
 type UseGetCompanyBySlugProps = {
   slug: string;
+  isValid: boolean;
 };
 
 type UseGetCompanyBySlug = {
@@ -28,11 +29,13 @@ type UseGetCompanyBySlug = {
 
 export function useGetCompanyBySlug({
   slug,
+  isValid,
 }: UseGetCompanyBySlugProps): UseGetCompanyBySlug {
   const { isLoading, data, error } = useQuery({
     queryKey: [QUERY_KEY.COMPANY, slug],
     queryFn: async (): Promise<CompanyDataResponse> => getCompanyBySlug(slug),
     refetchOnMount: false,
+    enabled: isValid,
   });
 
   return {

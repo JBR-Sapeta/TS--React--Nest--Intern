@@ -20,12 +20,13 @@ import {
 import { CreateBranchView, UpdateBranchView } from '@Views/branch';
 import {
   CompanyListingView,
+  CompanyView,
   CreateCompanyView,
   UpdateCompanyView,
   UploadImagesView,
   UserCompanyView,
 } from '@Views/company';
-import { NotFoundView } from '@Views/errors';
+import { InternalServerErrorView, NotFoundView } from '@Views/errors';
 import {
   CompanyOffersView,
   CompanyOfferView,
@@ -46,13 +47,14 @@ import {
 
 const ROUTER = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout />} errorElement={<NotFoundView />}>
+    <Route
+      path="/"
+      element={<Layout />}
+      errorElement={<InternalServerErrorView />}
+    >
       <Route path="/" element={<Navigate to={ROUTER_PATHS.OFFERS} />} />
       <Route path={ROUTER_PATHS.COMPANIES} element={<CompanyListingView />} />
-      <Route
-        path={`${ROUTER_PATHS.COMPANIES}/:companyId`}
-        element={<CompanyListingView />}
-      />
+      <Route path={ROUTER_PATHS.COMPANIES_VIEW} element={<CompanyView />} />
       <Route path={ROUTER_PATHS.OFFERS} element={<OfferListingView />} />
       <Route
         path={`${ROUTER_PATHS.OFFERS}/:offerId`}
@@ -127,6 +129,12 @@ const ROUTER = createBrowserRouter(
         />
         <Route path={ROUTER_PATHS.ADMIN_USERS} element={<UsersView />} />
       </Route>
+      <Route
+        path={ROUTER_PATHS.INTERNAL_SERVER_ERROR}
+        element={<InternalServerErrorView />}
+      />
+      <Route path={ROUTER_PATHS.NOT_FOUND} element={<NotFoundView />} />
+      <Route path="*" element={<NotFoundView />} />
     </Route>
   )
 );

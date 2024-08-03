@@ -1,4 +1,5 @@
 export { CompanyListing } from './CompanyListing/CompanyListing';
+export { CompanyProfil } from './CompanyProfil/CompanyProfil';
 export { CreateCompanyForm } from './CreateCompanyForm/CreateCompanyForm';
 export { UpdateCompanyForm } from './UpdateCompanyForm/UpdateCompanyForm';
 export { UploadImagesForm } from './UploadImagesForm/UploadImagesForm';
