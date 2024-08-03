@@ -2,6 +2,7 @@
   "extends": "stylelint-config-standard",
   "rules": {
     "selector-pseudo-class-no-unknown": null,
-    "selector-class-pattern": null
+    "selector-class-pattern": null,
+    "no-descending-specificity": null
   }
 }

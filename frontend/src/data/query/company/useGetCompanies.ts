@@ -6,7 +6,11 @@ import type { Nullable } from '@Common/types';
 
 import { isNotNil } from 'ramda';
 import { QUERY_KEY } from '../../constant';
-import type { CompanySearchParams, CompanyPrewievsResponse } from '../../types';
+import type {
+  CompanySearchParams,
+  CompanyPrewievsResponse,
+  CompanyPrewiev,
+} from '../../types';
 
 export async function getCompanies(
   params: CompanySearchParams
@@ -26,7 +30,9 @@ type UseGetCompaniesProps = {
 
 type UseGetCompanies = {
   isLoading: boolean;
-  companies?: CompanyPrewievsResponse;
+  companies?: CompanyPrewiev[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -41,7 +47,9 @@ export function useGetCompanies({
 
   return {
     isLoading,
-    companies: data,
+    companies: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }

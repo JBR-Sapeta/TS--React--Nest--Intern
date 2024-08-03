@@ -3,9 +3,10 @@ import L from 'leaflet';
 
 type Props = {
   position: [number, number];
+  zoom?: number;
 };
 
-export function MapCenterPosition({ position }: Props): null {
+export function MapCenterPosition({ position, zoom }: Props): null {
   const map = useMap();
 
   const closeAllPopups = () => {
@@ -18,6 +19,6 @@ export function MapCenterPosition({ position }: Props): null {
 
   closeAllPopups();
 
-  map.setView(position);
+  map.setView(position, zoom);
   return null;
 }

@@ -9,13 +9,13 @@ import type {
   AdminCompanySearchParamsState,
 } from '@Hooks/index';
 
-import styles from './CompanySearchParams.module.css';
+import styles from './AdminCompanySearchParams.module.css';
 
 type Props = UseAdminCompanySearchParams & {
   setParams: (data: AdminCompanySearchParamsState) => void;
 };
 
-export function CompanySearchParams({
+export function AdminCompanySearchParams({
   values,
   changeName,
   changeSlug,
@@ -68,7 +68,7 @@ export function CompanySearchParams({
             <span>Dodatkowe dane </span>
             <CheckboxInput
               name="owner"
-              label={{ id: '3-owner', text: 'Użytkownik' }}
+              label={{ id: '4-owner', text: 'Użytkownik' }}
               value={values.owner}
               onChange={changeOwner}
             />
@@ -77,7 +77,7 @@ export function CompanySearchParams({
             <span>Status</span>
             <CheckboxInput
               name="isVerified"
-              label={{ id: '3-isVerified', text: 'Zweryfikowane' }}
+              label={{ id: '5-isVerified', text: 'Zweryfikowane' }}
               value={values.isVerified}
               onChange={changeIsVerified}
             />

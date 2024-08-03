@@ -9,8 +9,8 @@ export type CompanySearchParams = {
   limit?: number;
   city?: string;
   region?: string;
-  long?: number;
-  lat?: number;
+  long?: string;
+  lat?: string;
   range?: string;
   categories?: string;
 };

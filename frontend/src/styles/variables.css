@@ -146,6 +146,6 @@ body.dark {
   --color-green-dark: var(--color-green-100);
   --color-black: var(--color-strict-white);
   --color-gray-light: var(--color-gray-800);
-  --color-gray: var(--color-gray-600);
+  --color-gray: var(--color-gray-700);
   --color-gray-dark: var(--color-gray-500);
 }

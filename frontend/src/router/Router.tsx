@@ -18,8 +18,8 @@ import {
   SignInView,
 } from '@Views/auth';
 import { CreateBranchView, UpdateBranchView } from '@Views/branch';
-import { CompanyListingView } from '@Views/companies';
 import {
+  CompanyListingView,
   CreateCompanyView,
   UpdateCompanyView,
   UploadImagesView,
@@ -48,7 +48,7 @@ const ROUTER = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />} errorElement={<NotFoundView />}>
       <Route path="/" element={<Navigate to={ROUTER_PATHS.OFFERS} />} />
-      <Route path={ROUTER_PATHS.COMPANIES} element={<OfferListingView />} />
+      <Route path={ROUTER_PATHS.COMPANIES} element={<CompanyListingView />} />
       <Route
         path={`${ROUTER_PATHS.COMPANIES}/:companyId`}
         element={<CompanyListingView />}
@@ -56,7 +56,7 @@ const ROUTER = createBrowserRouter(
       <Route path={ROUTER_PATHS.OFFERS} element={<OfferListingView />} />
       <Route
         path={`${ROUTER_PATHS.OFFERS}/:offerId`}
-        element={<CompanyListingView />}
+        element={<OfferListingView />}
       />
 
       <Route element={<PublicRoute />}>

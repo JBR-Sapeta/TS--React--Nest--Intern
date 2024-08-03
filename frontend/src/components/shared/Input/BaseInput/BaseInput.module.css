@@ -75,6 +75,21 @@
   }
 }
 
+.disabled {
+  & label {
+    color: var(--color-gray);
+  }
+
+  & input {
+    border: 1px solid var(--color-gray);
+    color: var(--color-gray);
+  }
+
+  & svg {
+    color: var(--color-gray);
+  }
+}
+
 .container input:focus {
   outline: none;
 }

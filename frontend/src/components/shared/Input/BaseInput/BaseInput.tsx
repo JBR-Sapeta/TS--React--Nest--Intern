@@ -42,6 +42,7 @@ function BaseInput({
     {
       [styles.active]: focused,
       [styles.error]: !!error,
+      [styles.disabled]: disabled,
     },
     className
   );

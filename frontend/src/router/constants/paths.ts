@@ -4,7 +4,7 @@ export const ROUTER_PATHS = {
   AUTH_INFO: '/auth/info',
   RESET: '/reset',
   COMPANIES: '/companies',
-  COMPANIES_VIEW: '/companies/:companyId',
+  COMPANIES_VIEW: '/companies/:slug',
   OFFERS: '/offers',
   OFFERS_VIEW: '/offers/:offerId',
   PROFILE: '/profile',
