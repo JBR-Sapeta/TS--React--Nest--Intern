@@ -4,7 +4,7 @@ import { BsFillGrid3X3GapFill } from 'react-icons/bs';
 import { MdSearch } from 'react-icons/md';
 
 import { removeEmptyValues } from '@Common/functions';
-import { Optional } from '@Common/types';
+import { Coords, Optional } from '@Common/types';
 import {
   CompaniesMap,
   CompanyListingItem,
@@ -19,8 +19,7 @@ import { useCompanySearchParams, usePagination } from '@Hooks/index';
 import styles from './CompanyListing.module.css';
 
 export function CompanyListing(): ReactElement {
-  const [userLocation, setUserLocation] =
-    useState<Optional<[number, number]>>();
+  const [userLocation, setUserLocation] = useState<Optional<Coords>>();
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryPreview[]
   >([]);

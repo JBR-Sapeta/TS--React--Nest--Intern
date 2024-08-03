@@ -9,6 +9,11 @@ export type {
   UseCompanySearchParams,
   CompanySearchParamsState,
 } from './useCompanySearchParams/useCompanySearchParams';
+export { useOfferSearchParams } from './useOfferSearchParams/useOfferSearchParams';
+export type {
+  UseOfferSearchParams,
+  OfferSearchParamsState,
+} from './useOfferSearchParams/useOfferSearchParams';
 export { useUserSearchParams } from './useUserSearchParams/useUserSearchParams';
 export type {
   UseUserSearchParams,

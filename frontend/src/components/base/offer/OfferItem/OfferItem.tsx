@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from 'react';
 import type { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
 import { BiCoinStack } from 'react-icons/bi';
 import { BsBriefcase } from 'react-icons/bs';
 import { FaPen, FaTrash } from 'react-icons/fa';
@@ -26,14 +24,9 @@ import styles from './OfferItem.module.css';
 type Props = {
   companyId: string;
   offer: OfferPreview;
-  isOwner?: boolean;
 };
 
-export function OfferItem({
-  companyId,
-  offer,
-  isOwner = false,
-}: Props): ReactElement {
+export function OfferItem({ companyId, offer }: Props): ReactElement {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -56,7 +49,7 @@ export function OfferItem({
   } = offer;
   const { logoUrl, name } = company;
 
-  return isOwner ? (
+  return (
     <article className={styles.container}>
       <CompanyLogo type="medium" url={logoUrl} hasPadding hasRadius />
       <div className={styles.data}>
@@ -120,40 +113,5 @@ export function OfferItem({
         </Modal>
       )}
     </article>
-  ) : (
-    <Link to={`${ROUTER_PATHS.OFFERS}/${id}`}>
-      <article className={styles.container}>
-        <CompanyLogo type="medium" url={logoUrl} hasPadding hasRadius />
-        <div className={styles.data}>
-          <div className={styles.header}>
-            <h3>{title}</h3>
-          </div>
-          <div className={styles.baseInfo}>
-            <p>
-              Stanowisko: <span>{position}</span>
-            </p>
-            <p>
-              Firma: <span>{name}</span>
-            </p>
-            <p>
-              Lokalizacja: <span>{locations.join(',')}</span>
-            </p>
-          </div>
-          <div className={styles.otherInfo}>
-            <p className={styles.p}>
-              <LuScrollText />
-              {EMPLOYMENT_TYPE_MAP.get(employmentTypeId)}
-            </p>
-            <p className={styles.p}>
-              <BiCoinStack />
-              {SALARY_MAP.get(isPaid)}
-            </p>
-            <p className={styles.p}>
-              <BsBriefcase /> {OPERATING_MODE_MAP.get(operatingModeId)}
-            </p>
-          </div>
-        </div>
-      </article>
-    </Link>
   );
 }

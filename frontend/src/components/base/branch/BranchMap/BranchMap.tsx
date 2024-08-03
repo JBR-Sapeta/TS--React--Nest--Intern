@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import { Branch } from '@Data/types';
@@ -7,6 +8,11 @@ import { Branch } from '@Data/types';
 import { MapCenterPosition } from '../../../shared';
 
 import styles from './BranchMap.module.css';
+
+const BLUE_MARKER = new Icon({
+  iconUrl: '/svg/blue_marker.svg',
+  iconSize: [48, 48],
+});
 
 type Props = {
   currentBranch: Branch;
@@ -37,7 +43,11 @@ export function BranchMap({ currentBranch, branches }: Props): ReactElement {
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
         {branches.map(({ id, name, address }) => (
-          <Marker key={id} position={[address.lat, address.long]}>
+          <Marker
+            key={id}
+            position={[address.lat, address.long]}
+            icon={BLUE_MARKER}
+          >
             <Popup>
               <div>
                 <p>{name}</p>

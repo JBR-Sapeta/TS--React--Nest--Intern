@@ -8,13 +8,13 @@ export type OfferSearchParams = {
   limit?: number;
   city?: string;
   region?: string;
-  long?: number;
-  lat?: number;
+  long?: string;
+  lat?: string;
   range?: string;
   categories?: string;
-  employmentTypeId?: number;
-  operatingModeId?: number;
-  isPaid?: boolean;
+  employmentTypeId?: string;
+  operatingModeId?: string;
+  isPaid?: string;
 };
 
 export type FullOfferDataResponse = ResponseWithData<FullOfferData>;
@@ -54,7 +54,7 @@ export type OfferData = {
 };
 
 export type CompanyOffersResponse = ResponseWithData<OfferPreview[]>;
-export type OfferPreviewsResponse = ResponseWithPagination<OfferPreview[]>;
+export type OfferPreviewsResponse = ResponseWithPagination<OfferPreview>;
 export type OfferPreview = {
   id: number;
   title: string;

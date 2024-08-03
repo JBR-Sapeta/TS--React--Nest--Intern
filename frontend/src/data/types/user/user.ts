@@ -11,7 +11,7 @@ export type UserProfile = {
   email: string;
   phoneNumber: Nullable<string>;
   roles: Role[];
-  applications: string[];
+  applications: number[];
   createdAt: string;
 };
 

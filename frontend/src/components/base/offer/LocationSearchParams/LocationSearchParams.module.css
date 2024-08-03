@@ -1,0 +1,35 @@
+.inputs {
+  display: flex;
+  justify-content: space-between;
+}
+
+.region {
+  width: 220px;
+}
+
+.city {
+  width: 250px;
+}
+
+.range {
+  width: 120px;
+}
+
+.span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-bottom: var(--space-8);
+  font-size: var(--font-p-16);
+  color: var(--color-text);
+
+  & svg {
+    color: var(--color-element-icon);
+  }
+}
+
+.active {
+  & svg {
+    color: var(--color-red);
+  }
+}

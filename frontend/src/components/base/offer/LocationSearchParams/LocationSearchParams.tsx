@@ -9,27 +9,31 @@ import clsx from 'clsx';
 import { RANGE_OPTIONS, REGION_OPTIONS } from '@Common/constants';
 import { Coords, Optional } from '@Common/types';
 import { BaseInput, CheckboxInput, SelectInput } from '@Components/shared';
-import type { UseCompanySearchParams } from '@Hooks/index';
+import type { UseOfferSearchParams } from '@Hooks/index';
 
-import styles from './CompanySearchParams.module.css';
+import styles from './LocationSearchParams.module.css';
 
 type Props = Omit<
-  UseCompanySearchParams,
-  'setCategoriesParam' | 'changeSearchParams'
+  UseOfferSearchParams,
+  'setCategoriesParam' | 'changeSearchParams' | 'offerParams'
 > & {
   setUserLocation: Dispatch<SetStateAction<Optional<Coords>>>;
 };
 
-export function CompanySearchParams({
+// @ TO DO - unify with CompanySearchParams
+
+export function LocationSearchParams({
   values,
-  setCityParam,
-  setLatParam,
-  setLongParam,
-  setRangeParam,
-  setRegionParam,
-  changeCity,
-  changeRegion,
-  changeRange,
+  locationParams: {
+    setCityParam,
+    setLatParam,
+    setLongParam,
+    setRangeParam,
+    setRegionParam,
+    changeCity,
+    changeRegion,
+    changeRange,
+  },
   setUserLocation,
 }: Props): ReactElement {
   const { enqueueSnackbar } = useSnackbar();

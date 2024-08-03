@@ -23,12 +23,12 @@ export function CompanyOffers({ companyId }: Props): Nullable<ReactElement> {
     <section className={styles.section}>
       <div>
         <OfferHeader text="Aktywne Rekrutacje" isActive />
-        <OfferList companyId={companyId} offers={activeOffers} isOwner />
+        <OfferList companyId={companyId} offers={activeOffers} />
         <AddOfferLink />
       </div>
       <div>
         <OfferHeader text="Zakończone Rekrutacje" />
-        <OfferList companyId={companyId} offers={inactiveOffers} isOwner />
+        <OfferList companyId={companyId} offers={inactiveOffers} />
       </div>
     </section>
   );

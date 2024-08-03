@@ -6,7 +6,11 @@ import { convertToQueryParams } from '@Common/functions';
 import type { Nullable } from '@Common/types';
 
 import { QUERY_KEY } from '../../constant';
-import type { OfferPreviewsResponse, OfferSearchParams } from '../../types';
+import type {
+  OfferPreview,
+  OfferPreviewsResponse,
+  OfferSearchParams,
+} from '../../types';
 
 export async function getOffers(
   params: OfferSearchParams
@@ -26,7 +30,9 @@ type UseGetOffersProps = {
 
 type UseGetOffers = {
   isLoading: boolean;
-  offers?: OfferPreviewsResponse;
+  offers?: OfferPreview[];
+  totalPages: number;
+  currentPage: number;
   error: Nullable<Error>;
 };
 
@@ -39,7 +45,9 @@ export function useGetOffers({ params }: UseGetOffersProps): UseGetOffers {
 
   return {
     isLoading,
-    offers: data,
+    offers: data ? data.data : undefined,
+    currentPage: data ? data.pageNumber : 0,
+    totalPages: data ? data.totalPages : 1,
     error,
   };
 }
