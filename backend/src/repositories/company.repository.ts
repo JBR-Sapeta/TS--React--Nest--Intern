@@ -17,7 +17,7 @@ import {
   CompanyParams,
   PaginationParams,
   addAddressParamsToQueryBuilder,
-  addCategoriesParamsToQueryBuilder,
+  addCategoriesParamsToCompanyQueryBuilder,
   addCompanyAdminParamsToQueryBuilder,
   addCompanyParamsToQueryBuilder,
   addPaginationParamsToQueryBuilder,
@@ -179,7 +179,7 @@ export class CompanyRepository extends Repository<CompanyEntity> {
         .leftJoinAndSelect('branch.address', 'address')
         .where('company.is_verified = :isVerified', { isVerified: true });
 
-      addCategoriesParamsToQueryBuilder(query, categoreisParams);
+      addCategoriesParamsToCompanyQueryBuilder(query, categoreisParams);
       addAddressParamsToQueryBuilder(query, locationParams);
       addPaginationParamsToQueryBuilder(query, paginationParams);
 

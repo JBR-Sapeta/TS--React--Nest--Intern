@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { isNotNil, isEmpty } from 'ramda';
+import { CategoryEntity } from 'src/entities';
 import type { SelectQueryBuilder } from 'typeorm';
 
 export class CategoriesParams {
@@ -24,11 +25,44 @@ export class CategoriesParams {
   categories?: number[];
 }
 
-export function addCategoriesParamsToQueryBuilder<T>(
+export function addCategoriesParamsToCompanyQueryBuilder<T>(
   queryBuilder: SelectQueryBuilder<T>,
   { categories }: CategoriesParams,
 ) {
   if (isNotNil(categories) && !isEmpty(categories)) {
-    queryBuilder.andWhere('category.id IN (:...categories)', { categories });
+    queryBuilder.andWhere(
+      (qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('1')
+          .from(CategoryEntity, 'category')
+          .innerJoin('category.companies', 'c', 'c.id = company.id')
+          .where('category.id IN (:...categories)')
+          .getQuery();
+        return `EXISTS ${subQuery}`;
+      },
+      { categories },
+    );
+  }
+}
+
+export function addCategoriesParamsToOfferQueryBuilder<T>(
+  queryBuilder: SelectQueryBuilder<T>,
+  { categories }: CategoriesParams,
+) {
+  if (isNotNil(categories) && !isEmpty(categories)) {
+    queryBuilder.andWhere(
+      (qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('1')
+          .from(CategoryEntity, 'category')
+          .innerJoin('category.offers', 'o', 'o.id = offer.id')
+          .where('category.id IN (:...categories)')
+          .getQuery();
+        return `EXISTS ${subQuery}`;
+      },
+      { categories },
+    );
   }
 }

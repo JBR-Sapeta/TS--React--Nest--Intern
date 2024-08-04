@@ -4,7 +4,8 @@ export {
 } from './address-query-params';
 export {
   CategoriesParams,
-  addCategoriesParamsToQueryBuilder,
+  addCategoriesParamsToCompanyQueryBuilder,
+  addCategoriesParamsToOfferQueryBuilder,
 } from './categories-query-params';
 export {
   CompanyAdminParams,

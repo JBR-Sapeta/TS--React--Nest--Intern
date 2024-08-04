@@ -15,7 +15,7 @@ import {
   OfferParams,
   PaginationParams,
   addAddressParamsToQueryBuilder,
-  addCategoriesParamsToQueryBuilder,
+  addCategoriesParamsToOfferQueryBuilder,
   addOfferParamsToQueryBuilder,
   addPaginationParamsToQueryBuilder,
 } from '../common/classes/params';
@@ -65,7 +65,7 @@ export class OfferRepository extends Repository<OfferEntity> {
         .andWhere('offer.expirationDate > :now', { now });
 
       addOfferParamsToQueryBuilder(query, offerParams);
-      addCategoriesParamsToQueryBuilder(query, categoreisParams);
+      addCategoriesParamsToOfferQueryBuilder(query, categoreisParams);
       addAddressParamsToQueryBuilder(query, locationParams);
       addPaginationParamsToQueryBuilder(query, paginationParams);
 
