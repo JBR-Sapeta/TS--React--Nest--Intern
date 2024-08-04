@@ -45,7 +45,7 @@ class UserProfileDto {
     this.createdAt = user.createdAt.toISOString();
     this.roles = user.roles.map((role) => new RoleDto(role));
     this.applications = user.applications
-      ? user.applications.map((app) => app.id)
+      ? user.applications.map((app) => app.offerId)
       : [];
   }
 }
