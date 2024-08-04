@@ -694,6 +694,7 @@ describe('CompanyController (e2e)', () => {
         'logoUrl',
         'size',
         'locations',
+        'branches',
         'categories',
       ]);
     });

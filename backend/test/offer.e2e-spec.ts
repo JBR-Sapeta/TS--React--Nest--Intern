@@ -681,6 +681,7 @@ describe('OfferController (e2e)', () => {
         'employmentTypeId',
         'operatingModeId',
         'locations',
+        'branches',
         'categories',
         'company',
       ]);
@@ -952,6 +953,7 @@ describe('OfferController (e2e)', () => {
         'employmentTypeId',
         'operatingModeId',
         'locations',
+        'branches',
         'categories',
         'company',
       ]);

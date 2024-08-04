@@ -3,8 +3,9 @@ import { Expose } from 'class-transformer';
 
 import { OfferEntity } from '../../../entities';
 
-import { CategoryPreviewDto } from '../../../category/dto/response';
 import { BaseCompanyDto } from '../../../company/dto/response';
+import { BranchPreviewDto } from '../../../branch/dto/response';
+import { CategoryPreviewDto } from '../../../category/dto/response';
 
 export class OfferPreviewDto {
   @ApiProperty({ example: 356 })
@@ -43,6 +44,10 @@ export class OfferPreviewDto {
   @Expose()
   public locations: string[];
 
+  @ApiProperty({ isArray: true, type: BranchPreviewDto })
+  @Expose()
+  public branches: BranchPreviewDto[];
+
   @ApiProperty({ isArray: true, type: CategoryPreviewDto })
   @Expose()
   public categories: CategoryPreviewDto[];
@@ -63,6 +68,7 @@ export class OfferPreviewDto {
       ...new Set(branches.map((branch) => branch.address.city)),
     ];
     this.company = new BaseCompanyDto(company);
+    this.branches = branches.map((branch) => new BranchPreviewDto(branch));
     this.categories = categories.map(
       (category) => new CategoryPreviewDto(category),
     );

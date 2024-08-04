@@ -3,6 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { CompanyEntity } from '../../../entities';
 
+import { BranchPreviewDto } from '../../../branch/dto/response';
 import { CategoryPreviewDto } from '../../../category/dto/response';
 
 export class CompanyPreviewDto {
@@ -32,6 +33,10 @@ export class CompanyPreviewDto {
   @Expose()
   public locations: string[];
 
+  @ApiProperty({ isArray: true, type: BranchPreviewDto })
+  @Expose()
+  public branches: BranchPreviewDto[];
+
   @ApiProperty({ isArray: true, type: CategoryPreviewDto })
   @Expose()
   public categories: CategoryPreviewDto[];
@@ -40,7 +45,7 @@ export class CompanyPreviewDto {
     this.locations = [
       ...new Set(branches.map((branch) => branch.address.city)),
     ];
-
+    this.branches = branches.map((branch) => new BranchPreviewDto(branch));
     this.categories = categories.map(
       (category) => new CategoryPreviewDto(category),
     );
