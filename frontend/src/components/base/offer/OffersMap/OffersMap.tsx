@@ -37,11 +37,11 @@ type OfferMarkers = {
 };
 
 type Props = {
-  userLocation?: Coords;
   offers: OfferPreview[];
+  userLocation?: Coords;
 };
 
-export function OffersMap({ userLocation, offers }: Props): ReactElement {
+export function OffersMap({ offers, userLocation }: Props): ReactElement {
   const userLocationRef = useRef(userLocation);
   const [mapPosition, setMapPosition] = useState<MapLocation>(DEFAULT_LOCATION);
 
@@ -127,7 +127,7 @@ export function OffersMap({ userLocation, offers }: Props): ReactElement {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
         />
-        {Object.values(offerMarkers).map((array) => (
+        {offerMarkers.map((array) => (
           <Marker
             key={array[0].branchId + array[0].offerId}
             position={[array[0].address.lat, array[0].address.long]}

@@ -54,7 +54,10 @@ export function CompanyListing(): ReactElement {
     <section className={styles.section}>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.map}>
-          <CompaniesMap userLocation={userLocation} />
+          <CompaniesMap
+            userLocation={userLocation}
+            companies={companies || []}
+          />
           <CompanySearchParams
             values={values}
             {...functions}
