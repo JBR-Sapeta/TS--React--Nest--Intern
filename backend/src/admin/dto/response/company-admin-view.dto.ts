@@ -21,6 +21,10 @@ export class CompanyAdminViewDto {
   @Expose()
   public email: string;
 
+  @ApiProperty({ example: '725 889 528' })
+  @Expose()
+  public phoneNumber: string | null;
+
   @ApiProperty({
     example: `https://intern-images-development.s3.eu-north-1.amazonaws.com/new-company_logo_f1963095-2166-495c-bd64-954269c3af76`,
   })

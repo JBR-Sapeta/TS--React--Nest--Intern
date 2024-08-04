@@ -278,6 +278,7 @@ describe('AppController (e2e)', () => {
         'name',
         'slug',
         'email',
+        'phoneNumber',
         'logoUrl',
         'size',
         'isVerified',
