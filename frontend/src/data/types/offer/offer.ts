@@ -66,6 +66,7 @@ export type OfferPreview = {
   operatingModeId: number;
   locations: string[];
   categories: CategoryPreview[];
+  branches: Branch[];
   company: BaseCompanyData;
 };
 

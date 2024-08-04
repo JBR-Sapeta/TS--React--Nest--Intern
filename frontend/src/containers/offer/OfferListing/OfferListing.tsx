@@ -76,7 +76,7 @@ export function OfferListing({ applications }: Props): ReactElement {
 
         <div className={styles.right}>
           <div className={styles.map}>
-            <OffersMap userLocation={userLocation} />
+            <OffersMap userLocation={userLocation} offers={offers || []} />
             <LocationSearchParams
               values={values}
               locationParams={locationParams}

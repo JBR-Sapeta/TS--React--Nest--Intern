@@ -28,8 +28,8 @@ export type FullCompanyData = {
   size: number;
   isVerified: boolean;
   createdAt: string;
-  categories: CategoryPreview[];
   branches: Branch[];
+  categories: CategoryPreview[];
 };
 
 export type CompanyDataResponse = ResponseWithData<CompanyData>;
@@ -68,6 +68,7 @@ export type CompanyPrewiev = {
   logoUrl: Nullable<string>;
   size: number;
   locations: string[];
+  branches: Branch[];
   categories: CategoryPreview[];
 };
 
