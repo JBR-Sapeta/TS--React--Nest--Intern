@@ -2,8 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
 import { isNotNil, isEmpty } from 'ramda';
-import { CategoryEntity } from 'src/entities';
 import type { SelectQueryBuilder } from 'typeorm';
+
+import { CategoryEntity } from '../../../entities';
 
 export class CategoriesParams {
   @ApiProperty({

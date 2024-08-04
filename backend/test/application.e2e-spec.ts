@@ -1275,6 +1275,7 @@ describe('ApplicationController (e2e)', () => {
 
       expect(Object.keys(data[0].offer)).toEqual([
         'id',
+        'slug',
         'title',
         'position',
         'companyId',

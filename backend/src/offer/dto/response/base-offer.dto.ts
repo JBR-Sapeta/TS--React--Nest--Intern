@@ -8,6 +8,10 @@ export class BaseOfferDto {
   @Expose()
   public id: string;
 
+  @ApiProperty({ example: 'new-company' })
+  @Expose()
+  public slug: string;
+
   @ApiProperty({ example: 'Accountant Summer Internship' })
   @Expose()
   public title: string;
@@ -36,6 +40,7 @@ export class BaseOfferDto {
     this.companyId = company.id;
     this.companyName = company.name;
     this.logoUrl = company.logoUrl;
+    this.slug = company.slug;
     Object.assign(this, offerData);
   }
 }
