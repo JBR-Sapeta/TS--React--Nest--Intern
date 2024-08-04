@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 
 import { ContentRow } from '@Containers/content';
@@ -8,6 +9,10 @@ import { useGetUserProfile } from '@Data/query/user';
 export function CompanyOffersView(): ReactElement {
   const { userProfile } = useGetUserProfile();
   const { company } = useGetUserCompany({ userId: userProfile?.id });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <ContentRow margin="medium">

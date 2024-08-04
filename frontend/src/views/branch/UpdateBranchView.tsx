@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { Navigate, useParams } from 'react-router';
 import { isNil } from 'ramda';
 
 import { Nullable } from '@Common/types';
@@ -10,14 +11,17 @@ import { useGetUserProfile } from '@Data/query/user';
 import { ROUTER_PATHS } from '@Router/constants';
 
 export function UpdateBranchView(): Nullable<ReactElement> {
-  const navigate = useNavigate();
   const { userProfile } = useGetUserProfile();
   const { company } = useGetUserCompany({ userId: userProfile?.id });
   const { branchId } = useParams();
   const numericBranchId = Number(branchId);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   if (Number.isNaN(numericBranchId)) {
-    navigate(ROUTER_PATHS.COMPANY_VIEW);
+    return <Navigate to={ROUTER_PATHS.COMPANY_VIEW} />;
   }
 
   if (isNil(company)) {

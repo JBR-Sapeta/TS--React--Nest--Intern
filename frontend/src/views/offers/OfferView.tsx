@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 import { Navigate, useParams } from 'react-router';
 import { isNotNil } from 'ramda';
@@ -15,6 +16,10 @@ export function OfferView(): ReactElement {
     offerId: offerId || '',
     companyId: companyId || '',
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return isNotNil(error) ? (
     <Navigate to={ROUTER_PATHS.NOT_FOUND} />

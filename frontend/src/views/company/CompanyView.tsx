@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 import { Navigate, useParams } from 'react-router';
 
@@ -25,6 +26,10 @@ export function CompanyView(): ReactElement {
   });
 
   const isInvalidRoute = !isValid || isNotNil(error);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return isInvalidRoute ? (
     <Navigate to={ROUTER_PATHS.NOT_FOUND} />

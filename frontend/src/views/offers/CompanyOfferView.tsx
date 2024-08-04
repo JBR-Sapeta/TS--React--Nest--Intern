@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
@@ -18,6 +19,10 @@ export function CompanyOfferView(): ReactElement {
   if (Number.isNaN(numericOfferId)) {
     navigate(ROUTER_PATHS.COMPANY_OFFERS);
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <ContentRow margin="medium">
