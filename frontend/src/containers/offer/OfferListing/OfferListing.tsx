@@ -103,7 +103,7 @@ export function OfferListing({ applications }: Props): ReactElement {
             currentPage={currentPage}
             totalPages={totalPages}
             onSetPage={handlePage}
-            classNames={styles.pagination}
+            classNames={styles.paginationTop}
             showPages
           />
         )}
@@ -136,7 +136,7 @@ export function OfferListing({ applications }: Props): ReactElement {
             currentPage={currentPage}
             totalPages={totalPages}
             onSetPage={handlePage}
-            classNames={styles.pagination}
+            classNames={styles.paginationBottom}
           />
         )}
       </div>

@@ -35,6 +35,7 @@ export function ApplicationItem({
 
   const {
     id: offerId,
+    slug,
     companyId,
     title,
     position,
@@ -55,17 +56,13 @@ export function ApplicationItem({
             listClassName={styles.dropdownList}
             isBottom
           >
-            {/* TO DO - change on slug */}
             <DropdownItem
               path={`${ROUTER_PATHS.OFFERS}/${companyId}/${offerId}`}
               isLink
             >
               <FaScroll /> Oferta
             </DropdownItem>
-            <DropdownItem
-              path={`${ROUTER_PATHS.COMPANIES}/${companyId}`}
-              isLink
-            >
+            <DropdownItem path={`${ROUTER_PATHS.COMPANIES}/${slug}`} isLink>
               <FaBuilding /> Firma
             </DropdownItem>
             <DropdownItem onClick={openModal} isLink={false}>

@@ -71,6 +71,7 @@ export type OfferPreview = {
 
 export type BaseOfferData = {
   id: string;
+  slug: string;
   title: string;
   position: string;
   companyId: string;
