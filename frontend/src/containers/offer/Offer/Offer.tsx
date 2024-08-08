@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
+import { isNil } from 'ramda';
 
-import { Nullable } from '@Common/types';
+import { UserRole } from '@Common/enums';
+import { hasRoles } from '@Common/functions';
+import { Nullable, Role } from '@Common/types';
 import { CategoryTag, OfferPreviewHeader } from '@Components/base';
 import { BaseButton, BaseLink, Modal } from '@Components/shared';
 import { CreateApplicationForm } from '@Containers/application';
@@ -12,7 +15,7 @@ import { BranchSection } from '../../branch';
 
 import styles from './Offer.module.css';
 
-type Props = OfferData & { applications: number[] };
+type Props = OfferData & { applications: number[]; userRoles?: Role[] };
 
 export function Offer({
   id: offerId,
@@ -27,6 +30,7 @@ export function Offer({
   categories,
   branches,
   applications,
+  userRoles,
 }: Props): Nullable<ReactElement> {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -39,6 +43,7 @@ export function Offer({
 
   const { id: companyId, logoUrl, size, name, slug } = company;
   const hasApplication = applications.includes(offerId);
+  const isUser = userRoles ? hasRoles(userRoles, [UserRole.USER]) : false;
 
   return (
     <div className={styles.container}>
@@ -66,7 +71,7 @@ export function Offer({
         </div>
         <BranchSection branches={branches} companyId={companyId} />
 
-        {isActive && (
+        {isActive && isUser && (
           <div className={styles.controls}>
             {hasApplication ? (
               <BaseLink
@@ -82,6 +87,19 @@ export function Offer({
                 Aplikuj
               </BaseButton>
             )}
+          </div>
+        )}
+
+        {isNil(userRoles) && (
+          <div className={styles.controls}>
+            <BaseLink
+              size="medium"
+              color="green"
+              path={ROUTER_PATHS.AUTH}
+              className={styles.authLink}
+            >
+              Aplikuj
+            </BaseLink>
           </div>
         )}
       </section>

@@ -26,7 +26,11 @@ export function OfferView(): ReactElement {
   ) : (
     <ContentRow margin="small">
       {offer && (
-        <Offer {...offer} applications={userProfile?.applications || []} />
+        <Offer
+          {...offer}
+          applications={userProfile?.applications || []}
+          userRoles={userProfile?.roles}
+        />
       )}
     </ContentRow>
   );
