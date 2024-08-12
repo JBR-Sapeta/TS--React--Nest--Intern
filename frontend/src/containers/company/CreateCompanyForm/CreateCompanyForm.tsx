@@ -113,7 +113,7 @@ export function CreateCompanyForm(): ReactElement {
           className={styles.button}
           disabled={isPending}
         >
-          Stwórz konto
+          Stwórz profil
         </BaseButton>
       </div>
     </form>

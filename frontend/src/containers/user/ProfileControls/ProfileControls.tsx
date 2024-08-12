@@ -85,7 +85,7 @@ function ProfileControls({ userProfile }: Props): ReactElement {
             color="green"
             path={ROUTER_PATHS.USER_CREATE_COMPANY}
           >
-            Nowa firma
+            Konto firmowe
           </BaseLink>
         )}
       </div>
