@@ -18,7 +18,7 @@ export function BranchSection({
   companyId,
   isOwner,
 }: Props): ReactElement {
-  const [selectedBranch, setSelectedBranch] = useState(branches[0]);
+  const [selectedBranch, setSelectedBranch] = useState(branches.at(0));
 
   return (
     <section className={styles.section}>
@@ -27,7 +27,7 @@ export function BranchSection({
       <BranchList
         companyId={companyId}
         branches={branches}
-        selectedBranchId={selectedBranch.id}
+        selectedBranchId={selectedBranch?.id}
         isOwner={isOwner}
         changeBranch={setSelectedBranch}
       />

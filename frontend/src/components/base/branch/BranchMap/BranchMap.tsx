@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import { DEFAULT_LOCATION, DEFAULT_ZOOM } from '@Common/constants';
 import { Branch } from '@Data/types';
 
 import { MapCenterPosition } from '../../../shared';
@@ -15,16 +16,19 @@ const BLUE_MARKER = new Icon({
 });
 
 type Props = {
-  currentBranch: Branch;
+  currentBranch?: Branch;
   branches: Branch[];
 };
 
 export function BranchMap({ currentBranch, branches }: Props): ReactElement {
-  const {
-    address: { long, lat },
-  } = currentBranch;
+  const long = currentBranch?.address.long;
+  const lat = currentBranch?.address.lat;
 
-  const [mapPosition, setMapPosition] = useState<[number, number]>([lat, long]);
+  const hasBranch = long && lat;
+
+  const [mapPosition, setMapPosition] = useState<[number, number]>(
+    hasBranch ? [lat, long] : DEFAULT_LOCATION.coords
+  );
 
   useEffect(() => {
     if (lat && long) setMapPosition([lat, long]);
@@ -34,7 +38,7 @@ export function BranchMap({ currentBranch, branches }: Props): ReactElement {
     <article className={styles.mapContainer}>
       <MapContainer
         center={mapPosition}
-        zoom={13}
+        zoom={hasBranch ? 13 : DEFAULT_ZOOM}
         scrollWheelZoom
         className={styles.map}
       >

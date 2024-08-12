@@ -74,12 +74,16 @@ export function useCreateCompany(): UseCreateCompany {
     mutationFn: (body) => createCompany(body, accessToken),
     onSuccess: (res) => {
       if (res) {
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
         enqueueSnackbar({
           message: res.message,
           variant: 'success',
         });
-        navigate(ROUTER_PATHS.PROFILE);
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.USER_PROFILE] });
+        queryClient
+          .invalidateQueries({ queryKey: [QUERY_KEY.ACCESS_TOKEN] })
+          .finally(() => {
+            navigate(ROUTER_PATHS.COMPANY_VIEW);
+          });
       }
     },
     onError: (res) => {
