@@ -37,7 +37,7 @@ export class GeocoderService extends GeocoderServiceAbstractClass {
     long,
   }: GeocoderAddress): Promise<boolean> {
     const query = encodeURI(
-      `${country}${region}${postcode}${city}${streetName}${houseNumber}`,
+      `${country} ${region} ${postcode} ${city} ${streetName} ${houseNumber}`,
     );
     const url = `${this.apiUrl}${query}.json?types=address&language=pl&limit=10&access_token=${this.accessToken}`;
 
