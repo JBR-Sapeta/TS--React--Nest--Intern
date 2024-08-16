@@ -48,25 +48,30 @@ export function OffersMap({ offers, userLocation }: Props): ReactElement {
   const userLat = userLocation?.at(0);
   const userLong = userLocation?.at(1);
 
+  const offerLat = offers.at(0)?.branches.at(0)?.address.lat;
+  const offerLong = offers.at(0)?.branches.at(0)?.address.long;
+
   useEffect(() => {
+    const hasUserLocation = userLat && userLong;
+    const hasOfferLocation = offerLat && offerLong;
+
     const cachedLat = userLocationRef.current?.[0];
     const cachedLong = userLocationRef.current?.[1];
 
-    if (
-      userLat &&
-      userLong &&
-      cachedLat !== userLat &&
-      cachedLong !== userLong
-    ) {
+    if (!hasUserLocation && hasOfferLocation) {
+      setMapPosition({ coords: [offerLat, offerLong], zoom: 10 });
+    }
+
+    if (hasUserLocation && cachedLat !== userLat && cachedLong !== userLong) {
       setMapPosition({ coords: [userLat, userLong], zoom: 13 });
       userLocationRef.current = [userLat, userLong];
     }
 
-    if (isNil(userLat) && cachedLat) {
+    if (isNil(userLat) && cachedLat && cachedLong) {
       setMapPosition({ ...DEFAULT_LOCATION, zoom: DEFAULT_ZOOM });
       userLocationRef.current = undefined;
     }
-  }, [userLat, userLong]);
+  }, [userLat, userLong, offerLat, offerLong]);
 
   const offerMarkers: OfferMarkers[][] = useMemo(
     () =>

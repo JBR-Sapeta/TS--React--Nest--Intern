@@ -1,11 +1,11 @@
 import { MapLocation } from '../types';
 
+export const DEFAULT_ZOOM = 6;
+
 export const DEFAULT_LOCATION: MapLocation = {
   coords: [52.331, 19.346],
-  zoom: undefined,
+  zoom: DEFAULT_ZOOM,
 };
-
-export const DEFAULT_ZOOM = 6;
 
 export const REGION_OPTIONS = [
   { value: '', label: 'Wybierz' },
