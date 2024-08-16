@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent, ReactElement } from 'react';
-import { isNil } from 'ramda';
+import { isEmpty, isNil, isNotEmpty, omit } from 'ramda';
 
+import { BranchMap } from '@Components/base';
 import { BaseButton, BaseInput, Hr } from '@Components/shared';
 import { getErrorMessages } from '@Data/utils';
-import { useCreateBranch } from '@Data/query/branch';
+import { useCreateBranch, useGetGeocoderData } from '@Data/query/branch';
+
+import { BranchList } from '../BranchList/BranchList';
 
 import {
-  ADDRESS_FORM_FIELDS,
-  AddressFromData,
+  ADDRESS_SEARCH_PARAMS_FIELDS,
   BRANCH_FIELD,
   BranchFormData,
   validateAddressFormData,
@@ -21,15 +23,11 @@ const BRANCH_INITIAL_STATE: BranchFormData = {
   name: '',
 };
 
-const ADDRESS_INITIAL_STATE: AddressFromData = {
-  country: '',
-  region: '',
+const ADDRESS_PARAMS = {
   postcode: '',
   city: '',
   streetName: '',
   houseNumber: '',
-  lat: '',
-  long: '',
 };
 
 type Props = {
@@ -40,29 +38,65 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
   const { isPending, error, createBranchMutation } = useCreateBranch({
     companyId,
   });
+  const { data: geocoderHints, getGeocoderData } = useGetGeocoderData();
+  const [selectedBranch, setSelectedBranch] = useState(geocoderHints?.at(0));
   const [branchValues, setBranchValues] = useState(BRANCH_INITIAL_STATE);
   const [branchErrors, setBranchErrors] = useState(BRANCH_INITIAL_STATE);
-  const [addressValues, setAddressValues] = useState(ADDRESS_INITIAL_STATE);
-  const [addressErrors, setAddressErrors] = useState(ADDRESS_INITIAL_STATE);
+  const [addressParams, setAddressParams] = useState(ADDRESS_PARAMS);
+  const [addressParamsErrors, setAddressParamsErrors] =
+    useState(ADDRESS_PARAMS);
 
   const onBranchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setBranchValues({ ...branchValues, [e.target.name]: e.target.value });
     setBranchErrors((state) => ({ ...state, [e.target.name]: '' }));
   };
 
-  const onAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setAddressValues({ ...addressValues, [e.target.name]: e.target.value });
-    setAddressErrors((state) => ({ ...state, [e.target.name]: '' }));
+  const onAddressParamsChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setAddressParams({ ...addressParams, [e.target.name]: e.target.value });
+    setAddressParamsErrors((state) => ({ ...state, [e.target.name]: '' }));
+  };
+
+  const findAddressData = () => {
+    if (Object.values(addressParams).every((param) => isNotEmpty(param))) {
+      getGeocoderData(addressParams);
+    } else {
+      const cityError = isEmpty(addressParams.city) ? 'Wprowadź miasto.' : '';
+      const postCodeError = isEmpty(addressParams.postcode)
+        ? 'Wprowadź kod pocztowy.'
+        : '';
+      const streetNameError = isEmpty(addressParams.streetName)
+        ? 'Wprowadź nazwe ulicy.'
+        : '';
+      const houseNumberError = isEmpty(addressParams.houseNumber)
+        ? 'Wprowadź numer budynku.'
+        : '';
+
+      setAddressParamsErrors((state) => ({
+        ...state,
+        city: cityError,
+        postcode: postCodeError,
+        streetName: streetNameError,
+        houseNumber: houseNumberError,
+      }));
+    }
   };
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
 
-    const addressValidationErrors = validateAddressFormData(addressValues);
+    const selectedHint = geocoderHints?.find(
+      (hint) => hint.id === selectedBranch?.id
+    );
+
+    if (isNil(selectedHint)) return;
+
+    const address = omit(['id'], selectedHint?.address);
+
+    const addressValidationErrors = validateAddressFormData(address);
     const branchValidationErrors = validateBranchFormData(branchValues);
 
     if (addressValidationErrors) {
-      setAddressErrors(addressValidationErrors);
+      setAddressParamsErrors(addressValidationErrors);
     }
 
     if (branchValidationErrors) {
@@ -72,11 +106,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
     if (isNil(addressValidationErrors) && isNil(branchValidationErrors)) {
       createBranchMutation({
         name: branchValues.name,
-        address: {
-          ...addressValues,
-          lat: +addressValues.lat,
-          long: +addressValues.long,
-        },
+        address,
       });
     }
   };
@@ -95,29 +125,59 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
             className={styles.companyName}
           />
 
-          {ADDRESS_FORM_FIELDS.map((input) => (
+          {ADDRESS_SEARCH_PARAMS_FIELDS.map((input) => (
             <BaseInput
               inputSize="small"
               key={input.name}
               {...input}
-              onChange={onAddressChange}
-              value={addressValues[input.name]}
-              error={addressErrors[input.name]}
+              onChange={onAddressParamsChange}
+              value={addressParams[input.name]}
+              error={addressParamsErrors[input.name]}
             />
           ))}
+          <p className={styles.manual}>
+            Wpisz adres i kliknij przycisk szukaj. Nastepnie wybierz adres z
+            listy.
+          </p>
+        </div>
+        <div>
+          <BranchMap
+            currentBranch={selectedBranch}
+            branches={geocoderHints || []}
+          />
+          <BranchList
+            companyId={companyId}
+            branches={geocoderHints || []}
+            selectedBranchId={selectedBranch?.id}
+            changeBranch={setSelectedBranch}
+          />
         </div>
         <div className={styles.message}>
           {error && <p>{getErrorMessages(error)}</p>}
         </div>
-        <BaseButton
-          size="medium"
-          color="green"
-          type="submit"
-          className={styles.button}
-          disabled={isPending}
-        >
-          Stwórz oddział
-        </BaseButton>
+        <div className={styles.controls}>
+          <BaseButton
+            size="medium"
+            color="blue"
+            type="button"
+            className={styles.button}
+            disabled={isPending}
+            onClick={findAddressData}
+          >
+            Szukaj
+          </BaseButton>
+          {selectedBranch && (
+            <BaseButton
+              size="medium"
+              color="green"
+              type="submit"
+              className={styles.button}
+              disabled={isPending}
+            >
+              Stwórz oddział
+            </BaseButton>
+          )}
+        </div>
       </form>
     </section>
   );

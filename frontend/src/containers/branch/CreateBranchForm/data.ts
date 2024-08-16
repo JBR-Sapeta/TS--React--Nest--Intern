@@ -2,16 +2,8 @@ import { isInRange, isNotEmptyString } from '@Common/validation';
 
 import { isEmpty } from 'ramda';
 
-type AddressFormFields = {
-  name:
-    | 'country'
-    | 'region'
-    | 'postcode'
-    | 'city'
-    | 'streetName'
-    | 'houseNumber'
-    | 'lat'
-    | 'long';
+type AddressSearchParamsFields = {
+  name: 'postcode' | 'city' | 'streetName' | 'houseNumber';
   type: string;
   label: { id: string; text: string };
   placeholder: string;
@@ -22,32 +14,29 @@ type AddressFormFields = {
   step?: string;
 };
 
-export type AddressFromData = {
+type AddressFromData = {
   country: string;
   region: string;
   postcode: string;
   city: string;
   streetName: string;
   houseNumber: string;
-  lat: string;
-  long: string;
+  lat: number;
+  long: number;
 };
 
-export const ADDRESS_FORM_FIELDS: AddressFormFields[] = [
-  {
-    name: 'country',
-    type: 'text',
-    label: { id: '1-country', text: 'Kraj' },
-    placeholder: '',
-    required: true,
-  },
-  {
-    name: 'region',
-    type: 'text',
-    label: { id: '2-region', text: 'Województwo ' },
-    placeholder: '',
-    required: true,
-  },
+export type AddressSearchParams = {
+  country: string;
+  region: string;
+  postcode: string;
+  city: string;
+  streetName: string;
+  houseNumber: string;
+  lat: number;
+  long: number;
+};
+
+export const ADDRESS_SEARCH_PARAMS_FIELDS: AddressSearchParamsFields[] = [
   {
     name: 'postcode',
     type: 'text',
@@ -75,26 +64,6 @@ export const ADDRESS_FORM_FIELDS: AddressFormFields[] = [
     label: { id: '6-houseNumber', text: 'Numer domu' },
     placeholder: '',
     required: true,
-  },
-  {
-    name: 'lat',
-    type: 'number',
-    label: { id: '7-lat', text: 'Szerokość geograficzna (lat)' },
-    placeholder: '',
-    required: true,
-    min: '-90',
-    max: '90',
-    step: '0.000001',
-  },
-  {
-    name: 'long',
-    type: 'number',
-    label: { id: '8-long', text: 'Długość geograficzna (long)' },
-    placeholder: '',
-    required: true,
-    min: '-180',
-    max: '180',
-    step: '0.000001',
   },
 ];
 
