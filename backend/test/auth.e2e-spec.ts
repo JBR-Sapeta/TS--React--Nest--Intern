@@ -6,7 +6,7 @@ import { DataSource } from 'typeorm';
 
 import { Roles } from './../src/common/enums';
 import { calculateDate } from './../src/common/functions';
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app/app.module';
 import { UserRepository } from './../src/repositories';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';

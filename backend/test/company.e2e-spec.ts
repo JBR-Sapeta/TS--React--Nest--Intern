@@ -16,7 +16,7 @@ import {
 
 import { Roles } from './../src/common/enums';
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app/app.module';
 import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { CacheService } from './../src/cache/cache.service';

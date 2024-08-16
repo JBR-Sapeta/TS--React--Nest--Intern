@@ -9,7 +9,7 @@ import {
   RoleRepository,
 } from './../src/repositories';
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app/app.module';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';

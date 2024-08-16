@@ -14,7 +14,7 @@ import {
   UserRepository,
 } from './../src/repositories';
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app/app.module';
 import { AdminService } from './../src/admin/admin.service';
 import { AuthService } from './../src/auth/auth.service';
 import { BranchService } from './../src/branch/branch.service';

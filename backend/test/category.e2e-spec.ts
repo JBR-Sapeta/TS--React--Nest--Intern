@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app/app.module';
 import { AdminService } from './../src/admin/admin.service';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
