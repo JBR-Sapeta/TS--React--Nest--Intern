@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { AddressEntity } from '../../../entities';
+import { AddressEntity } from '../../../entity';
 
 export class AddressPreviewDto {
   @ApiProperty({ example: 2137 })

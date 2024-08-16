@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { isEmpty, isNil, isNotNil, not } from 'ramda';
 import { DataSource } from 'typeorm';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
   ApplicationRepository,
@@ -21,7 +21,7 @@ import {
   OfferRepository,
   RoleRepository,
   UserRepository,
-} from '../repositories';
+} from '../repository';
 import { SuccessMessageDto } from '../common/classes';
 import {
   AddressParams,

@@ -9,7 +9,7 @@ import {
   EmploymentTypeEntity,
   OfferEntity,
   OperatingModeEntity,
-} from '../entities';
+} from '../entity';
 import {
   ApplicationRepository,
   BranchRepository,
@@ -18,7 +18,7 @@ import {
   EmploymentTypeRepository,
   OfferRepository,
   OperatingModeRepository,
-} from '../repositories';
+} from '../repository';
 
 import { AuthModule } from '../auth/auth.module';
 import { CacheService } from '../cache/cache.service';

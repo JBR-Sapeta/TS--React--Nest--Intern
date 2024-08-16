@@ -4,7 +4,7 @@ import path = require('path');
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
-import { OfferEntity } from './../src/entities';
+import { OfferEntity } from '../src/entity';
 
 import {
   ApplicationRepository,
@@ -12,7 +12,7 @@ import {
   CompanyRepository,
   OfferRepository,
   UserRepository,
-} from './../src/repositories';
+} from './../src/repository';
 
 import { Roles } from './../src/common/enums';
 

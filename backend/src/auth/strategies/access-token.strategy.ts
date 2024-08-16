@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { ENV_KEYS } from '../../common/constants';
 import type { JwtPayload } from '../../common/types';
-import { RoleEntity } from '../../entities';
+import { RoleEntity } from '../../entity';
 
 type JsonWebTokenPayload = {
   userId: string;

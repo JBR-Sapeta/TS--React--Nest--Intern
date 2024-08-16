@@ -9,9 +9,9 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { isEmpty, isNil, isNotNil, not } from 'ramda';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { ApplicationRepository, OfferRepository } from '../repositories';
+import { ApplicationRepository, OfferRepository } from '../repository';
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';
 import { FILE_SIZE_LIMIT } from '../common/config';

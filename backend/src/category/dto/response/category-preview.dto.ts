@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { CategoryEntity } from '../../../entities';
+import { CategoryEntity } from '../../../entity';
 
 export class CategoryPreviewDto {
   @ApiProperty({ example: 10 })

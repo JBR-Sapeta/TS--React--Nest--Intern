@@ -26,7 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import {
   AccessTokenGuard,
   ExtendedAccessTokenGuard,

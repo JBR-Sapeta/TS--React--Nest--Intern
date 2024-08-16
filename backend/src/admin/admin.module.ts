@@ -8,12 +8,12 @@ import {
   OfferEntity,
   RoleEntity,
   UserEntity,
-} from '../entities';
+} from '../entity';
 import {
   CompanyRepository,
   OfferRepository,
   UserRepository,
-} from '../repositories';
+} from '../repository';
 
 import { S3Service } from '../s3/s3.service';
 

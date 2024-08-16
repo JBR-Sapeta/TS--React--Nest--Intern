@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
-import { RoleEntity } from '../entities';
+import { RoleEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import { USER_ROLES_ARRAY } from '../common/config/roles';
 

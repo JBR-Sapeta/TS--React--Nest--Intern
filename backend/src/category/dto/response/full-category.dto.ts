@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { CategoryEntity } from '../../../entities';
+import { CategoryEntity } from '../../../entity';
 import { isEmpty } from 'class-validator';
 
 export class FullCategoryDto {

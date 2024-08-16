@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { isNil, isEmpty, isNotNil, not } from 'ramda';
 
-import { OfferEntity } from '../entities';
+import { OfferEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
   ApplicationRepository,
@@ -18,7 +18,7 @@ import {
   EmploymentTypeRepository,
   OfferRepository,
   OperatingModeRepository,
-} from '../repositories';
+} from '../repository';
 import { DAY_IN_MS, TIME_OF_REMOVAL } from '../common/constants';
 import { SuccessMessageDto } from '../common/classes';
 import {

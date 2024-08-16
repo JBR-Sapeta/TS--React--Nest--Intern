@@ -19,7 +19,7 @@ import {
 } from '../common/classes/params';
 import { PostgresqlErrorCode } from '../common/enums';
 import type { Nullable } from '../common/types';
-import { UserEntity, RoleEntity } from '../entities';
+import { UserEntity, RoleEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 
 export class UserRepository extends Repository<UserEntity> {

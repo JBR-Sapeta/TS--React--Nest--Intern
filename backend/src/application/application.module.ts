@@ -6,13 +6,13 @@ import {
   CompanyEntity,
   OfferEntity,
   UserEntity,
-} from '../entities';
+} from '../entity';
 
 import { AuthModule } from '../auth/auth.module';
 import { CacheService } from '../cache/cache.service';
 import { S3Service } from '../s3/s3.service';
 
-import { ApplicationRepository, OfferRepository } from '../repositories';
+import { ApplicationRepository, OfferRepository } from '../repository';
 
 import { ApplicationController } from './application.controller';
 import { ApplicationService } from './application.service';

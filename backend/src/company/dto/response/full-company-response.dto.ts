@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { CompanyEntity } from '../../../entities';
+import { CompanyEntity } from '../../../entity';
 import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 

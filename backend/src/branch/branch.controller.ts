@@ -21,7 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import { SuccessMessageDto } from '../common/classes';
 import { HEADER } from '../common/docs';
 import { JwtPayload } from '../common/types';

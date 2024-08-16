@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Point, QueryRunner, Repository } from 'typeorm';
 
-import { AddressEntity } from '../entities';
+import { AddressEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import { GeocoderAddress } from '../common/types';
 

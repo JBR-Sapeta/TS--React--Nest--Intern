@@ -9,33 +9,33 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
-import { EmploymentTypeEntity } from '../entities';
+import { OperatingModeEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
-import { EMPLOYMENT_TYPES_ARRAY } from '../common/config';
+import { OPERATING_MODES_ARRAY } from '../common/config';
 import { Nullable } from '../common/types';
 
-export class EmploymentTypeRepository
-  extends Repository<EmploymentTypeEntity>
+export class OperatingModeRepository
+  extends Repository<OperatingModeEntity>
   implements OnApplicationBootstrap
 {
   constructor(
-    @InjectRepository(EmploymentTypeEntity)
-    private readonly repository: Repository<EmploymentTypeEntity>,
+    @InjectRepository(OperatingModeEntity)
+    private readonly repository: Repository<OperatingModeEntity>,
     @Inject(Logger) private readonly logger: LoggerService,
   ) {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
   // ----------------------------------------------------------------------- \\
-  public async getEmploymentTypeById(
-    employmentTypeId: number,
-  ): Promise<Nullable<EmploymentTypeEntity>> {
+  public async getOperatingModeById(
+    operatingModeId: number,
+  ): Promise<Nullable<OperatingModeEntity>> {
     try {
-      const employmentType = await this.findOneBy({ id: employmentTypeId });
-      return employmentType;
+      const operatingMode = await this.findOneBy({ id: operatingModeId });
+      return operatingMode;
     } catch (error) {
       this.logger.error(
-        EmploymentTypeRepository.name + ' - getEmploymentTypeById',
+        OperatingModeRepository.name + ' - getOperatingModeById',
         error.stack,
       );
 
@@ -44,30 +44,30 @@ export class EmploymentTypeRepository
   }
 
   // ----------------------------------------------------------------------- \\
-  public async seedEmploymentTypes(): Promise<void> {
-    let employmentTypes: EmploymentTypeEntity[] = [];
+  public async seedOperatingModes(): Promise<void> {
+    let operatingModes: OperatingModeEntity[] = [];
 
     try {
-      employmentTypes = await this.find();
+      operatingModes = await this.find();
     } catch (error) {
       this.logger.error(
-        EmploymentTypeRepository.name + ' - seedEmploymentTypes',
+        OperatingModeRepository.name + ' - seedOperatingModes',
         error.stack,
       );
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }
 
-    if (isEmpty(employmentTypes)) {
+    if (isEmpty(operatingModes)) {
       try {
         await this.createQueryBuilder()
           .insert()
-          .into(EmploymentTypeEntity)
-          .values(EMPLOYMENT_TYPES_ARRAY)
+          .into(OperatingModeEntity)
+          .values(OPERATING_MODES_ARRAY)
           .execute();
       } catch (error) {
         this.logger.error(
-          EmploymentTypeRepository.name + ' - seedEmploymentTypes',
+          OperatingModeRepository.name + ' - seedOperatingModes',
           error.stack,
         );
       }
@@ -76,6 +76,6 @@ export class EmploymentTypeRepository
 
   // ----------------------------------------------------------------------- \\
   public async onApplicationBootstrap() {
-    await this.seedEmploymentTypes();
+    await this.seedOperatingModes();
   }
 }

@@ -1,5 +1,5 @@
 import { isArray } from 'class-validator';
-import { RoleEntity } from '../../entities';
+import { RoleEntity } from '../../entity';
 import { Roles } from '../enums';
 
 export function hasRole(

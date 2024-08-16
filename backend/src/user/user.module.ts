@@ -7,14 +7,14 @@ import {
   CompanyEntity,
   ApplicationEntity,
   OfferEntity,
-} from '../entities';
+} from '../entity';
 import {
   UserRepository,
   RoleRepository,
   OfferRepository,
   ApplicationRepository,
   CompanyRepository,
-} from '../repositories';
+} from '../repository';
 import { AuthModule } from '../auth/auth.module';
 
 import { S3Service } from '../s3/s3.service';

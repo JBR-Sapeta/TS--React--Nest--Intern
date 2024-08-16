@@ -4,7 +4,7 @@ import { IsOptional } from 'class-validator';
 import { isNotNil, isEmpty } from 'ramda';
 import type { SelectQueryBuilder } from 'typeorm';
 
-import { CategoryEntity } from '../../../entities';
+import { CategoryEntity } from '../../../entity';
 
 export class CategoriesParams {
   @ApiProperty({

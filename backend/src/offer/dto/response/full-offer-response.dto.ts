@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
-import { OfferEntity } from '../../../entities';
+import { OfferEntity } from '../../../entity';
 
 import { FullOfferDto } from './full-offer.dto';
 

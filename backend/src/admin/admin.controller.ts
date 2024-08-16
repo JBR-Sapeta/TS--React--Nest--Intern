@@ -28,7 +28,7 @@ import {
 } from '../common/classes/params';
 import { HEADER } from '../common/docs';
 import { Roles } from '../common/enums';
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 
 import { GetAccessTokentExtendedPayload } from '../auth/decorators';
 import { ExtendedAccessTokenGuard, RolesGuard } from '../auth/guards';

@@ -1,7 +1,7 @@
 import { createParamDecorator } from '@nestjs/common';
 import type { ExecutionContext } from '@nestjs/common';
 
-import { UserEntity } from '../../entities';
+import { UserEntity } from '../../entity';
 
 export const GetAccessTokentExtendedPayload = createParamDecorator(
   (_: never, context: ExecutionContext): UserEntity => {

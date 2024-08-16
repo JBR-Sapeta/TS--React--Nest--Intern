@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { CompanyEntity } from '../../../entities';
+import { CompanyEntity } from '../../../entity';
 
 export class BaseCompanyDto {
   @ApiProperty({ example: '67e42ba9-33df-4244-82a9-fe977293ab20' })

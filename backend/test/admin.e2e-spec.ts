@@ -7,7 +7,7 @@ import {
   CompanyRepository,
   UserRepository,
   RoleRepository,
-} from './../src/repositories';
+} from './../src/repository';
 
 import { AppModule } from '../src/app/app.module';
 import { CacheService } from './../src/cache/cache.service';

@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { SuccessMessageArgs, SuccessMessageDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
-import { BranchEntity } from '../../../entities';
+import { BranchEntity } from '../../../entity';
 
 import { BranchPreviewDto } from './branch-preview.dto';
 

@@ -9,7 +9,7 @@ import {
   CompanyRepository,
   OfferRepository,
   UserRepository,
-} from './../src/repositories';
+} from './../src/repository';
 
 import { AppModule } from '../src/app/app.module';
 import { AdminService } from './../src/admin/admin.service';

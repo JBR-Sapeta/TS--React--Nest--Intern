@@ -10,7 +10,7 @@ import {
   OfferEntity,
   RoleEntity,
   UserEntity,
-} from '../entities';
+} from '../entity';
 import {
   ApplicationRepository,
   CategoryRepository,
@@ -18,7 +18,7 @@ import {
   OfferRepository,
   RoleRepository,
   UserRepository,
-} from '../repositories';
+} from '../repository';
 
 import { AuthModule } from '../auth/auth.module';
 import { S3Service } from '../s3/s3.service';

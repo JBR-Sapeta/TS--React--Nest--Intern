@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { ApplicationEntity } from '../../../entities';
+import { ApplicationEntity } from '../../../entity';
 import { UserPreviewDto } from '../../../user/dto/response';
 
 export class OfferApplicationPreviewDto {

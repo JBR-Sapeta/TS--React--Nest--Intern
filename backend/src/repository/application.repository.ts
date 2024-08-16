@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { ApplicationEntity, OfferEntity, UserEntity } from '../entities';
+import { ApplicationEntity, OfferEntity, UserEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import { Nullable } from '../common/types';
 import { PaginationParams } from '../common/classes/params';

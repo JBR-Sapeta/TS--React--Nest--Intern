@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { UserEntity } from '../../../entities';
+import { UserEntity } from '../../../entity';
 import { PaginationArgs, PaginationDto } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
 

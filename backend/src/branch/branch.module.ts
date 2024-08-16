@@ -7,12 +7,12 @@ import {
   CompanyEntity,
   OfferEntity,
   UserEntity,
-} from '../entities';
+} from '../entity';
 import {
   AddressRepository,
   BranchRepository,
   CompanyRepository,
-} from '../repositories';
+} from '../repository';
 import { AuthModule } from '../auth/auth.module';
 import { GeocoderService } from '../geocoder/geocoder.service';
 

@@ -8,7 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { CategoryEntity, CompanyEntity, UserEntity } from '../entities';
+import { CategoryEntity, CompanyEntity, UserEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import {
   AddressParams,

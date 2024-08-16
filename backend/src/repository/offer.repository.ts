@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, Repository } from 'typeorm';
 
-import { OfferEntity } from '../entities';
+import { OfferEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import {
   AddressParams,

@@ -15,7 +15,7 @@ import {
   CompanyRepository,
   OfferRepository,
   UserRepository,
-} from '../repositories';
+} from '../repository';
 import { SuccessMessageDto } from '../common/classes';
 import { Roles } from '../common/enums';
 

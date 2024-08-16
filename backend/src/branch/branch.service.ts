@@ -10,12 +10,12 @@ import {
 import { DataSource } from 'typeorm';
 import { isEmpty, isNil, isNotNil, not } from 'ramda';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import {
   AddressRepository,
   BranchRepository,
   CompanyRepository,
-} from '../repositories';
+} from '../repository';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { SuccessMessageDto } from '../common/classes';
 

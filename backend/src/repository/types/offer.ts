@@ -1,8 +1,8 @@
-import { BranchEntity } from '../../entities/branch.entity';
-import { CategoryEntity } from '../../entities/category.entity';
-import { CompanyEntity } from '../../entities/company.entity';
-import { EmploymentTypeEntity } from '../../entities/employment-type.entity';
-import { OperatingModeEntity } from '../../entities/operating-mode.entity';
+import { BranchEntity } from '../../entity/branch.entity';
+import { CategoryEntity } from '../../entity/category.entity';
+import { CompanyEntity } from '../../entity/company.entity';
+import { EmploymentTypeEntity } from '../../entity/employment-type.entity';
+import { OperatingModeEntity } from '../../entity/operating-mode.entity';
 
 export type CreateOfferData = {
   title: string;

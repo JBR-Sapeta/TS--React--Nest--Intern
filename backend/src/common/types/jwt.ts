@@ -1,4 +1,4 @@
-import { RoleEntity } from '../../entities';
+import { RoleEntity } from '../../entity';
 
 export type JwtPayload = {
   userId: string;

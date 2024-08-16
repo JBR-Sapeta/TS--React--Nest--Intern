@@ -7,10 +7,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryRunner, Repository } from 'typeorm';
 
-import { AddressEntity, CompanyEntity } from '../entities';
+import { AddressEntity, CompanyEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 import { Nullable } from '../common/types';
-import { BranchEntity } from '../entities/branch.entity';
+import { BranchEntity } from '../entity/branch.entity';
 
 export class BranchRepository extends Repository<BranchEntity> {
   constructor(

@@ -1,8 +1,8 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { CategoryEntity } from '../entities';
-import { CategoryRepository } from '../repositories';
+import { CategoryEntity } from '../entity';
+import { CategoryRepository } from '../repository';
 
 import { CategoryController } from './category.controller';
 import { CategoryService } from './category.service';

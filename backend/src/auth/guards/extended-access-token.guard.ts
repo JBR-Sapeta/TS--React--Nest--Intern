@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
-import { UserEntity } from '../../entities';
+import { UserEntity } from '../../entity';
 import { PL_ERRORS } from '../../locales';
 
 export class ExtendedAccessTokenGuard extends AuthGuard(

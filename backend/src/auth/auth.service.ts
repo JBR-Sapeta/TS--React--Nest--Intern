@@ -13,9 +13,9 @@ import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { equals, isNil, not } from 'ramda';
 
-import { RoleEntity, UserEntity } from '../entities';
+import { RoleEntity, UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
-import { UserRepository, RoleRepository } from '../repositories';
+import { UserRepository, RoleRepository } from '../repository';
 import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
 import { SuccessMessageDto } from '../common/classes';

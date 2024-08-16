@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { OfferEntity } from '../../../entities';
+import { OfferEntity } from '../../../entity';
 
 import { BaseCompanyDto } from '../../../company/dto/response';
 import { BranchPreviewDto } from '../../../branch/dto/response';

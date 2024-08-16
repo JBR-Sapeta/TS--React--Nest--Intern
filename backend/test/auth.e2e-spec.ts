@@ -7,7 +7,7 @@ import { DataSource } from 'typeorm';
 import { Roles } from './../src/common/enums';
 import { calculateDate } from './../src/common/functions';
 import { AppModule } from '../src/app/app.module';
-import { UserRepository } from './../src/repositories';
+import { UserRepository } from './../src/repository';
 import { CacheService } from './../src/cache/cache.service';
 import { MailService } from './../src/mail/mail.service';
 import { GeocoderService } from './../src/geocoder/geocoder.service';

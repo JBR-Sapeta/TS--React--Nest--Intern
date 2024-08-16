@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Repository } from 'typeorm';
 import { isEmpty } from 'ramda';
 
-import { CategoryEntity } from '../entities';
+import { CategoryEntity } from '../entity';
 import { PL_ERRORS } from '../locales';
 
 import { MAIN_CATEGORIES_ARRAY, CATEGORIES_ARRAY } from '../common/config';

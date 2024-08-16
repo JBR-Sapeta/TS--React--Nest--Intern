@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
-import { BranchEntity } from '../../../entities';
+import { BranchEntity } from '../../../entity';
 import { transformDate } from '../../../common/functions';
 
 import { AddressPreviewDto } from './address-preview.dto';

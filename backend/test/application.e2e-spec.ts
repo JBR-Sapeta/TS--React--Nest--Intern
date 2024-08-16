@@ -6,14 +6,14 @@ import { isNil } from 'ramda';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
-import { OfferEntity } from './../src/entities';
+import { OfferEntity } from '../src/entity';
 import {
   BranchRepository,
   CompanyRepository,
   UserRepository,
   OfferRepository,
   ApplicationRepository,
-} from './../src/repositories';
+} from './../src/repository';
 
 import { AppModule } from '../src/app/app.module';
 import { CacheService } from './../src/cache/cache.service';

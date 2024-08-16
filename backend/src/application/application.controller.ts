@@ -28,7 +28,7 @@ import {
 } from '@nestjs/swagger';
 import { Response as ExpressResponse } from 'express';
 
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import { applicationFileFilter } from '../common/functions';
 import { SuccessMessageDto } from '../common/classes';
 import { PaginationParams } from '../common/classes/params';

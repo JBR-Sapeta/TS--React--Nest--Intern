@@ -21,13 +21,13 @@ import { SuccessMessageDto } from '../common/classes';
 import { Roles } from '../common/enums';
 import { hasRole } from '../common/functions';
 import { Nullable } from '../common/types';
-import { UserEntity } from '../entities';
+import { UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import {
   CompanyRepository,
   OfferRepository,
   UserRepository,
-} from '../repositories';
+} from '../repository';
 
 import { S3Service } from '../s3/s3.service';
 

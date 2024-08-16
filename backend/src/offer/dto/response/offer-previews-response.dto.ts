@@ -3,7 +3,7 @@ import { Expose } from 'class-transformer';
 
 import { PaginationDto, PaginationArgs } from '../../../common/classes';
 import { ResponseWithPayload } from '../../../common/interfaces';
-import { OfferEntity } from '../../../entities';
+import { OfferEntity } from '../../../entity';
 
 import { OfferPreviewDto } from './offer-preview.dto';
 

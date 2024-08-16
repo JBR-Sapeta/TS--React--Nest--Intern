@@ -1,5 +1,5 @@
 import { Injectable, Inject, LoggerService, Logger } from '@nestjs/common';
-import { CategoryRepository } from '../repositories';
+import { CategoryRepository } from '../repository';
 import { FullCategoriesResponseDto } from './dto/response';
 
 @Injectable()
