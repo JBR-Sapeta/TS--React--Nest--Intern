@@ -13,7 +13,7 @@ export function usePagination(): UsePagination {
   const [pageNumber, setPageNumber] = useState<number>(() =>
     Number(searchParams.get('page')) > 0 ? Number(searchParams.get('page')) : 0
   );
-  const [limit, setLimit] = useState<number>(21);
+  const [limit, setLimit] = useState<number>(10);
 
   const changePage = useCallback(
     (newPage: number) => {
