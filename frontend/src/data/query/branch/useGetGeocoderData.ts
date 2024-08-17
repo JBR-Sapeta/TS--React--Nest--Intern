@@ -30,12 +30,12 @@ function convertGeocoderDataToBranchesData(data: GeocoderData[]): Branch[] {
       name: `${streetName} ${houseNumber}, ${city} ${postcode}, ${country}`,
       address: {
         id: location.id,
-        country,
-        region: region.trim(),
-        postcode,
-        city,
-        streetName,
-        houseNumber,
+        country: country.trim() || '',
+        region: region.trim() || '',
+        postcode: postcode.trim() || '',
+        city: city.trim() || '',
+        streetName: streetName.trim() || '',
+        houseNumber: houseNumber.trim() || '',
         long,
         lat,
       },
@@ -57,7 +57,9 @@ export async function sendGetGeocoderData({
   streetName,
   houseNumber,
 }: GetGeocoderDataProps): Promise<Branch[]> {
-  const query = encodeURI(`${postcode} ${city} ${streetName} ${houseNumber}`);
+  const query = encodeURI(
+    `Polska ${postcode} ${city} ${streetName} ${houseNumber}`
+  );
 
   const { data } = await axios.get<GeocoderResponse>(
     `${import.meta.env.VITE_GEOCODER_URL}${query}.json?types=address&language=pl&limit=5&access_token=${import.meta.env.VITE_GEOCODER_TOKEN}`

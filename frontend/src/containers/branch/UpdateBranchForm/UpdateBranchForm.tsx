@@ -97,11 +97,11 @@ export function UpdateBranchForm({ branch, companyId }: Props): ReactElement {
       (hint) => hint.id === selectedBranch?.id
     );
 
-    if (isNil(selectedHint)) return;
+    const newAddress = selectedHint?.address;
 
-    const newAddress = omit(['id'], selectedHint?.address);
-
-    const addressValidationErrors = validateAddressFormData(newAddress);
+    const addressValidationErrors = validateAddressFormData(
+      newAddress || address
+    );
     const branchValidationErrors = validateBranchFormData(branchValues);
 
     if (addressValidationErrors) {

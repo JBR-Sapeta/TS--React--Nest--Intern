@@ -110,6 +110,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
       });
     }
   };
+
   return (
     <section className={styles.section}>
       <h3>Dodaj oddział</h3>
@@ -151,12 +152,14 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
             currentBranch={selectedBranch}
             branches={geocoderHints || []}
           />
-          <BranchList
-            companyId={companyId}
-            branches={geocoderHints || []}
-            selectedBranchId={selectedBranch?.id}
-            changeBranch={setSelectedBranch}
-          />
+          {geocoderHints && (
+            <BranchList
+              companyId={companyId}
+              branches={geocoderHints || []}
+              selectedBranchId={selectedBranch?.id}
+              changeBranch={setSelectedBranch}
+            />
+          )}
         </div>
         <div className={styles.message}>
           {error && <p>{getErrorMessages(error)}</p>}
