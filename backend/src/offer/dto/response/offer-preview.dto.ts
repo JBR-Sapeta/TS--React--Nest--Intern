@@ -32,6 +32,10 @@ export class OfferPreviewDto {
   @Expose()
   public createdAt: string;
 
+  @ApiProperty({ example: '2024-05-05T14:48:00.000Z' })
+  @Expose()
+  public expirationDate: string;
+
   @ApiProperty({ example: 1 })
   @Expose()
   public employmentTypeId: number;
@@ -60,10 +64,12 @@ export class OfferPreviewDto {
     categories,
     company,
     createdAt,
+    expirationDate,
     branches,
     ...offerData
   }: OfferEntity) {
     this.createdAt = createdAt.toISOString();
+    this.expirationDate = expirationDate.toISOString();
     this.locations = [
       ...new Set(branches.map((branch) => branch.address.city)),
     ];
