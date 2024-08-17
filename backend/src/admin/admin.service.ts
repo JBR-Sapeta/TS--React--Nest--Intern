@@ -6,7 +6,9 @@ import {
   LoggerService,
   NotFoundException,
 } from '@nestjs/common';
-import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import { ConfigService } from '@nestjs/config';
+import { SchedulerRegistry } from '@nestjs/schedule';
+import { CronJob } from 'cron';
 import * as fs from 'fs';
 import { isNil, not } from 'ramda';
 
@@ -18,6 +20,7 @@ import {
   UserParams,
 } from '../common/classes/params';
 import { SuccessMessageDto } from '../common/classes';
+import { ENV_KEYS } from '../common/constants';
 import { Roles } from '../common/enums';
 import { hasRole } from '../common/functions';
 import { Nullable } from '../common/types';
@@ -42,14 +45,27 @@ import {
 
 @Injectable()
 export class AdminService {
+  private DELETE_OFFERS_SCHEDULE: string;
+  private DELETE_ACCOUNTS_SCHEDULE: string;
+
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly configService: ConfigService,
     private readonly s3Service: S3Service,
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly companyRepository: CompanyRepository,
     private readonly offerRepository: OfferRepository,
     private readonly userRepository: UserRepository,
-  ) {}
+  ) {
+    this.DELETE_OFFERS_SCHEDULE = this.configService.get<string>(
+      ENV_KEYS.DELETE_OLD_OFFERS_SCHEDULE,
+    );
+    this.DELETE_ACCOUNTS_SCHEDULE = this.configService.get<string>(
+      ENV_KEYS.DELETE_INACTIVE_ACCOUNTS_SCHEDULE,
+    );
+
+    this.startCronJob();
+  }
 
   public async getLogs({
     startDate,
@@ -387,7 +403,7 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */12 1-5 * * *', { name: 'removeInactiveAccounts' })
+
   private async removeInactiveAccounts() {
     const users = await this.userRepository.getInactiveUsers();
 
@@ -402,7 +418,6 @@ export class AdminService {
   }
 
   // ----------------------------------------------------------------------- \\
-  @Cron('0 */5 1-5 * * *', { name: 'removeOldOffers' })
   private async removeOldOffers() {
     const offers = await this.offerRepository.getOffersToRemove();
 
@@ -426,5 +441,21 @@ export class AdminService {
         `remove old offers - ${offers.length}`,
       );
     }
+  }
+
+  // ----------------------------------------------------------------------- \\
+  private startCronJob() {
+    const offersJob = new CronJob(this.DELETE_OFFERS_SCHEDULE, async () => {
+      await this.removeOldOffers();
+    });
+
+    const accountsJob = new CronJob(this.DELETE_ACCOUNTS_SCHEDULE, async () => {
+      await this.removeInactiveAccounts();
+    });
+
+    this.schedulerRegistry.addCronJob('removeOldOffers', offersJob);
+    this.schedulerRegistry.addCronJob('removeInactiveAccounts', accountsJob);
+    offersJob.start();
+    accountsJob.start();
   }
 }
