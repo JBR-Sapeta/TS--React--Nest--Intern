@@ -122,7 +122,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
             value={branchValues.name}
             error={branchErrors.name}
             {...BRANCH_FIELD}
-            className={styles.companyName}
+            className={styles.oneRow}
           />
 
           {ADDRESS_SEARCH_PARAMS_FIELDS.map((input) => (
@@ -135,10 +135,16 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
               error={addressParamsErrors[input.name]}
             />
           ))}
-          <p className={styles.manual}>
-            Wpisz adres i kliknij przycisk szukaj. Nastepnie wybierz adres z
-            listy.
-          </p>
+          <BaseButton
+            size="medium"
+            color="blue"
+            type="button"
+            className={styles.button}
+            disabled={isPending}
+            onClick={findAddressData}
+          >
+            Szukaj adresu
+          </BaseButton>
         </div>
         <div>
           <BranchMap
@@ -156,16 +162,6 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
           {error && <p>{getErrorMessages(error)}</p>}
         </div>
         <div className={styles.controls}>
-          <BaseButton
-            size="medium"
-            color="blue"
-            type="button"
-            className={styles.button}
-            disabled={isPending}
-            onClick={findAddressData}
-          >
-            Szukaj
-          </BaseButton>
           {selectedBranch && (
             <BaseButton
               size="medium"

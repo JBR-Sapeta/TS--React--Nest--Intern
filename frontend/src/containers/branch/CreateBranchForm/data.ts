@@ -3,7 +3,7 @@ import { isInRange, isNotEmptyString } from '@Common/validation';
 import { isEmpty } from 'ramda';
 
 type AddressSearchParamsFields = {
-  name: 'postcode' | 'city' | 'streetName' | 'houseNumber';
+  name: 'city' | 'postcode' | 'streetName' | 'houseNumber';
   type: string;
   label: { id: string; text: string };
   placeholder: string;
@@ -38,16 +38,16 @@ export type AddressSearchParams = {
 
 export const ADDRESS_SEARCH_PARAMS_FIELDS: AddressSearchParamsFields[] = [
   {
-    name: 'postcode',
+    name: 'city',
     type: 'text',
-    label: { id: '3-postcode', text: 'Kod pocztowy' },
+    label: { id: '4-city', text: 'Miasto' },
     placeholder: '',
     required: true,
   },
   {
-    name: 'city',
+    name: 'postcode',
     type: 'text',
-    label: { id: '4-city', text: 'Miasto' },
+    label: { id: '3-postcode', text: 'Kod pocztowy' },
     placeholder: '',
     required: true,
   },

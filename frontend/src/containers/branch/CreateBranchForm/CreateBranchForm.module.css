@@ -19,16 +19,8 @@
   gap: var(--space-8) var(--space-96);
 }
 
-.companyName {
+.oneRow {
   grid-column: 1/-1;
-}
-
-.manual {
-  grid-column: 1/-1;
-  margin-bottom: var(--space-8);
-  font-size: var(--font-p-16);
-  font-weight: var(--weight-600);
-  color: var(--color-orange-400);
 }
 
 .message {
@@ -42,7 +34,7 @@
   margin-top: var(--space-16);
 }
 
-.controls{
+.controls {
   display: flex;
   gap: var(--space-32);
 }

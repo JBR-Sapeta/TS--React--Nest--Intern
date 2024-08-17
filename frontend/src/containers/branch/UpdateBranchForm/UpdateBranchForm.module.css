@@ -1,4 +1,5 @@
 .section {
+  width: 952px;
   padding: var(--space-40);
   border-radius: var(--radius-8);
   box-shadow: var(--shadow-l);
