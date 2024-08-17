@@ -3,6 +3,7 @@ import { isNil } from 'ramda';
 
 import { Nullable } from '@Common/types';
 import { AddOfferLink, OfferHeader, OfferList } from '@Components/base';
+import { OfferPreview } from '@Data/types';
 import { useGetCompanyOffers } from '@Data/query/offer';
 
 import styles from './CompanyOffers.module.css';
@@ -16,8 +17,21 @@ export function CompanyOffers({ companyId }: Props): Nullable<ReactElement> {
 
   if (isNil(offers)) return null;
 
-  const activeOffers = offers.filter((offer) => offer.isActive);
-  const inactiveOffers = offers.filter((offer) => !offer.isActive);
+  const nowTime = new Date().getTime();
+
+  const activeOffers: OfferPreview[] = [];
+  const inactiveOffers: OfferPreview[] = [];
+
+  offers.forEach((offer) => {
+    const { isActive, expirationDate } = offer;
+    const expirationTime = new Date(expirationDate).getTime();
+
+    if (isActive && nowTime < expirationTime) {
+      activeOffers.push(offer);
+    } else {
+      inactiveOffers.push(offer);
+    }
+  });
 
   return (
     <section className={styles.section}>

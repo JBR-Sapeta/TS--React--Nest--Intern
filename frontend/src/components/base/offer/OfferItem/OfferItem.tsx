@@ -82,7 +82,7 @@ export function OfferItem({ companyId, offer }: Props): ReactElement {
             Firma: <span>{name}</span>
           </p>
           <p>
-            Lokalizacja: <span>{locations.join(',')}</span>
+            Lokalizacja: <span>{locations.join(', ')}</span>
           </p>
         </div>
         <div className={styles.otherInfo}>

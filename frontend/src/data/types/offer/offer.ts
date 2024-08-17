@@ -62,6 +62,7 @@ export type OfferPreview = {
   isPaid: boolean;
   isActive: boolean;
   createdAt: string;
+  expirationDate: string;
   employmentTypeId: number;
   operatingModeId: number;
   locations: string[];
