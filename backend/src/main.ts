@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
 import { LoggerFactory } from './common/classes';
@@ -17,6 +18,8 @@ async function bootstrap() {
     allowedHeaders: '*',
     credentials: true,
   });
+
+  app.use(helmet());
 
   const config = new DocumentBuilder()
     .setTitle('API')
