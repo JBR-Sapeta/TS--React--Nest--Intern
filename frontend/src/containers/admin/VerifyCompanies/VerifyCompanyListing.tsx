@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { removeEmptyValues } from '@Common/functions';
-import { CompanySearchParams, VerifyCompanyItem } from '@Components/base';
+import { AdminCompanySearchParams, VerifyCompanyItem } from '@Components/base';
 import { LogoSpinner, Pagination } from '@Components/shared';
 import { useGetCompanies } from '@Data/query/admin';
 import { useAdminCompanySearchParams, usePagination } from '@Hooks/index';
@@ -27,7 +27,7 @@ export function VerifyCompanyListing(): ReactElement {
 
   return (
     <section className={styles.section}>
-      <CompanySearchParams
+      <AdminCompanySearchParams
         {...functions}
         values={values}
         setParams={setParams}
