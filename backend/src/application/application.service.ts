@@ -56,7 +56,6 @@ export class ApplicationService {
         ApplicationService.name + ' - createApplication',
         `ForbiddenException - ${user.id}`,
       );
-
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_APPLICATION_DUPLICATION);
     }
 
@@ -117,8 +116,9 @@ export class ApplicationService {
 
     const { fileKey } = application;
 
-    const { data, contentType } =
-      await this.s3Service.getApplicationFile(fileKey);
+    const { data, contentType } = await this.s3Service.getApplicationFile(
+      fileKey,
+    );
     const buffer = Buffer.from(data);
 
     return { buffer, contentType, fileName: fileKey };
@@ -192,8 +192,9 @@ export class ApplicationService {
     userId: string,
     applicationId: number,
   ): Promise<SuccessMessageDto> {
-    const application =
-      await this.applicationRepository.getApplicationById(applicationId);
+    const application = await this.applicationRepository.getApplicationById(
+      applicationId,
+    );
 
     if (isNil(application)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_APPLICATION);

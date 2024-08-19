@@ -70,12 +70,12 @@ export class OfferRepository extends Repository<OfferEntity> {
       addPaginationParamsToQueryBuilder(query, paginationParams);
 
       const offers = await query
-        .orderBy('company.createdAt', 'DESC')
+        .orderBy('offer.createdAt', 'DESC')
         .getManyAndCount();
 
       return offers;
     } catch (error) {
-      this.logger.error(OfferRepository.name + ' - getOfferById', error.stack);
+      this.logger.error(OfferRepository.name + ' - getOffers', error.stack);
 
       throw new InternalServerErrorException(PL_ERRORS.INTERNAL_SERVER_ERROR);
     }

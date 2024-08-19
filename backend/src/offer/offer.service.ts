@@ -101,8 +101,9 @@ export class OfferService {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_BRANCHES);
     }
 
-    const categories =
-      await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+    const categories = await this.categoriesRepository.getCategoriesByIds(
+      categoriesDto,
+    );
 
     if (isEmpty(categories)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
@@ -195,8 +196,9 @@ export class OfferService {
   ): Promise<PartialOfferResponseDto> {
     const key = this.cacheService.composeKey(companyId, offerId);
 
-    const cachedOffer =
-      await this.cacheService.getData<Nullish<OfferEntity>>(key);
+    const cachedOffer = await this.cacheService.getData<Nullish<OfferEntity>>(
+      key,
+    );
 
     if (isNotNil(cachedOffer)) {
       return new PartialOfferResponseDto({}, cachedOffer);
@@ -331,8 +333,9 @@ export class OfferService {
     }
 
     if (isNotNil(categoriesDto)) {
-      const categories =
-        await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+      const categories = await this.categoriesRepository.getCategoriesByIds(
+        categoriesDto,
+      );
 
       if (isEmpty(categories)) {
         throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
