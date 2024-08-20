@@ -52,6 +52,7 @@ export class OfferController {
   constructor(private readonly offerService: OfferService) {}
 
   @Post('/:companyId/create')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation(OPERATION.CREATE)
@@ -93,9 +94,9 @@ export class OfferController {
   }
 
   @Get('/:companyId')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_COMPANY_OFFERS)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -152,6 +153,7 @@ export class OfferController {
   }
 
   @Patch('/:companyId/:offerId/update')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
@@ -180,6 +182,7 @@ export class OfferController {
   }
 
   @Delete('/:companyId/:offerId/delete')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)

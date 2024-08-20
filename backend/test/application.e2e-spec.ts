@@ -145,10 +145,6 @@ describe('ApplicationController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login({
-      email: userData.email,
-      password: userData.password,
-    });
 
     await companyService.createCompany(updatedUser, companyData);
     const company = await companyRepository.getCompanyBySlug(companyData.slug);
@@ -176,6 +172,11 @@ describe('ApplicationController (e2e)', () => {
 
     const offers = await offerRepository.find({
       where: { companyId: company.id },
+    });
+
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
     });
 
     return {
@@ -1332,14 +1333,16 @@ describe('ApplicationController (e2e)', () => {
 
   describe('/applications/users/:userId  (GET) - Invalid Request', () => {
     it('returns 400 status code when invalid offerid param is provided', async () => {
-      const { accessToken, offers } = await createUserAndCompanyWithOffers(
+      const { offers } = await createUserAndCompanyWithOffers(
         USER_ONE,
         COMPANY_ONE,
         COMPANY_ONE_BRANCHES,
         COMPANY_ONE_OFFERS,
       );
-      await createUserWithApplication(USER_TWO, offers[0]);
-      await createUserWithApplication(USER_THREE, offers[0]);
+      const { accessToken } = await createUserWithApplication(
+        USER_TWO,
+        offers[0],
+      );
 
       const response = await sendGetUserApplicationsRequest(
         accessToken,

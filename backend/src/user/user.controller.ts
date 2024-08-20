@@ -43,8 +43,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/me')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.ME)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -59,8 +59,8 @@ export class UserController {
   }
 
   @Patch('/:userId/update')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -83,8 +83,8 @@ export class UserController {
   }
 
   @Patch('/:userId/email')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.EMAIL)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -104,8 +104,8 @@ export class UserController {
   }
 
   @Patch('/:userId/password')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.PASSWORD)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)

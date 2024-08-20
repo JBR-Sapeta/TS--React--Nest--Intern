@@ -21,16 +21,21 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-import { UserEntity } from '../entity';
 import { SuccessMessageDto } from '../common/classes';
+import { Roles } from '../common/enums';
 import { HEADER } from '../common/docs';
 import { JwtPayload } from '../common/types';
+import { UserEntity } from '../entity';
 
 import {
   GetAccessTokenPayload,
   GetAccessTokentExtendedPayload,
 } from '../auth/decorators';
-import { AccessTokenGuard, ExtendedAccessTokenGuard } from '../auth/guards';
+import {
+  AccessTokenGuard,
+  ExtendedAccessTokenGuard,
+  RolesGuard,
+} from '../auth/guards';
 
 import { BranchService } from './branch.service';
 import { CreateBranchDto, UpdateBranchDto } from './dto/request';
@@ -58,8 +63,9 @@ export class BranchController {
   }
 
   @Post('/:companyId/create')
-  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(ExtendedAccessTokenGuard)
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation(OPERATION.CREATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -80,8 +86,9 @@ export class BranchController {
   }
 
   @Patch('/:companyId/:branchId/update')
-  @HttpCode(HttpStatus.OK)
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.UPDATE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)
@@ -109,8 +116,9 @@ export class BranchController {
   }
 
   @Delete('/:companyId/:branchId/delete')
-  @HttpCode(HttpStatus.OK)
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.DELETE)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)

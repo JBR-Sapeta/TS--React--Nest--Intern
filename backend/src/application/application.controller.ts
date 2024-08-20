@@ -94,6 +94,7 @@ export class ApplicationController {
   }
 
   @Get('/:applicationId/file')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_APPLICATION_FILE)
@@ -123,6 +124,7 @@ export class ApplicationController {
   }
 
   @Get('/offers/:offerId')
+  @UseGuards(RolesGuard(Roles.COMPANY))
   @UseGuards(AccessTokenGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.GET_OFFER_APPLICATIONS)

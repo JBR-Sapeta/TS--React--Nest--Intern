@@ -110,13 +110,14 @@ describe('BranchController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     const updatedUser = await userRepository.save(user);
+
+    await companyService.createCompany(updatedUser, companyData);
+    const company = await companyRepository.getCompanyBySlug(companyData.slug);
+
     const tokens = await authService.login({
       email: userData.email,
       password: userData.password,
     });
-
-    await companyService.createCompany(updatedUser, companyData);
-    const company = await companyRepository.getCompanyBySlug(companyData.slug);
 
     return {
       user: updatedUser,
@@ -140,10 +141,6 @@ describe('BranchController (e2e)', () => {
     user.activationToken = null;
     user.isActive = true;
     const updatedUser = await userRepository.save(user);
-    const tokens = await authService.login({
-      email: userData.email,
-      password: userData.password,
-    });
 
     await companyService.createCompany(updatedUser, companyData);
     const company = await companyRepository.getCompanyBySlug(companyData.slug);
@@ -171,6 +168,11 @@ describe('BranchController (e2e)', () => {
 
     const offers = await offerRepository.find({
       where: { companyId: company.id },
+    });
+
+    const tokens = await authService.login({
+      email: userData.email,
+      password: userData.password,
     });
 
     return {
@@ -633,8 +635,9 @@ describe('BranchController (e2e)', () => {
         branches[0].id,
         BRANCH_TWO,
       );
-      const { branches: updatedBranches } =
-        await getBranchesByCompanyIdFromDB(companyId);
+      const { branches: updatedBranches } = await getBranchesByCompanyIdFromDB(
+        companyId,
+      );
 
       expect(branches[0]).not.toBe(updatedBranches[0]);
     });
