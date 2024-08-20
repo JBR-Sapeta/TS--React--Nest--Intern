@@ -66,8 +66,8 @@ export class AuthController {
   }
 
   @Post('/logout')
-  @HttpCode(HttpStatus.OK)
   @UseGuards(AccessTokenGuard)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation(OPERATION.LOGOUT)
   @ApiBearerAuth()
   @ApiHeader(HEADER.ACCESS_TOKEN)

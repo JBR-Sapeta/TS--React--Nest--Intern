@@ -7,7 +7,6 @@ import {
   Type,
 } from '@nestjs/common';
 import { isArray } from 'class-validator';
-import { not } from 'ramda';
 
 import { Roles } from '../../common/enums';
 import { JwtPayload } from '../../common/types';
@@ -34,7 +33,7 @@ export const RolesGuard = (
         canActivate = userRoles.includes(rolesWithAccess);
       }
 
-      if (not(canActivate)) {
+      if (!canActivate) {
         throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INCORRECT_ROLE);
       }
 

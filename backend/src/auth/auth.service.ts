@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
-import { equals, isNil, not } from 'ramda';
+import { equals, isNil } from 'ramda';
 
 import { RoleEntity, UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
@@ -94,15 +94,22 @@ export class AuthService {
 
   // ----------------------------------------------------------------------- \\
   public async login({ email, password }: LoginUserDto): Promise<TokensDto> {
-    const user = await this.validateUserCredentials(email, password);
+    const { id, roles, isActive, hasBan } = await this.validateUserCredentials(
+      email,
+      password,
+    );
 
-    if (user.hasBan) {
+    if (!isActive) {
+      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INACTIVE_ACCOUNT);
+    }
+
+    if (hasBan) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN_ACCOUNT_SUSPENDED);
     }
 
-    const refreshToken = await this.createRefreshToken(user.id);
-    await this.userRepository.updateRefreshToken(user.id, refreshToken.token);
-    const accessToken = await this.createAccessToken(user.id, user.roles);
+    const refreshToken = await this.createRefreshToken(id);
+    await this.userRepository.updateRefreshToken(id, refreshToken.token);
+    const accessToken = await this.createAccessToken(id, roles);
 
     return new TokensDto(
       { message: PL_MESSAGES.AUTH_LOGGED_IN },
@@ -131,7 +138,7 @@ export class AuthService {
 
     const isValidToken = equals(refreshToken, user.refreshToken);
 
-    if (not(isValidToken)) {
+    if (!isValidToken) {
       this.logger.error(
         AuthService.name + ' - refreshToken',
         `ForbiddenException - ${userId}`,
@@ -229,13 +236,9 @@ export class AuthService {
       );
     }
 
-    if (not(user.isActive)) {
-      throw new ForbiddenException(PL_ERRORS.FORBIDDEN_INACTIVE_ACCOUNT);
-    }
-
     const isValidPassword = await this.verifyPassword(password, user.password);
 
-    if (not(isValidPassword)) {
+    if (!isValidPassword) {
       throw new UnauthorizedException(
         PL_ERRORS.UNAUTHORIZED_INVALID_CREDENTIALS,
       );
@@ -257,7 +260,7 @@ export class AuthService {
 
     const isValidPassword = await this.verifyPassword(password, user.password);
 
-    if (not(isValidPassword)) {
+    if (!isValidPassword) {
       throw new UnauthorizedException(PL_ERRORS.UNAUTHORIZED_INVALID_PASSWORD);
     }
 
