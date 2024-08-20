@@ -25,6 +25,7 @@ const BRANCH_INITIAL_STATE: BranchFormData = {
 };
 
 const ADDRESS_PARAMS = {
+  country: '',
   postcode: '',
   city: '',
   streetName: '',

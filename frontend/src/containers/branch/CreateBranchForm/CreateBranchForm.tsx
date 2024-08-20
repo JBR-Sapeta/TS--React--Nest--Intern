@@ -24,6 +24,7 @@ const BRANCH_INITIAL_STATE: BranchFormData = {
 };
 
 const ADDRESS_PARAMS = {
+  country: '',
   postcode: '',
   city: '',
   streetName: '',
@@ -136,6 +137,7 @@ export function CreateBranchForm({ companyId }: Props): ReactElement {
               error={addressParamsErrors[input.name]}
             />
           ))}
+
           <BaseButton
             size="medium"
             color="blue"

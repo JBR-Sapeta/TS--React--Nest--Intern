@@ -45,6 +45,7 @@ function convertGeocoderDataToBranchesData(data: GeocoderData[]): Branch[] {
 }
 
 type GetGeocoderDataProps = {
+  country: string;
   postcode: string;
   city: string;
   streetName: string;
@@ -52,13 +53,14 @@ type GetGeocoderDataProps = {
 };
 
 export async function sendGetGeocoderData({
+  country,
   postcode,
   city,
   streetName,
   houseNumber,
 }: GetGeocoderDataProps): Promise<Branch[]> {
   const query = encodeURI(
-    `Polska ${postcode} ${city} ${streetName} ${houseNumber}`
+    `${country} ${postcode} ${city} ${streetName} ${houseNumber}`
   );
 
   const { data } = await axios.get<GeocoderResponse>(

@@ -3,7 +3,7 @@ import { isInRange, isNotEmptyString } from '@Common/validation';
 import { isEmpty } from 'ramda';
 
 type AddressSearchParamsFields = {
-  name: 'city' | 'postcode' | 'streetName' | 'houseNumber';
+  name: 'country' | 'city' | 'postcode' | 'streetName' | 'houseNumber';
   type: string;
   label: { id: string; text: string };
   placeholder: string;
@@ -38,9 +38,16 @@ export type AddressSearchParams = {
 
 export const ADDRESS_SEARCH_PARAMS_FIELDS: AddressSearchParamsFields[] = [
   {
+    name: 'country',
+    type: 'text',
+    label: { id: '1-country', text: 'Kraj' },
+    placeholder: '',
+    required: true,
+  },
+  {
     name: 'city',
     type: 'text',
-    label: { id: '4-city', text: 'Miasto' },
+    label: { id: '2-city', text: 'Miasto' },
     placeholder: '',
     required: true,
   },
@@ -54,19 +61,18 @@ export const ADDRESS_SEARCH_PARAMS_FIELDS: AddressSearchParamsFields[] = [
   {
     name: 'streetName',
     type: 'text',
-    label: { id: '5-streetName', text: 'Ulica' },
+    label: { id: '4-streetName', text: 'Ulica' },
     placeholder: '',
     required: true,
   },
   {
     name: 'houseNumber',
     type: 'text',
-    label: { id: '6-houseNumber', text: 'Numer domu' },
+    label: { id: '5-houseNumber', text: 'Numer domu' },
     placeholder: '',
     required: true,
   },
 ];
-
 export function validateAddressFormData({
   country,
   region,
