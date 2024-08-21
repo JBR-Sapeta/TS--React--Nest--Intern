@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserEntity, RoleEntity } from '../entity';
 import { UserRepository, RoleRepository } from '../repository';
+import { CacheService } from '../cache/cache.service';
 import { MailService } from '../mail/mail.service';
 
 import { AuthController } from './auth.controller';
@@ -28,6 +29,7 @@ import {
     ExtendedAccessTokenStrategy,
     RefreshTokenStrategy,
     AuthService,
+    CacheService,
     MailService,
     UserRepository,
     RoleRepository,

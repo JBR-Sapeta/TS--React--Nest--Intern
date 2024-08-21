@@ -17,10 +17,12 @@ import { RoleEntity, UserEntity } from '../entity';
 import { PL_ERRORS, PL_MESSAGES } from '../locales';
 import { UserRepository, RoleRepository } from '../repository';
 import { ENV_KEYS } from '../common/constants';
-import { Roles } from '../common/enums';
 import { SuccessMessageDto } from '../common/classes';
+import { Roles } from '../common/enums';
 import { calculateDate } from '../common/functions';
+import { Nullable, CachedUserData } from '../common/types';
 
+import { CacheService } from '../cache/cache.service';
 import { MailService } from '../mail/mail.service';
 
 import { AccessTokenDto, RefreshTokenDto, TokensDto } from './dto/response';
@@ -33,6 +35,7 @@ import type {
 
 @Injectable()
 export class AuthService {
+  private cacheExpirationTime = 1200;
   private accessTokenSecret: string;
   private accessTokenExpirationTime: string;
   private refreshTokenSecret: string;
@@ -41,6 +44,7 @@ export class AuthService {
 
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly cacheService: CacheService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly mailService: MailService,
@@ -111,6 +115,12 @@ export class AuthService {
     await this.userRepository.updateRefreshToken(id, refreshToken.token);
     const accessToken = await this.createAccessToken(id, roles);
 
+    await this.cacheService.setData(
+      id,
+      { id, roles, refreshToken: refreshToken.token },
+      this.cacheExpirationTime,
+    );
+
     return new TokensDto(
       { message: PL_MESSAGES.AUTH_LOGGED_IN },
       accessToken,
@@ -121,6 +131,7 @@ export class AuthService {
   // ----------------------------------------------------------------------- \\
   public async logout(userId: string): Promise<SuccessMessageDto> {
     await this.userRepository.updateRefreshToken(userId, null);
+    await this.cacheService.removeData(userId);
 
     return new SuccessMessageDto({ message: PL_MESSAGES.AUTH_LOGGED_OUT });
   }
@@ -130,13 +141,24 @@ export class AuthService {
     userId: string,
     refreshToken: string,
   ): Promise<AccessTokenDto> {
-    const user = await this.userRepository.getUserById(userId);
+    let userData: Nullable<CachedUserData> = null;
 
-    if (isNil(user) || isNil(user.refreshToken)) {
+    userData = await this.cacheService.getData<CachedUserData>(userId);
+
+    if (isNil(userData)) {
+      const user = await this.userRepository.getUserById(userId);
+
+      if (!isNil(user)) {
+        const { id, roles, refreshToken } = user;
+        userData = { id, roles, refreshToken };
+      }
+    }
+
+    if (isNil(userData) || isNil(userData.refreshToken)) {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const isValidToken = equals(refreshToken, user.refreshToken);
+    const isValidToken = equals(refreshToken, userData.refreshToken);
 
     if (!isValidToken) {
       this.logger.error(
@@ -147,7 +169,9 @@ export class AuthService {
       throw new ForbiddenException(PL_ERRORS.FORBIDDEN);
     }
 
-    const accessToken = await this.createAccessToken(user.id, user.roles);
+    const accessToken = await this.createAccessToken(userId, userData.roles);
+
+    await this.cacheService.setData(userId, userData, this.cacheExpirationTime);
 
     return new AccessTokenDto(
       { message: PL_MESSAGES.BASE_SUCCESS },

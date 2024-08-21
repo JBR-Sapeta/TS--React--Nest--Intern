@@ -37,7 +37,7 @@ export class CacheService {
   public async getData<T>(key: string): Promise<Nullable<T>> {
     try {
       const data = await this.redis.get(key);
-      return isNil(data) ? null : (JSON.parse(data) as T);
+      return isNil(data) ? null : (JSON.parse(data) as Nullable<T>);
     } catch (error) {
       this.logger.error(CacheService.name + ' - getData', error.stack);
 

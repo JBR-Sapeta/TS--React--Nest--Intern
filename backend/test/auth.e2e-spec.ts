@@ -29,6 +29,7 @@ import type { User, Credentials } from './helpers/auth-data';
 import { mailService } from './mocks/mail-service';
 import { geocoderService } from './mocks/geocoder-service';
 import { s3Service } from './mocks/s3-service';
+import { CachedUserData } from 'src/common/types';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -426,6 +427,18 @@ describe('AuthController (e2e)', () => {
         'accessToken',
         'refreshToken',
       ]);
+    });
+
+    it('saves refresh token and user roles in Redis', async () => {
+      const user = await createActiveUser(USER_ONE);
+      await sendLoginRequest(USER_ONE_CREDENTIALS);
+
+      const cachedUserData = await cacheService.getData<CachedUserData>(
+        user.id,
+      );
+
+      expect(cachedUserData?.refreshToken).toBeDefined();
+      expect(cachedUserData?.roles).toBeDefined();
     });
   });
 

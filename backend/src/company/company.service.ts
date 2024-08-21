@@ -33,6 +33,7 @@ import { Roles } from '../common/enums';
 import { hasRole, imageFileValidator } from '../common/functions';
 import { Nullable, Optional } from '../common/types';
 
+import { CacheService } from '../cache/cache.service';
 import { S3Service } from '../s3/s3.service';
 
 import {
@@ -50,6 +51,7 @@ import {
 export class CompanyService {
   constructor(
     @Inject(Logger) private readonly logger: LoggerService,
+    private readonly cacheService: CacheService,
     private readonly s3Service: S3Service,
     private readonly applicationRepository: ApplicationRepository,
     private readonly categoriesRepository: CategoryRepository,
@@ -71,8 +73,9 @@ export class CompanyService {
 
     const { categories: categoriesDto, ...companyData } = createCompanyDto;
 
-    const categories =
-      await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+    const categories = await this.categoriesRepository.getCategoriesByIds(
+      categoriesDto,
+    );
 
     if (isEmpty(categories)) {
       throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
@@ -124,6 +127,8 @@ export class CompanyService {
       }
     }
 
+    await this.cacheService.removeData(user.id);
+
     return new SuccessMessageDto({
       statusCode: 201,
       message: PL_MESSAGES.COMPANY_CREATED,
@@ -153,8 +158,9 @@ export class CompanyService {
     const { categories: categoriesDto, ...companyData } = updateCompanyDto;
 
     if (isNotNil(categoriesDto)) {
-      const categories =
-        await this.categoriesRepository.getCategoriesByIds(categoriesDto);
+      const categories = await this.categoriesRepository.getCategoriesByIds(
+        categoriesDto,
+      );
 
       if (isEmpty(categories)) {
         throw new NotFoundException(PL_ERRORS.NOT_FUOND_CATEGORIES);
@@ -463,6 +469,8 @@ export class CompanyService {
         this.logger.error(`S3Service - deleteImageFile - fileKey:$${fileKey}`);
       }
     }
+
+    await this.cacheService.removeData(user.id);
 
     return new SuccessMessageDto({ message: PL_MESSAGES.COMPANY_DELETED });
   }

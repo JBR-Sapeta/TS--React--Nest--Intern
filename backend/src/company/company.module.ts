@@ -21,6 +21,7 @@ import {
 } from '../repository';
 
 import { AuthModule } from '../auth/auth.module';
+import { CacheService } from '../cache/cache.service';
 import { S3Service } from '../s3/s3.service';
 
 import { CompanyController } from './company.controller';
@@ -43,6 +44,7 @@ import { CompanyService } from './company.service';
   controllers: [CompanyController],
   providers: [
     Logger,
+    CacheService,
     CompanyService,
     S3Service,
     ApplicationRepository,
