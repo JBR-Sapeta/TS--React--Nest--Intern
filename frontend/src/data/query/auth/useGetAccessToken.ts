@@ -43,7 +43,7 @@ export function useGetAccessToken(): UseGetAccessToken {
     queryKey: [QUERY_KEY.ACCESS_TOKEN],
     queryFn: async (): Promise<Nullable<AccessTokenResponse>> =>
       refreshAccessToken(),
-    refetchInterval: 840000,
+    refetchInterval: 540000,
     refetchIntervalInBackground: true,
     refetchOnMount: false,
     refetchOnWindowFocus: true,

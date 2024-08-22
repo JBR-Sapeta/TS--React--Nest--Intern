@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import type { ReactElement } from 'react';
 import {
   createRoutesFromElements,
@@ -127,6 +128,7 @@ const ROUTER = createBrowserRouter(
         />
         <Route path={ROUTER_PATHS.ADMIN_USERS} element={<UsersView />} />
       </Route>
+
       <Route
         path={ROUTER_PATHS.INTERNAL_SERVER_ERROR}
         element={<InternalServerErrorView />}
