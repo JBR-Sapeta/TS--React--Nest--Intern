@@ -93,7 +93,7 @@ describe('SignInForm', () => {
     expect(changeFormMock).toHaveBeenCalledWith(AuthForms.RECOVERY);
   });
 
-  it('does not call signUpMutation when the form is submitted with empty fields', async () => {
+  it('does not call signInMutation when the form is submitted with empty fields', async () => {
     render(<SignInForm changeForm={changeFormMock} />);
 
     const submitButton = screen.getByRole('button', {
@@ -105,7 +105,7 @@ describe('SignInForm', () => {
     expect(signInMutation).toHaveBeenCalledTimes(0);
   });
 
-  it('does not call signUpMutation when the form is submitted with invalid email', async () => {
+  it('does not call signInMutation when the form is submitted with invalid email', async () => {
     render(<SignInForm changeForm={changeFormMock} />);
 
     const { password } = VALID_FORM_DATA;
@@ -129,7 +129,7 @@ describe('SignInForm', () => {
     expect(signInMutation).toHaveBeenCalledTimes(0);
   });
 
-  it('calls signUpMutation when the form is submitted with valid values', async () => {
+  it('calls signInMutation when the form is submitted with valid values', async () => {
     render(<SignInForm changeForm={changeFormMock} />);
 
     const { email, password } = VALID_FORM_DATA;

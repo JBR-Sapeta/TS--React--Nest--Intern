@@ -16,6 +16,7 @@ function PostRegistrationMessage(): ReactElement {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className={styles.svg}
+        aria-label="Ikona - Zablokowane"
       >
         <g clipPath="url(#clip0_708_2464)">
           <path

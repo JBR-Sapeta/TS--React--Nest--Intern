@@ -85,7 +85,7 @@ describe('RecoveryForm', () => {
     expect(changeFormMock).toHaveBeenCalledWith(AuthForms.SIGN_IN);
   });
 
-  it('does not call signUpMutation when the form is submitted with empty fields', async () => {
+  it('does not call accountRecoveryMutation when the form is submitted with empty fields', async () => {
     render(<RecoveryForm changeForm={changeFormMock} />);
 
     const submitButton = screen.getByRole('button', {
@@ -97,7 +97,7 @@ describe('RecoveryForm', () => {
     expect(accountRecoveryMutation).toHaveBeenCalledTimes(0);
   });
 
-  it('does not call signUpMutation when the form is submitted with invalid email', async () => {
+  it('does not call accountRecoveryMutation when the form is submitted with invalid email', async () => {
     render(<RecoveryForm changeForm={changeFormMock} />);
 
     const { email } = INVALID_FORM_DATA;
@@ -116,7 +116,7 @@ describe('RecoveryForm', () => {
     expect(accountRecoveryMutation).toHaveBeenCalledTimes(0);
   });
 
-  it('calls signUpMutation when the form is submitted with valid values', async () => {
+  it('calls accountRecoveryMutation when the form is submitted with valid values', async () => {
     render(<RecoveryForm changeForm={changeFormMock} />);
 
     const { email } = VALID_FORM_DATA;
