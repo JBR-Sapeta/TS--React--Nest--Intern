@@ -65,7 +65,7 @@ export function DropdownMenu({
         ref={dropdownElement}
         className={buttonClassNames}
         type="button"
-        aria-label="Przycisk menu"
+        aria-label={label || 'Przycisk menu'}
         onClick={() => setIsOpen((state) => !state)}
       >
         {LeftIcon && <LeftIcon />}

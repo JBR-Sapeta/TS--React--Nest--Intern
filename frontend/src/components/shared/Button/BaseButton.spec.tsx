@@ -10,13 +10,15 @@ const BUTTON_LABEL = 'Button';
 const onClick = vi.fn();
 
 describe('BaseButton', () => {
-  it(`renders '${BUTTON_LABEL}' text when it's provided as a children`, () => {
+  it(`renders '${BUTTON_LABEL}' text when it's provided as a child`, () => {
     render(
       <BaseButton color="red" size="small" onClick={onClick}>
         {BUTTON_LABEL}
       </BaseButton>
     );
+
     const button = screen.getByRole('button');
+
     expect(button).toHaveTextContent(BUTTON_LABEL);
   });
 
@@ -26,8 +28,11 @@ describe('BaseButton', () => {
         {BUTTON_LABEL}
       </BaseButton>
     );
+
     const button = screen.getByRole('button', { name: BUTTON_LABEL });
+
     await user.click(button);
+
     expect(onClick).toHaveBeenCalled();
   });
 
@@ -37,8 +42,10 @@ describe('BaseButton', () => {
         {BUTTON_LABEL}
       </BaseButton>
     );
+
     const button = screen.getByRole('button');
     const childElements = button.querySelectorAll('*');
+
     expect(childElements).toHaveLength(2);
     expect(childElements[0].tagName).toBe('svg');
   });

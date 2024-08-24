@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import { ReactElement } from 'react';
@@ -9,7 +11,14 @@ type Props = {
 };
 
 function Backdrop({ onClick }: Props): ReactElement {
-  return <div className={styles.backdrop} onClick={onClick} />;
+  return (
+    <div
+      data-testid="backdropId"
+      className={styles.backdrop}
+      role="button"
+      onClick={onClick}
+    />
+  );
 }
 
 export default Backdrop;
