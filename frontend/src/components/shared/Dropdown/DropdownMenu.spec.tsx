@@ -20,7 +20,7 @@ const dropdownList = (
   </>
 );
 
-describe('BaseButton', () => {
+describe('DropdownMenu', () => {
   it(`renders button with provided label`, async () => {
     render(<DropdownMenu label={DROPDOWN_LABEL}>{dropdownList}</DropdownMenu>);
 

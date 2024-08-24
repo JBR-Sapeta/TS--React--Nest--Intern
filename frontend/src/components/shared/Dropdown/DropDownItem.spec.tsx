@@ -10,7 +10,7 @@ const LINK_LABEL = 'Link Label';
 
 const onClick = vi.fn();
 
-describe('BaseButton', () => {
+describe('DropdownItem', () => {
   it(`renders button with text when isLink is set to false`, () => {
     render(
       <DropdownItem onClick={onClick} isLink={false}>
