@@ -24,6 +24,7 @@ export function VerifyCompanyItem({
   logoUrl,
   isVerified,
   email,
+  phoneNumber,
   owner,
 }: Props): ReactElement {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,7 +62,7 @@ export function VerifyCompanyItem({
             hasColors
           />
           <p className={styles.p}>
-            <FaEnvelope /> Telefon:<span>{' -'}</span>
+            <FaEnvelope /> Telefon:<span>{phoneNumber}</span>
           </p>
           <p className={styles.p}>
             <FaPhoneAlt /> Email:<span>{email}</span>

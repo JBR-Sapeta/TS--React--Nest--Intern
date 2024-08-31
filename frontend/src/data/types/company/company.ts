@@ -54,6 +54,7 @@ export type CompanyAdminPrewiev = {
   name: string;
   slug: string;
   email: string;
+  phoneNumber: Nullable<string>;
   logoUrl: Nullable<string>;
   size: number;
   isVerified: boolean;

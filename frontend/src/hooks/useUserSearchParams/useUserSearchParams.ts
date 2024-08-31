@@ -14,7 +14,7 @@ export type UseUserSearchParams = {
   values: UserSearchParamsState;
   changeFirstName: (e: ChangeEvent<HTMLInputElement>) => void;
   changeLastName: (e: ChangeEvent<HTMLInputElement>) => void;
-  changeEmial: (e: ChangeEvent<HTMLInputElement>) => void;
+  changeEmail: (e: ChangeEvent<HTMLInputElement>) => void;
   changeHasBan: (e: ChangeEvent<HTMLInputElement>) => void;
   changeSearchParams: (data: UserSearchParamsState) => void;
 };
@@ -42,7 +42,7 @@ export function useUserSearchParams(): UseUserSearchParams {
     setLastName(e.target.value);
   }, []);
 
-  const changeEmial = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const changeEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   }, []);
 
@@ -85,7 +85,7 @@ export function useUserSearchParams(): UseUserSearchParams {
     values,
     changeFirstName,
     changeLastName,
-    changeEmial,
+    changeEmail,
     changeHasBan,
     changeSearchParams,
   };

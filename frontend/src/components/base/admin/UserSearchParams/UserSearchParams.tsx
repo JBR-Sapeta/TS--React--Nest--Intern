@@ -16,7 +16,7 @@ export function UserSearchParams({
   values,
   changeFirstName,
   changeLastName,
-  changeEmial,
+  changeEmail,
   changeHasBan,
   changeSearchParams,
   setParams,
@@ -57,7 +57,7 @@ export function UserSearchParams({
           label={{ id: '3-email', text: 'Email' }}
           Icon={FaEnvelope}
           value={values.email}
-          onChange={changeEmial}
+          onChange={changeEmail}
         />
         <div className={styles.checkboxes}>
           <div className={styles.checkbox}>

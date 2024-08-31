@@ -19,7 +19,7 @@ export function AdminCompanySearchParams({
   values,
   changeName,
   changeSlug,
-  changeEmial,
+  changeEmail,
   changeOwner,
   changeIsVerified,
   changeSearchParams,
@@ -61,7 +61,7 @@ export function AdminCompanySearchParams({
           label={{ id: '3-email', text: 'Email firmy' }}
           Icon={FaEnvelope}
           value={values.email}
-          onChange={changeEmial}
+          onChange={changeEmail}
         />
         <div className={styles.checkboxes}>
           <div className={styles.checkbox}>

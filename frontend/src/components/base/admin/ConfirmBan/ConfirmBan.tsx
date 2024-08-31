@@ -25,7 +25,7 @@ export function ConfirmBan({
 
   return (
     <section className={styles.container}>
-      <h3>Usuń ofertę</h3>
+      <h3>Blokada użytkownika</h3>
       <Hr className={styles.hr} />
       <p>
         {hasBan

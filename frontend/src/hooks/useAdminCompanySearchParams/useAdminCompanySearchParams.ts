@@ -15,7 +15,7 @@ export type UseAdminCompanySearchParams = {
   values: AdminCompanySearchParamsState;
   changeName: (e: ChangeEvent<HTMLInputElement>) => void;
   changeSlug: (e: ChangeEvent<HTMLInputElement>) => void;
-  changeEmial: (e: ChangeEvent<HTMLInputElement>) => void;
+  changeEmail: (e: ChangeEvent<HTMLInputElement>) => void;
   changeOwner: (e: ChangeEvent<HTMLInputElement>) => void;
   changeIsVerified: (e: ChangeEvent<HTMLInputElement>) => void;
   changeSearchParams: (data: AdminCompanySearchParamsState) => void;
@@ -47,7 +47,7 @@ export function useAdminCompanySearchParams(): UseAdminCompanySearchParams {
     setSlug(e.target.value);
   }, []);
 
-  const changeEmial = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  const changeEmail = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   }, []);
 
@@ -95,7 +95,7 @@ export function useAdminCompanySearchParams(): UseAdminCompanySearchParams {
     values,
     changeName,
     changeSlug,
-    changeEmial,
+    changeEmail,
     changeOwner,
     changeIsVerified,
     changeSearchParams,
