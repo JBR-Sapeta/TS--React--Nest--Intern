@@ -5,7 +5,7 @@ import type { Nullable } from '@Common/types';
 
 import styles from './CompanyLogo.module.css';
 
-const DEFAULT_IMAGE = '/company-logo.png';
+export const DEFAULT_IMAGE = '/company-logo.png';
 
 type Props = {
   type: 'small' | 'medium';

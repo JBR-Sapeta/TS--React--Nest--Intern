@@ -4,7 +4,7 @@ import type { Nullable } from '@Common/types';
 
 import styles from './MainPhoto.module.css';
 
-const DEFAULT_IMAGE = '/company-main.png';
+export const DEFAULT_IMAGE = '/company-main.png';
 
 type Props = {
   url: Nullable<string>;
