@@ -1,4 +1,4 @@
-# Stażysta Project - Backend
+# Intern Project - Backend
 
 
 ## Description
