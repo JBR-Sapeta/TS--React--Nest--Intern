@@ -1,4 +1,4 @@
-# Stażys Project - Frontend
+# Intern Project - Frontend
 
 ## Description
 
