@@ -1,9 +1,5 @@
 # Intern Offers Platform – README
 
-# Internship & Apprenticeship Finder Platform
-
-## Overview
-
 This project is a web application designed to support students of vocational schools, technical schools, and universities in finding internships and apprenticeship opportunities. The platform addresses the problem of inefficient and time-consuming search processes by providing a centralized, map-based system tailored specifically to early-career users.
 
 The application enables users to:
@@ -79,31 +75,6 @@ ERD diagram
 - **AWS S3** (file storage)
 - **Mapbox API** (geocoding & maps)
 
-### Structure
-
-backend/
-├── src/
-│   ├── app/
-│   ├── auth/
-│   ├── admin/
-│   ├── application/
-│   ├── branch/
-│   ├── category/
-│   ├── company/
-│   ├── offer/
-│   ├── user/
-│   ├── geocoder/
-│   ├── mail/
-│   ├── cache/
-│   ├── s3/
-│   ├── entity/
-│   ├── repository/
-│   ├── common/
-│   ├── locales/
-│   └── main.ts
-├── test/
-└── .env
-
 ### Key Backend Features
 
 - REST API built with NestJS
@@ -145,25 +116,7 @@ backend/
 - **React Testing Library**
 - **Vitest**
 - **Leaflet**
-
-### Structure
-
-frontend/
-├── src/
-│   ├── app/
-│   ├── assets/
-│   ├── common/
-│   ├── components/
-│   ├── containers/
-│   ├── views/
-│   ├── router/
-│   ├── data/
-│   ├── hooks/
-│   ├── styles/
-│   └── main.tsx
-├── public/
-└── .env
-
+- 
 ### Key Frontend Features
 
 - Component-based architecture (React)
