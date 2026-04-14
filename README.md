@@ -67,6 +67,7 @@ The application follows a **three-tier architecture**:
 - **Redis** (caching)
 - **AWS S3** (file storage)
 - **Mapbox API** (geocoding & maps)
+- **Swagger documentation**
 
 ### Key Backend Features
 
@@ -78,6 +79,7 @@ The application follows a **three-tier architecture**:
 - External API integration (Mapbox)
 - Email verification system
 - Data caching with Redis
+- Swagger documentation
 
 ### Security
 
