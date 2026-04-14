@@ -44,8 +44,6 @@ The system also includes an administrative panel for verifying companies and man
 - Responsive and intuitive UI
 - Secure authentication and authorization (JWT-based)
 
----
-
 ## System Architecture
 
 The application follows a **three-tier architecture**:
@@ -55,10 +53,9 @@ The application follows a **three-tier architecture**:
 
 ## Data structure
 
-ERD diagram
-![ERD diagram](./docs/erd.PNG)
+### ERD diagram
 
----
+![ERD diagram](./docs/erd.png)
 
 ## Backend
 
@@ -100,9 +97,7 @@ ERD diagram
 - Database integration tests (PostgreSQL & Redis)
 - Code coverage: **~86.6%**
 
-![Tests coverage](./docs/be_test.PNG)
-
----
+![Tests coverage](./docs/be_tests.png)
 
 ## Frontend
 
@@ -134,23 +129,23 @@ ERD diagram
 
 Design tokens
 
-![Design Tokens](./docs/design_system.PNG)
+![Design Tokens](./docs/design_system.png)
 
 Design system
 
-![Components](./docs/ds_components.PNG)
+![Components](./docs/ds_components.png)
 
 Over 40 views
 
-![Views](./docs/ds_views.PNG)
+![Views](./docs/ds_views.png)
 
 Search view
 
-![Search view](./docs/search_view.PNG)
+![Search view](./docs/search_view.png)
 
 Offer view
 
-![Offer view](./docs/offer_view.PNG)
+![Offer view](./docs/offer_view.png)
 
 ### Testing
 
