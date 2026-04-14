@@ -15,8 +15,6 @@ At the same time, companies, institutions, and organizations can:
 
 The system also includes an administrative panel for verifying companies and managing users.
 
----
-
 ## Key Features
 
 ### For Candidates
@@ -51,9 +49,7 @@ The application follows a **three-tier architecture**:
 2. **Application Layer (Backend)** – Business logic
 3. **Data Layer** – Database and storage
 
-## Data structure
-
-### ERD diagram
+## Data structure - ERD
 
 ![ERD diagram](./docs/erd.png)
 
