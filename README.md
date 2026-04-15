@@ -93,7 +93,7 @@ The application follows a **three-tier architecture**:
 
 - Unit and integration tests using **Jest**
 - Database integration tests (PostgreSQL & Redis)
-- Code coverage: **~86.6%**
+- Code coverage: **~87%**
 
 ![Tests coverage](./docs/be_tests.png)
 
