@@ -109,7 +109,7 @@ The application follows a **three-tier architecture**:
 - **React Testing Library**
 - **Vitest**
 - **Leaflet**
-- 
+  
 ### Key Frontend Features
 
 - Component-based architecture (React)
